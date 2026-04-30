@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Vibe FM iR</title>
+
+<style>
+body {
+  margin: 0;
+  overflow: hidden;
+  background: black;
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+#planetas {
+  z-index: -3;
+}
+
+/* FUNDO ANIMADO */
+body::before {
+  content: "";
+  position: fixed;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background:
+    radial-gradient(circle, #00f7ff, transparent 40%),
+    radial-gradient(circle, #a020f0, transparent 40%);
+  animation: movimento 12s linear infinite;
+  opacity: 0.15;
+}
+
+@keyframes movimento {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#espaco {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -2;
+}
+
+#particulas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* LOGO */
+.logo {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #00f7ff;
+  font-size: 22px;
+}
+
+/* OLHO */
+.olho {
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* TÍTULO */
+.titulo {
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 60px;
+  text-align: center;
+}
+
+.vibe {
+  color: #00f7ff;
+  text-shadow: 0 0 20px #00f7ff;
+}
+
+.fm {
+  color: #a020f0;
+  text-shadow: 0 0 20px #a020f0;
+}
+
+.ir {
+  font-size: 18px;
+  vertical-align: super;
+}
+
+/* BOTÃO */
+.botao {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px 50px;
+  font-size: 20px;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+  background: linear-gradient(45deg, #00f7ff, #a020f0);
+  color: black;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px #00f7ff; }
+  to { box-shadow: 0 0 40px #a020f0; }
+}
+
+/* PLAYER */
+.player {
+  display: none;
+  margin-top: 20px;
+}
+
+/* ONDAS */
+.ondas {
+  position: absolute;
+  top: 70%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.barra {
+  width: 5px;
+  height: 20px;
+  background: #00f7ff;
+  display: inline-block;
+  margin: 2px;
+  animation: som 1s infinite;
+}
+
+@keyframes som {
+  0% { height: 10px; }
+  50% { height: 40px; }
+  100% { height: 10px; }
+}
+
+/* CHAT */
+.chat {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+.chat button {
+  background: #00f7ff;
+  border: none;
+  padding: 15px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.chat-box {
+  display: none;
+  width: 260px;
+  height: 320px;
+  background: #111;
+  border: 1px solid #00f7ff;
+  position: absolute;
+  bottom: 70px;
+  right: 0;
+  padding: 10px;
+}
+
+/* RODAPÉ */
+.footer {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  font-size: 12px;
+}
+</style>
+
+</head>
+
+<body>
+
+<canvas id="espaco"></canvas>
+<canvas id="particulas"></canvas>
+<canvas id="planetas"></canvas>
+
+
+<div class="logo">
+  <span class="olho" id="olho">👁 iR</span>
+</div>
+
+<div class="titulo">
+  <span class="vibe">Vibe</span> <span class="fm">FM</span>
+  <span class="ir">iR</span>
+</div>
+
+<div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 18px; color: #00f7ff;">🎧 Rádio Online • 2026</div>
+
+<button class="botao" onclick="tocarRadio()">▶ Ouvir Agora</button>
+<div style="position: absolute; top: 15px; right: 20px; font-size: 20px; color: #00f7ff;">
+  <span id="radioStatusIcon">●</span> <span style="font-size: 14px; color: #fff;">ON</span>
+</div>
+
+<div class="player" id="player">
+  <audio controls autoplay>
+    <source src="LINK_DA_SUA_RADIO" type="audio/mpeg">
+  </audio>
+</div>
+
+<div class="ondas">
+  <div class="barra"></div>
+  <div class="barra"></div>
+  <div class="barra"></div>
+  <div class="barra"></div>
+  <div class="barra"></div>
+</div>
+
+
+
+  <div class="chat" style="position: fixed; bottom: 20px; right: 20px;">
+    <button onclick="abrirChat()">💬</button>
+    <div class="chat-box" id="chatBox">
+      <p>Falar com ADM</p>
+      <a href="https://wa.me/5591999999999" target="_blank">Abrir WhatsApp</a>
+    </div>
+  </div>
+
+<div class="footer">
+  © 2026 Belém para Brasil • Região Norte
+</div>
+
+<script>
+
+/* RADIO */
+
+
+/* CHAT */
+function abrirChat(){
+  let chat = document.getElementById("chatBox");
+  chat.style.display = chat.style.display === "block" ? "none" : "block";
+}
+
+/* OLHO PISCANDO */
+function piscar(){
+  let olho = document.getElementById("olho");
+  olho.style.opacity = "0";
+  setTimeout(()=> olho.style.opacity="1", 200);
+  setTimeout(piscar, Math.random()*200000+60000);
+}
+piscar();
+
+/* PARTÍCULAS */
+const canvasParticulas = document.getElementById("particulas");
+const ctxParticulas = canvasParticulas.getContext("2d");
+
+canvasParticulas.width = window.innerWidth;
+canvasParticulas.height = window.innerHeight;
+
+let particulas = [];
+
+for(let i=0;i<100;i++){
+  particulas.push({
+    x: Math.random()*canvasParticulas.width,
+    y: Math.random()*canvasParticulas.height,
+    r: Math.random()*2,
+    dx: (Math.random()-0.5)*0.5,
+    dy: (Math.random()-0.5)*0.5
+  });
+}
+
+function animarParticulas(){
+  ctxParticulas.clearRect(0,0,canvasParticulas.width,canvasParticulas.height);
+  ctxParticulas.fillStyle="#00f7ff";
+
+  particulas.forEach(p=>{
+    ctxParticulas.beginPath();
+    ctxParticulas.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctxParticulas.fill();
+
+    p.x += p.dx;
+    p.y += p.dy;
+
+    // Wrap around edges
+    if (p.x < 0) p.x = canvasParticulas.width;
+    if (p.x > canvasParticulas.width) p.x = 0;
+    if (p.y < 0) p.y = canvasParticulas.height;
+    if (p.y > canvasParticulas.height) p.y = 0;
+  });
+
+  requestAnimationFrame(animarParticulas);
+}
+
+animarParticulas();
+
+</script>
+<script src="planetas.js"></script>
+<script>
+const canvasEstrelas = document.getElementById("espaco");
+
+const ctxEstrelas = canvasEstrelas.getContext("2d");
+
+canvasEstrelas.width = window.innerWidth;
+canvasEstrelas.height = window.innerHeight;
+
+let estrelas = [];
+
+for (let i = 0; i < 300; i++) {
+  estrelas.push({
+    x: Math.random() * canvasEstrelas.width,
+    y: Math.random() * canvasEstrelas.height,
+    z: Math.random() * canvasEstrelas.width
+  });
+}
+
+function animarEstrelas() {
+  ctxEstrelas.fillStyle = "black";
+  ctxEstrelas.fillRect(0, 0, canvasEstrelas.width, canvasEstrelas.height);
+
+  for (let i = 0; i < estrelas.length; i++) {
+    let e = estrelas[i];
+
+    e.z -= 3.5;
+
+    if (e.z <= 0) {
+      e.z = canvasEstrelas.width;
+      e.x = Math.random() * canvasEstrelas.width * 2 - canvasEstrelas.width;
+      e.y = Math.random() * canvasEstrelas.height * 2 - canvasEstrelas.height;
+    }
+
+    let sx = canvasEstrelas.width / e.z;
+    let x = (e.x - canvasEstrelas.width / 2) * sx + canvasEstrelas.width / 2;
+    let y = (e.y - canvasEstrelas.height / 2) * sx + canvasEstrelas.height / 2;
+
+    let tamanho = sx * 1.5;
+    let brilho = 1 - e.z / canvasEstrelas.width;
+
+    ctxEstrelas.fillStyle = `rgba(0, 247, 255, ${brilho})`;
+    ctxEstrelas.save();
+    ctxEstrelas.shadowColor = 'cyan';
+    ctxEstrelas.shadowBlur = tamanho * 2;
+    ctxEstrelas.beginPath();
+    ctxEstrelas.arc(x, y, tamanho * 0.8, 0, Math.PI * 2);
+    ctxEstrelas.fill();
+    ctxEstrelas.shadowBlur = 0;
+    ctxEstrelas.restore();
+
+    // Trail
+    const trailGradient = ctxEstrelas.createRadialGradient(x + tamanho*0.5, y, 0, x + tamanho, y + tamanho*0.5, tamanho);
+    trailGradient.addColorStop(0, `rgba(0, 247, 255, ${brilho * 0.5})`);
+    trailGradient.addColorStop(1, 'transparent');
+    ctxEstrelas.fillStyle = trailGradient;
+    ctxEstrelas.beginPath();
+    ctxEstrelas.ellipse(x + tamanho*0.7, y + tamanho*0.3, tamanho*0.6, tamanho*0.3, 0, 0, Math.PI * 2);
+    ctxEstrelas.fill();
+  }
+
+  requestAnimationFrame(animarEstrelas);
+}
+
+animarEstrelas();
+</script>
+</body>
+</html>

@@ -2,144 +2,204 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Vibe FM</title>
+<title>VIBE FM - CINEMA</title>
 
 <style>
-  body {
-    margin: 0;
-    overflow: hidden;
-    background: radial-gradient(circle at center, #020024, #000000);
-    font-family: Arial, sans-serif;
-    color: #00ffcc;
-    text-align: center;
-  }
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    box-shadow:
-      0 0 40px rgba(138, 43, 226, 0.6),
-      0 0 80px rgba(0, 0, 139, 0.6);
-    pointer-events: none;
-  }
+body {
+  margin: 0;
+  overflow: hidden;
+  background: black;
+  font-family: Arial, sans-serif;
+  color: white;
+  text-align: center;
+}
 
-  canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
+/* Planeta Terra girando */
+.solar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
 
-  .conteudo {
-    position: relative;
-    z-index: 1;
-    margin-top: 80px;
-  }
+.solar_systm {
+  pointer-events: none;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+}
 
-  .titulo {
-    font-size: 60px;
-    text-shadow:
-      0 0 10px #00ffcc,
-      0 0 20px #8a2be2;
-  }
+.earth.planet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: auto;
+  bottom: -200px;
+  transform: translateY(0);
+  margin: auto;
+  height: 300px;
+  width: 300px;
+  border-radius: 50%;
+  background: url("https://img00.deviantart.net/04ef/i/2009/114/3/e/new_earth_texture_map_by_lightondesigns.jpg");
+  background-size: 300px 300px !important;
+  box-shadow: 
+    0 -150px 50px black inset, 
+    0 0px 40px 15px #8cbaff inset, 
+    0 0px 10px 2px #8cbaff inset, 
+    0 -6px 30px #7894a9;
+  transform: translateZ(0px) rotateX(4deg) scaleX(0.89);
+  animation: spinPlanet 8s linear infinite;
+}
 
-  button {
-    margin-top: 30px;
-    padding: 15px 45px;
-    font-size: 18px;
-    background: transparent;
-    border: 2px solid #00ffcc;
-    color: #00ffcc;
-    border-radius: 30px;
-    cursor: pointer;
-  }
+/* Overlay para efeito 3D */
+.overlay {
+  border-bottom: 260px solid black;
+  width: 460px;
+  height: 160px;
+  top: auto;
+  -webkit-transform: none;
+  transform: none;
+  top: -60px;
+  left: -80px;
+  opacity: 1;
+  border-radius: 50%;
+  z-index: 0;
+  box-shadow: 0px -50px 60px 30px black inset;
+  position: absolute;
+}
 
-  button:hover {
-    background: #00ffcc;
-    color: black;
-    box-shadow: 0 0 20px #00ffcc, 0 0 40px #8a2be2;
+/* Animação de rotação */
+@keyframes spinPlanet {
+  from {
+    background-position: 0 0;
   }
-
-  .equalizer {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-    gap: 5px;
-    height: 40px;
+  to {
+    background-position: 300px 0;
   }
+}
 
-  .bar {
-    width: 5px;
-    height: 10px;
-    background: #00ffcc;
-    animation: som 1s infinite;
-    animation-play-state: paused;
-  }
+/* 🌌 NÉVOA CINEMATOGRÁFICA */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(138,43,226,0.12), transparent),
+    radial-gradient(circle at 80% 70%, rgba(0,0,255,0.12), transparent);
+  z-index: 0;
+}
 
-  .bar:nth-child(2) { animation-delay: 0.2s; }
-  .bar:nth-child(3) { animation-delay: 0.4s; }
-  .bar:nth-child(4) { animation-delay: 0.6s; }
-  .bar:nth-child(5) { animation-delay: 0.8s; }
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
 
-  @keyframes som {
-    0% { height: 10px; }
-    50% { height: 40px; }
-    100% { height: 10px; }
-  }
+.conteudo {
+  position: relative;
+  z-index: 2;
+  margin-top: 80px;
+}
 
-  /* 💬 botão chat */
-  #chat-btn {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: #00ffcc;
-    color: black;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    font-size: 25px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    box-shadow: 0 0 15px #00ffcc;
-    z-index: 10;
-  }
+.titulo {
+  font-size: 60px;
+  color: #00ffcc;
+  text-shadow: 0 0 10px #00ffcc, 0 0 30px #8a2be2;
+}
 
-  /* 💬 caixa do chat */
-  #chat-box {
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    width: 250px;
-    height: 300px;
-    background: rgba(0,0,0,0.9);
-    border: 1px solid #00ffcc;
-    border-radius: 10px;
-    padding: 10px;
-    display: none;
-    flex-direction: column;
-    z-index: 10;
-  }
+button {
+  margin-top: 30px;
+  padding: 15px 45px;
+  font-size: 18px;
+  background: transparent;
+  border: 2px solid #00ffcc;
+  color: #00ffcc;
+  border-radius: 30px;
+  cursor: pointer;
+}
 
-  #mensagens {
-    flex: 1;
-    overflow-y: auto;
-    font-size: 12px;
-    margin-bottom: 5px;
-  }
+button:hover {
+  background: #00ffcc;
+  color: black;
+   box-shadow: 0 0 20px #00ffcc, 0 0 40px #8a2be2;
+}
 
-  #input-msg {
-    width: 70%;
-    background: black;
-    color: #00ffcc;
-    border: 1px solid #00ffcc;
-  }
+.equalizer {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
 
-  #chat-box button {
-    width: 25%;
-    margin-top: 5px;
-  }
+.bar {
+  width: 5px;
+  height: 10px;
+  background: #00ffcc;
+  animation: som 1s infinite;
+  animation-play-state: paused;
+}
+
+@keyframes som {
+  0% { height: 10px; }
+  50% { height: 40px; }
+  100% { height: 10px; }
+}
+
+/* 💬 CHAT */
+#chat-btn {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(0,255,204,0.8);
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 3;
+}
+
+#chat-box {
+  position: fixed;
+  bottom: 70px;
+  right: 15px;
+  width: 220px;
+  height: 260px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid #00ffcc;
+  border-radius: 10px;
+  display: none;
+  flex-direction: column;
+  z-index: 3;
+}
+
+#mensagens {
+  flex: 1;
+  overflow-y: auto;
+  font-size: 12px;
+  padding: 5px;
+}
+
+#input-msg {
+  width: 70%;
+  background: black;
+  color: #00ffcc;
+  border: 1px solid #00ffcc;
+}
 </style>
 </head>
 
@@ -147,10 +207,18 @@
 
 <canvas id="espaco"></canvas>
 
+<!-- Planeta Terra girando -->
+<div class="solar">
+  <div class="solar_systm">
+    <div class="earth planet">
+      <div class="overlay"></div>
+    </div>
+  </div>
+</div>
+
 <div class="conteudo">
   <div class="titulo">🎧 VIBE FM 🔊</div>
-
-  <p>🌌 Rádio digital Online ⚡ - PA-Brasil 🚀 </p>
+  <p>🌌 Rádio digital Online ⚡ - PA-Brasil 🚀</p>
 
   <button onclick="tocar()"> ▶ OUVIR AGORA</button>
 
@@ -165,12 +233,11 @@
   <audio id="audio" src="musica.mp3"></audio>
 </div>
 
-<!-- 💬 CHAT -->
+<!-- CHAT -->
 <div id="chat-btn" onclick="toggleChat()">💬</div>
 
 <div id="chat-box">
   <div id="mensagens"></div>
-
   <div>
     <input id="input-msg" placeholder="Digite...">
     <button onclick="enviarMsg()">➤</button>
@@ -178,73 +245,100 @@
 </div>
 
 <script>
-  function tocar() {
-    const audio = document.getElementById("audio");
-    audio.play();
+const canvas = document.getElementById("espaco");
+const ctx = canvas.getContext("2d");
 
-    document.querySelectorAll(".bar").forEach(bar => {
-      bar.style.animationPlayState = "running";
-    });
-  }
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-  function toggleChat() {
-    const chat = document.getElementById("chat-box");
-    chat.style.display = (chat.style.display === "none") ? "flex" : "none";
-  }
+// ⭐ FUNDO (80%)
+let fundo = [];
+for (let i = 0; i < 2000; i++) {
+  fundo.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: Math.random() * 1.5,
+    alpha: Math.random(),
+    speed: Math.random() * 0.01
+  });
+}
 
-  function enviarMsg() {
-    const input = document.getElementById("input-msg");
-    const mensagens = document.getElementById("mensagens");
+// 🚀 MOVIMENTO (20%)
+let movimento = [];
+for (let i = 0; i < 500; i++) {
+  movimento.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    z: Math.random() * canvas.width
+  });
+}
 
-    if (input.value.trim() === "") return;
+function animar() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const msg = document.createElement("div");
-    msg.textContent = "Você: " + input.value;
+  // ⭐ fundo com brilho
+  fundo.forEach(e => {
+    e.alpha += e.speed;
+    if (e.alpha <= 0 || e.alpha >= 1) e.speed *= -1;
 
-    mensagens.appendChild(msg);
-    input.value = "";
-    mensagens.scrollTop = mensagens.scrollHeight;
-  }
+    ctx.beginPath();
+    ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${e.alpha})`;
+    ctx.fill();
+  });
 
-  const canvas = document.getElementById("espaco");
-  const ctx = canvas.getContext("2d");
+  // 🚀 profundidade
+  movimento.forEach(e => {
+    e.z -= 2;
+    if (e.z <= 0) e.z = canvas.width;
 
+    let x = (e.x - canvas.width/2) * (canvas.width/e.z) + canvas.width/2;
+    let y = (e.y - canvas.height/2) * (canvas.width/e.z) + canvas.height/2;
+
+    let size = (1 - e.z/canvas.width) * 2.5;
+
+    ctx.fillStyle = "white";
+    ctx.fillRect(x, y, size, size);
+  });
+
+  requestAnimationFrame(animar);
+}
+
+animar();
+
+// 🎧 player
+function tocar() {
+  document.getElementById("audio").play();
+  document.querySelectorAll(".bar").forEach(b => {
+    b.style.animationPlayState = "running";
+  });
+}
+
+// 💬 chat
+function toggleChat() {
+  const c = document.getElementById("chat-box");
+  c.style.display = (c.style.display === "flex") ? "none" : "flex";
+}
+
+function enviarMsg() {
+  const input = document.getElementById("input-msg");
+  const mensagens = document.getElementById("mensagens");
+
+  if (!input.value) return;
+
+  let msg = document.createElement("div");
+  msg.textContent = input.value;
+  mensagens.appendChild(msg);
+
+  input.value = "";
+  mensagens.scrollTop = mensagens.scrollHeight;
+}
+
+window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-
-  let estrelas = [];
-
-  for (let i = 0; i < 700; i++) {
-    estrelas.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      z: Math.random() * canvas.width
-    });
-  }
-
-  function animar() {
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    for (let i = 0; i < estrelas.length; i++) {
-      let e = estrelas[i];
-
-      e.z -= 1.5;
-      if (e.z <= 0) e.z = canvas.width;
-
-      let x = (e.x - canvas.width / 2) * (canvas.width / e.z) + canvas.width / 2;
-      let y = (e.y - canvas.height / 2) * (canvas.width / e.z) + canvas.height / 2;
-
-      let tamanho = (1 - e.z / canvas.width) * 3;
-
-      ctx.fillStyle = "#00ffcc";
-      ctx.fillRect(x, y, tamanho, tamanho);
-    }
-
-    requestAnimationFrame(animar);
-  }
-
-  animar();
+});
 </script>
 
 </body>

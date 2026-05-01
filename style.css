@@ -1,0 +1,88 @@
+* {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+body {
+  overflow: hidden;
+  background: black;
+  height: 100vh;
+  font-family: "Montserrat", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* Container do sistema solar */
+.solar {
+  position: absolute;
+  transform: rotateX(-20deg);
+  perspective: 800px;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.solar_systm {
+  transform-style: preserve-3d;
+  pointer-events: none;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+
+/* Planeta Terra girando */
+.earth.planet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: auto;
+  height: 300px;
+  width: 300px;
+  border-radius: 50%;
+  background: url("https://img00.deviantart.net/04ef/i/2009/114/3/e/new_earth_texture_map_by_lightondesigns.jpg");
+  background-size: 300px 300px !important;
+  box-shadow: 
+    0 -150px 50px black inset, 
+    0 0px 40px 15px #8cbaff inset, 
+    0 0px 10px 2px #8cbaff inset, 
+    0 -5px 30px #7894a9;
+  transform: translateZ(0px) translateY(0) rotateX(4deg) scaleX(0.89);
+  top: auto;
+  bottom: -230px;
+  animation: spinPlanet 8s linear infinite;
+}
+
+/* Overlay para dar efeito 3D */
+.overlay {
+  border-bottom: 260px solid black;
+  width: 460px;
+  height: 160px;
+  top: auto;
+  -webkit-transform: none;
+  transform: none;
+  top: -60px;
+  left: -80px;
+  opacity: 1;
+  border-radius: 50%;
+  z-index: 0;
+  box-shadow: 0px -50px 60px 30px black inset;
+  position: absolute;
+}
+
+/* Animação de rotação do planeta */
+@keyframes spinPlanet {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 300px 0;
+  }
+}

@@ -2,7 +2,13 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>VIBE FM -</title>
+<title>VIBE FM</title>
+<title>VIBE FM</title>
+
+<meta property="og:title" content="VIBE FM">
+<meta property="og:description" content="Rádio online  🚀">
+<meta property="og:url" content="https://vibefm-oficial.netlify.app/">
+<meta property="og:type" content="website">
 
 <style>
 * {
@@ -10,6 +16,115 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+.top-buttons {
+  position: fixed;
+  top: 2px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 0px;  /* No gap - buttons together */ 
+  width: 120px;
+  z-index: 999;
+}
+
+.btn {
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.btn {
+  border: none;
+  padding: 3px 5px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.4);
+  color: #fff;
+  transition: 0.3s;
+  width: 120px;
+  height: 28px;
+  font-size: 9px; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+.programacao {
+  background: linear-gradient(45deg, #00ffcc, #cc00ff);
+  white-space: nowrap;
+}
+
+.programacao-opcoes {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 100%;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(0,0,0,0.95);
+  padding: 5px;
+  border-radius: 8px;
+  z-index: 1000;
+  min-width: 120px;
+}
+
+.programacao-btn {
+  font-size: 9px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  transition: 0.3s;
+}
+
+.programacao-btn:hover {
+  background: #cc00ff;
+  color: white;
+}
+
+.in-vibe { background: #00ffcc; color: black; }
+.fundao { background: #00ffcc; }
+.lofi { background: #00ffcc; }
+.hits { background: #00ffcc; color: white; }
+
+.doador {
+  background: rgba(255,255,255,0.1);
+}
+
+.parceiro {
+  background: rgba(255,255,255,0.1);
+}
+
+.contato {
+  background: rgba(255,255,255,0.1);
+  font-size: 9px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  padding: 3px 5px !important;
+}
+
+.painel-online {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 13px;
+  z-index: 999;
 }
 
 body {
@@ -21,7 +136,6 @@ body {
   text-align: center;
 }
 
-/* Planeta Terra girando */
 .solar {
   position: fixed;
   top: 0;
@@ -61,7 +175,6 @@ body {
   animation: spinPlanet 8s linear infinite;
 }
 
-/* Overlay para efeito 3D */
 .overlay {
   border-bottom: 260px solid black;
   width: 460px;
@@ -78,7 +191,6 @@ body {
   position: absolute;
 }
 
-/* Animação de rotação */
 @keyframes spinPlanet {
   from {
     background-position: 0 0;
@@ -88,7 +200,6 @@ body {
   }
 }
 
-/* 🌌 NÉVOA CINEMATOGRÁFICA */
 body::before {
   content: "";
   position: fixed;
@@ -136,27 +247,40 @@ button:hover {
 }
 
 .equalizer {
-  margin-top: 30px;
   display: flex;
   justify-content: center;
-  gap: 5px;
+  align-items: center;
+  gap: 3px;
+  margin: 15px auto 0 auto;
+  width: 200px;
+  height: 40px;
 }
 
 .bar {
-  width: 5px;
-  height: 10px;
-  background: #00ffcc;
-  animation: som 1s infinite;
+  flex: 1;
+  height: 100%;
+  background: linear-gradient(to top, #00ffcc, #cc00ff);
+  animation: som 0.8s ease-in-out infinite;
   animation-play-state: paused;
+  border-radius: 3px;
+  min-width: 8px;
 }
+
+.bar:nth-child(1) { animation-delay: 0s; }
+.bar:nth-child(2) { animation-delay: 0.1s; }
+.bar:nth-child(3) { animation-delay: 0.2s; }
+.bar:nth-child(4) { animation-delay: 0.3s; }
+.bar:nth-child(5) { animation-delay: 0.4s; }
+.bar:nth-child(6) { animation-delay: 0.5s; }
+.bar:nth-child(7) { animation-delay: 0.6s; }
+.bar:nth-child(8) { animation-delay: 0.7s; }
 
 @keyframes som {
-  0% { height: 10px; }
-  50% { height: 40px; }
-  100% { height: 10px; }
+  0% { height: 20%; }
+  50% { height: 100%; }
+  100% { height: 20%; }
 }
 
-/* 💬 CHAT */
 #chat-btn {
   position: fixed;
   bottom: 15px;
@@ -228,6 +352,9 @@ button:hover {
     <div class="bar"></div>
     <div class="bar"></div>
     <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
+    <div class="bar"></div>
   </div>
 
   <audio id="audio" src="musica.mp3"></audio>
@@ -251,15 +378,15 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// ⭐ FUNDO (80%)
+// ⭐ FUNDO (80%) - mais estrelas pulsando
 let fundo = [];
-for (let i = 0; i < 2000; i++) {
+for (let i = 0; i < 5000; i++) {
   fundo.push({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    size: Math.random() * 1.5,
+    size: Math.random() * 2,
     alpha: Math.random(),
-    speed: Math.random() * 0.01
+    speed: Math.random() * 0.03 + 0.005
   });
 }
 
@@ -339,6 +466,64 @@ window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
+</script>
+<!-- BOTÕES SUPERIORES -->
+<div class="top-buttons">
+
+  <a href="https://link.mercadopago.com.br/vibefm" target="_blank"><button class="btn doador">💖 Seja Doador</button></a>
+
+  <a href="https://wa.me/5591982283924" target="_blank" class="btn contato">📱 Contato</a>
+
+  <button class="btn parceiro">🤝 Seja Parceiro</button>
+
+  <div style="position:relative">
+    <button class="btn programacao" onclick="toggleProgramacao()">📻 Programação Vibe FM</button>
+    
+    <div id="prog-opcoes" class="programacao-opcoes">
+      <div class="programacao-btn">🔥 Fundão da Vibe: Seg-Sáb 06:00-08:00</div>
+      <div class="programacao-btn">🎵 In Vibe: Seg-Dom 08:00-12:00</div>
+      <div class="programacao-btn">⭐ Hits Vibe: Seg-Dom 12:00-21:00</div>
+      <div class="programacao-btn">💃 Balada Vibe: Seg-Sex 21:00-00:00</div>
+      <div class="programacao-btn">☕ Lo-Fi Vibe: Seg-sex 00:00-04:00</div>
+      <div class="programacao-btn">😌 Chill Vibe: Seg-Sex e Dom 04:00-06:00</div>
+      <div class="programacao-btn">🌀 *Psy-Vibe*: -Sáb-> Do pôr do Sol ao Amanhecer 18:00-06:00</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PAINEL ONLINE -->
+<div class="painel-online">
+  <div>👨‍💻 ADM online: <span id="admCount">1</span></div>
+  <div>👥 Ouvintes: <span id="ouvintesCount">100</span></div>
+</div>
+
+<script>
+// PROGRAMAÇÃO VIBE FM
+function toggleProgramacao() {
+  const menu = document.getElementById("prog-opcoes");
+  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
+}
+
+// VARIAÇÃO AUTOMÁTICA
+
+function atualizarDados() {
+
+  // ADM: 1 a 3
+  const adm = Math.floor(Math.random() * 3) + 1;
+  document.getElementById("admCount").innerText = adm;
+
+  // OUVINTES: 50 a 250
+  const ouvintes = Math.floor(Math.random() * 200) + 50;
+  document.getElementById("ouvintesCount").innerText = ouvintes;
+
+}
+
+// Atualiza a cada 1 hora (3600000 ms)
+setInterval(atualizarDados, 3600000);
+
+// Atualiza ao entrar
+atualizarDados();
 </script>
 
 </body>

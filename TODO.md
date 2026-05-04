@@ -1,18 +1,11 @@
-# TODO: Correções e Fundo Espacial Futurista
+# TODO - Correção Botão Programação Vibe FM
 
-## ✅ Passos Concluídos
-- [x] 1. Criar este TODO.md
-- [x] 2. Editar index.html: Fix canvas vars/conflitos, adicionar resize handler, melhorar audio player (visualizer nas ondas).
-- [x] 3. Adicionar canvas de planetas (3-5 planetas glowing, órbita lenta, anéis, cores space: azul/roxo).
-- [x] 4. Aprimorar estrelas/nebulosa no CSS/JS para viagem espacial realista.
+## Status: Iniciando
 
-## ⏳ Passos Pendentes
-- [ ] 2. Editar index.html: Fix canvas vars/conflitos, adicionar resize handler, melhorar audio player (visualizer nas ondas).
-- [ ] 3. Adicionar canvas de planetas (3-5 planetas glowing, órbita lenta, anéis, cores space: azul/roxo).
-- [ ] 4. Aprimorar estrelas/nebulosa no CSS/JS para viagem espacial realista.
-- [ ] 5. Testar no browser (resize, play, animações).
-- [ ] 6. Atualizar TODO com progresso, completar tarefa.
+- [x] Passo 1: Adicionar função toggleProgramacao() melhorada no radio.js
+- [x] Passo 2: Editar index.html - remover scripts inline duplicados e ajustar HTML
+- [ ] Passo 3: Testar no browser (dropdown abre/fecha, player funciona)
+- [ ] Passo 4: Criar pastas de músicas placeholder ou usar streams reais
+- [ ] Passo 5: Finalizar e marcar como concluído
 
-**Notas**: 
-- Substitua "LINK_DA_SUA_RADIO" por stream real.
-- Ajustes em cores/velocidade conforme necessário.
+**Problema atual:** Dropdown do botão \"Programação Vibe FM\" não abre (display não muda de none para flex).

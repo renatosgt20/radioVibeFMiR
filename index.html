@@ -344,7 +344,11 @@ button:hover {
   <div class="titulo">🎧 VIBE FM 🔊</div>
   <p>🌌 Rádio digital Online ⚡ - PA-Brasil 🚀</p>
 
-  <button onclick="tocar()"> ▶ OUVIR AGORA</button>
+  <button id="btnRadio" onclick="tocarRadio()">▶ OUVIR AGORA</button>
+
+
+
+
 
   <div class="equalizer">
     <div class="bar"></div>
@@ -356,8 +360,6 @@ button:hover {
     <div class="bar"></div>
     <div class="bar"></div>
   </div>
-
-  <audio id="audio" src="musica.mp3"></audio>
 </div>
 
 <!-- CHAT -->
@@ -371,6 +373,7 @@ button:hover {
   </div>
 </div>
 
+<script src="radio.js"></script>
 <script>
 const canvas = document.getElementById("espaco");
 const ctx = canvas.getContext("2d");

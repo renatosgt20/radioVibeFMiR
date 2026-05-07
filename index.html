@@ -512,12 +512,12 @@ function toggleProgramacao() {
 
 function atualizarDados() {
 
-  // ADM: 1 a 3
-  const adm = Math.floor(Math.random() * 3) + 1;
+  // ADM: 1 a 2
+  const adm = Math.floor(Math.random() * 2) + 1;
   document.getElementById("admCount").innerText = adm;
 
-  // OUVINTES: 50 a 250
-  const ouvintes = Math.floor(Math.random() * 200) + 50;
+  // OUVINTES: 300 a 500
+  const ouvintes = Math.floor(Math.random() * 300) + 200;
   document.getElementById("ouvintesCount").innerText = ouvintes;
 
 }
@@ -528,6 +528,8 @@ setInterval(atualizarDados, 3600000);
 // Atualiza ao entrar
 atualizarDados();
 </script>
+
+<script src="radio.js"></script>
 
 </body>
 </html>

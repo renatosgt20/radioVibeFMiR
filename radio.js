@@ -1,5 +1,5 @@
 // ==============================
-// VIBE FM - Rádio Automática
+// VIBE FM - Rádio Corrigida
 // ==============================
 
 const player = new Audio();
@@ -11,9 +11,9 @@ const PASTAS = {
   hitsnoite: { arquivos: [] }
 };
 
-// Estado da fila
 let filaAtual = [];
 let idxAtual = 0;
+let audioLiberado = false;
 
 // ==============================
 // LISTAS DAS MÚSICAS
@@ -22,13 +22,9 @@ let idxAtual = 0;
 function inicializarListas() {
 
   PASTAS.lofi.arquivos = [
-
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3",
-
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115443/musica49_yoxbjc.mp3",
-
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115430/musica123_uhyzyp.mp3",
-
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115462/musica101_eldtz1.mp3",
 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115427/musica108_d2nkzz.mp3",
@@ -125,17 +121,12 @@ function inicializarListas() {
 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115443/musica49_yoxbjc.mp3",
     
-
-
-
+  
   ];
 
   PASTAS.hitsnoite.arquivos = [
-
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932734/musica10_canhmr.mp3",
-
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932771/musica70_slnbr4.mp3",
-
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932739/musica24_rehlhm.mp3",
 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932776/musica74_j7vyix.mp3",
@@ -346,219 +337,150 @@ function inicializarListas() {
 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778178487/musica222_wtaacz.mp3",
 
-
   ];
-
 }
-
 
 // ==============================
 // EMBARALHAR
 // ==============================
 
 function embaralhar(array) {
-
   const arr = array.slice();
-
   for (let i = arr.length - 1; i > 0; i--) {
-
     const j = Math.floor(Math.random() * (i + 1));
-
     [arr[i], arr[j]] = [arr[j], arr[i]];
-
   }
-
   return arr;
-
 }
 
 // ==============================
-// DEFINIR PASTA PELO HORÁRIO
+// HORÁRIO
 // ==============================
 
 function getPastaInicialPorHorario() {
-
-  const agora = new Date();
-
-  const h = agora.getHours();
-
-  return h >= 6 && h < 18
-    ? "hitsnoite"
-    : "lofi";
-
+  const h = new Date().getHours();
+  return h >= 6 && h < 18 ? "hitsnoite" : "lofi";
 }
 
 // ==============================
 // PREPARAR FILA
 // ==============================
 
-function prepararFilaDaPasta(pasta) {
-
-  const lista = (PASTAS[pasta]?.arquivos || []).filter(Boolean);
-
-  if (!lista.length) {
-
-    return {
-      fila: [],
-      indice: 0
-    };
-
-  }
-
+function prepararFila(pasta) {
+  const lista = PASTAS[pasta]?.arquivos || [];
   return {
-
     fila: embaralhar(lista),
-
     indice: 0
-
   };
+}
 
+// ==============================
+// 🔓 DESBLOQUEAR ÁUDIO (ESSENCIAL)
+// ==============================
+
+async function desbloquearAudio() {
+  if (audioLiberado) return true;
+
+  try {
+    await player.play();
+    player.pause();
+    player.currentTime = 0;
+
+    audioLiberado = true;
+    console.log("🔊 Áudio liberado pelo navegador");
+    return true;
+
+  } catch (e) {
+    console.log("❌ Ainda bloqueado:", e);
+    return false;
+  }
 }
 
 // ==============================
 // TOCAR MÚSICA
 // ==============================
 
-function tocarMusica(src, pasta) {
+async function tocarMusica(src, pasta) {
 
   console.log("🎵 Tocando:", pasta, src);
 
-  document.querySelectorAll(".bar").forEach(barra => {
-
-    barra.style.animationPlayState = "running";
-
-  });
-
   player.src = src;
+  player.crossOrigin = "anonymous";
 
-  player.play().catch(() => {
+  try {
+    await player.play();
+    tocando = true;
 
-    alert("Clique na tela para liberar o áudio 🔊");
-
-  });
-
-}
-
-// ==============================
-// TROCAR PASTA
-// ==============================
-
-function alternarPasta() {
-
-  pastaAtual =
-    pastaAtual === "lofi"
-      ? "hitsnoite"
-      : "lofi";
-
+  } catch (e) {
+    console.log("❌ Bloqueado ao tocar:", e);
+  }
 }
 
 // ==============================
 // PRÓXIMA MÚSICA
 // ==============================
 
-function tocarProximaDaFila() {
+function proximaMusica() {
 
   if (idxAtual >= filaAtual.length) {
-
-    alternarPasta();
-
-    const prep = prepararFilaDaPasta(pastaAtual);
-
+    pastaAtual = pastaAtual === "lofi" ? "hitsnoite" : "lofi";
+    const prep = prepararFila(pastaAtual);
     filaAtual = prep.fila;
-
-    idxAtual = prep.indice;
-
-    if (!filaAtual.length) {
-
-      console.log("Sem músicas na pasta:", pastaAtual);
-
-      return;
-
-    }
-
+    idxAtual = 0;
   }
 
   const musica = filaAtual[idxAtual];
-
   idxAtual++;
 
   tocarMusica(musica, pastaAtual);
-
 }
 
 // ==============================
 // BOTÃO PLAY
 // ==============================
 
-function tocarRadio() {
+async function tocarRadio() {
 
   const btn = document.getElementById("btnRadio");
 
+  // 🔓 PRIMEIRO CLIQUE: LIBERA ÁUDIO
+  if (!audioLiberado) {
+    const ok = await desbloquearAudio();
+    if (!ok) {
+      alert("Clique novamente para liberar o áudio 🔊");
+      return;
+    }
+  }
+
   // PAUSAR
   if (tocando) {
-
     player.pause();
-
     tocando = false;
-
-    if (btn) {
-
-      btn.innerHTML = "▶ PLAY";
-
-    }
-
+    if (btn) btn.innerHTML = "▶ PLAY";
     return;
-
   }
 
-  // CONTINUAR
-  if (player.src) {
+  // PRIMEIRA INICIALIZAÇÃO
+  if (!player.src) {
 
-    tocando = true;
+    inicializarListas();
 
-    player.play().catch(() => {
+    pastaAtual = getPastaInicialPorHorario();
 
-      alert("Clique na tela para liberar o áudio 🔊");
+    const prep = prepararFila(pastaAtual);
+    filaAtual = prep.fila;
+    idxAtual = 0;
 
-    });
+    player.onended = () => {
+      if (tocando) proximaMusica();
+    };
 
-    if (btn) {
+    proximaMusica();
 
-      btn.innerHTML = "⏸ PARAR";
-
-    }
-
-    return;
-
+  } else {
+    player.play();
   }
 
-  // PRIMEIRO PLAY
   tocando = true;
-
-  inicializarListas();
-
-  pastaAtual = getPastaInicialPorHorario();
-
-  const prep = prepararFilaDaPasta(pastaAtual);
-
-  filaAtual = prep.fila;
-
-  idxAtual = prep.indice;
-
-  player.onended = () => {
-
-    if (!tocando) return;
-
-    tocarProximaDaFila();
-
-  };
-
-  tocarProximaDaFila();
-
-  if (btn) {
-
-    btn.innerHTML = "⏸ PARAR";
-
-  }
-
+  if (btn) btn.innerHTML = "⏸ PARAR";
 }

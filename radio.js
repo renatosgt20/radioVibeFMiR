@@ -477,37 +477,43 @@ function embaralhar(array) {
 
 function getPastaInicialPorHorario() {
 
-  const now = new Date();
+const now = new Date(
+  new Date().toLocaleString("en-US", {
+    timeZone: "America/Belem"
+  })
+);
 
-  const day = now.getDay();
-  const h = now.getHours();
+const day = now.getDay();
+const h = now.getHours();
 
-  console.log("DIA:", day);
-  console.log("HORA:", h);
+console.log("DIA:", day);
+console.log("HORA:", h);
 
 
   // =========================================
   // SÁBADO
   // =========================================
 
-  if (day === 6) {
+if (day === 6) {
 
-    // 18h até 21h = grove
-    if (h >= 18 && h < 21) {
-      return "grove";
-    }
-
-    // 21h até 00h = night
-    if (h >= 21) {
-      return "night";
-    }
+  // 18h até 21h
+  if (h >= 18 && h < 21) {
+    return "grove";
   }
+
+  // 21h até 23:59
+  if (h >= 21 && h <= 23) {
+    return "night";
+  }
+}
 
   // =========================================
   // DOMINGO
   // =========================================
 
   if (day === 0) {
+
+  // madrugada continua o evento
 
     // 00h até 05h = forest
     if (h >= 0 && h < 5) {

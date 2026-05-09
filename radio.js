@@ -502,7 +502,7 @@ function getPastaInicialPorHorario() {
   if (day === 6) {
     // sábado
     if (h >= 18 && h < 21) return "psy";
-    if (h >= 21) return "grove";
+    if (h >= 21 && h < 24) return "grove";
   }
 
   if (day === 0) {
@@ -511,6 +511,7 @@ function getPastaInicialPorHorario() {
     if (h >= 5 && h < 6) return "forest";
     if (h >= 6 && h < 8) return "fundaovibe";
   }
+
 
   // ==============================
   // Regras normais da semana
@@ -601,9 +602,11 @@ async function tocarMusica(src, pasta) {
 // ==============================
 
 function proximaMusica() {
-  // Se terminou a fila, recalcula a pasta pelo horário atual.
-  if (idxAtual >= filaAtual.length) {
-    pastaAtual = getPastaInicialPorHorario();
+  // Atualiza a pasta pelo horário atual sempre que toca a próxima música
+  // (assim a troca de sábado/domingo acontece no horário certinho).
+  const pastaPorHorario = getPastaInicialPorHorario();
+  if (pastaPorHorario !== pastaAtual || idxAtual >= filaAtual.length) {
+    pastaAtual = pastaPorHorario;
     const prep = prepararFila(pastaAtual);
     filaAtual = prep.fila;
     idxAtual = 0;
@@ -614,6 +617,7 @@ function proximaMusica() {
 
   tocarMusica(musica, pastaAtual);
 }
+
 
 // ==============================
 // BOTÃO PLAY

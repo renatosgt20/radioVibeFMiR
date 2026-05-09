@@ -650,11 +650,20 @@ async function tocarRadio() {
 
   const btn = document.getElementById("btnRadio");
 
+  const bars = document.querySelectorAll(".bar");
+
+  function setEqualizerState(running) {
+    bars.forEach(b => {
+      b.style.animationPlayState = running ? "running" : "paused";
+    });
+  }
+
   if (tocando) {
 
     player.pause();
 
     tocando = false;
+    setEqualizerState(false);
 
     if (btn) {
       btn.innerHTML = "▶ PLAY";
@@ -662,6 +671,9 @@ async function tocarRadio() {
 
     return;
   }
+
+  // Liga o equalizador assim que começar a tocar.
+  setEqualizerState(true);
 
   if (filaAtual.length === 0) {
 
@@ -693,6 +705,8 @@ async function tocarRadio() {
     } catch (e) {
 
       console.log(e);
+      tocando = false;
+      setEqualizerState(false);
     }
   }
 

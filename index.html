@@ -501,7 +501,7 @@ window.addEventListener("resize", () => {
 <div class="painel-online">
   <div>👨‍💻 ADM online: <span id="admCount">—</span></div>
   <div>👥 Ouvintes: <span id="ouvintesCount">—</span></div>
-  <div style="font-size: 11px; opacity: 0.8; margin-top: 6px;">Contagem indisponível .</div>
+  <div style="font-size: 11px; opacity: 0.8; margin-top: 6px;">Contagem indisponível.</div>
 </div>
 
 <script>
@@ -510,6 +510,20 @@ function toggleProgramacao() {
   const menu = document.getElementById("prog-opcoes");
   menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
 }
+</script>
+
+<script>
+// Garante que o equalizador volte a animar no primeiro clique/execução.
+// (Se algum trecho travar o `tocar()` do player, isso reativa o estado visual.)
+(function(){
+  function setRunning(){
+    document.querySelectorAll('.bar').forEach(b=>{ b.style.animationPlayState='running'; });
+  }
+  window.addEventListener('click', setRunning, { once:false });
+  window.addEventListener('touchstart', setRunning, { once:false });
+  // tenta também após carregar
+  setTimeout(setRunning, 500);
+})();
 </script>
 
 <script src="./radio2.js?v=101"></script>

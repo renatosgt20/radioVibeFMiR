@@ -480,10 +480,11 @@ function getPastaInicialPorHorario() {
   const now = new Date();
 
   const day = now.getDay();
-  // 0 = domingo
-  // 6 = sábado
-
   const h = now.getHours();
+
+  console.log("DIA:", day);
+  console.log("HORA:", h);
+
 
   // =========================================
   // SÁBADO

@@ -8,7 +8,11 @@ let pastaAtual = "lofi";
 
 const PASTAS = {
   lofi: { arquivos: [] },
-  hitsnoite: { arquivos: [] }
+  hitsnoite: { arquivos: [] },
+  psy: { arquivos: [] },
+  grove: { arquivos: [] },
+  night: { arquivos: [] },
+  forest: { arquivos: [] }
 };
 
 let filaAtual = [];
@@ -123,6 +127,23 @@ function inicializarListas() {
     
   
   ];
+
+  // ==============================
+  // PASTAS SÁBADO / DOMINGO
+  // Preencha SOMENTE com links .mp3
+  // ==============================
+  PASTAS.grove.arquivos = [
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3"
+  ];
+
+  PASTAS.night.arquivos = [
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932734/musica10_canhmr.mp3"
+  ];
+
+  PASTAS.forest.arquivos = [
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3"
+  ];
+
 
   PASTAS.hitsnoite.arquivos = [
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932734/musica10_canhmr.mp3",
@@ -358,8 +379,31 @@ function embaralhar(array) {
 // ==============================
 
 function getPastaInicialPorHorario() {
-  const h = new Date().getHours();
-  return h >= 6 && h < 18 ? "hitsnoite" : "lofi";
+  const now = new Date();
+  const day = now.getDay(); // 0=Dom, 6=Sáb
+  const h = now.getHours();
+
+  // Programação normal (Seg- Dom, exceto sábado 18:00 -> domingo 06:00)
+  const normalPasta = h >= 6 && h < 18 ? "hitsnoite" : "lofi";
+
+  // Sábado: 18:00-22:00 grove | 22:00-00:00 night | 00:00-04:00 forest | 04:00-06:00 grove
+  if (day === 6) {
+    if (h >= 18 && h < 22) return "grove";
+    if (h >= 22) return "night";
+    if (h >= 0 && h < 4) return "forest";
+    if (h >= 4 && h < 6) return "grove";
+    // 06:00-18:00 => normal
+    return normalPasta;
+  }
+
+  // Domingo: 00:00-04:00 forest | 04:00-06:00 grove | 06:00+ => normal
+  if (day === 0) {
+    if (h >= 0 && h < 4) return "forest";
+    if (h >= 4 && h < 6) return "grove";
+    return normalPasta;
+  }
+
+  return normalPasta;
 }
 
 // ==============================
@@ -421,9 +465,9 @@ async function tocarMusica(src, pasta) {
 // ==============================
 
 function proximaMusica() {
-
+  // Se terminou a fila, recalcula a pasta pelo horário atual.
   if (idxAtual >= filaAtual.length) {
-    pastaAtual = pastaAtual === "lofi" ? "hitsnoite" : "lofi";
+    pastaAtual = getPastaInicialPorHorario();
     const prep = prepararFila(pastaAtual);
     filaAtual = prep.fila;
     idxAtual = 0;
@@ -462,10 +506,14 @@ async function tocarRadio() {
 
   // PRIMEIRA INICIALIZAÇÃO
   if (!player.src) {
-
     inicializarListas();
-
     pastaAtual = getPastaInicialPorHorario();
+
+    // Garantir que exista fila na pasta atual
+    if (!PASTAS[pastaAtual] || !PASTAS[pastaAtual].arquivos || PASTAS[pastaAtual].arquivos.length === 0) {
+      console.warn(`Pasta vazia: ${pastaAtual}. Fallback para lofi/hitsnoite (normal).`);
+      pastaAtual = "lofi";
+    }
 
     const prep = prepararFila(pastaAtual);
     filaAtual = prep.fila;

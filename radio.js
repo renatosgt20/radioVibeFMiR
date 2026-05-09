@@ -489,15 +489,32 @@ function getPastaInicialPorHorario() {
   const day = now.getDay(); // 0=Dom, 1=Seg, ... 6=Sáb
   const h = now.getHours();
 
-  // Regras:
-  // - 08:00-12:00 => hitsnoite
-  // - 12:00-15:00 => lofi
-  // - 15:00-17:00 => lofi (continua como lofi até 17h)
-  // - 17:00-19:00 => fundaovibe (seg-sex)
-  // - 19:00-00:00 => hitsnoite
-  // - 00:00-04:00 => lofi
-  // - 04:00-06:00 => chilldrive (seg-sex)
-  // - Domingo: 04:00-06:00 => lofi
+  // ==============================
+  // SÁBADO / DOMINGO (blocos fixos)
+  // ==============================
+  // Sábado 18:00-21:00 => psy
+  // Sábado 21:00-24:00 => grove
+  // Domingo 00:00-05:00 => night
+  // Domingo 05:00-06:00 => forest
+  // Domingo 06:00-08:00 => fundaovibe
+  // Depois de 08:00 => programação normal
+
+  if (day === 6) {
+    // sábado
+    if (h >= 18 && h < 21) return "psy";
+    if (h >= 21) return "grove";
+  }
+
+  if (day === 0) {
+    // domingo
+    if (h >= 0 && h < 5) return "night";
+    if (h >= 5 && h < 6) return "forest";
+    if (h >= 6 && h < 8) return "fundaovibe";
+  }
+
+  // ==============================
+  // Regras normais da semana
+  // ==============================
 
   // Seg-Sex
   const diaUtil = day >= 1 && day <= 5;
@@ -509,13 +526,13 @@ function getPastaInicialPorHorario() {
   if (h >= 4 && h < 6) return diaUtil ? "chilldrive" : "lofi";
 
   // 06:00-08:00
-  if (h >= 6 && h < 8) return "lofi";
+  if (h >= 6 && h < 8) return "fundaovibe";
 
-  // 08:00-12:00
-  if (h >= 8 && h < 12) return "hitsnoite";
+  // 08:00-14:00
+  if (h >= 8 && h < 14) return "hitsnoite";
 
-  // 12:00-17:00
-  if (h >= 12 && h < 17) return "lofi";
+  // 14:00-17:00
+  if (h >= 14 && h < 17) return "lofi";
 
   // 17:00-19:00
   if (h >= 17 && h < 19) return diaUtil ? "fundaovibe" : "hitsnoite";
@@ -523,6 +540,7 @@ function getPastaInicialPorHorario() {
   // 19:00-24:00
   return "hitsnoite";
 }
+
 
 // ==============================
 // PREPARAR FILA

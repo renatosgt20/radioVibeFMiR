@@ -643,7 +643,6 @@ async function tocarRadio() {
 
   const btn = document.getElementById("btnRadio");
 
-  // PAUSAR
   if (tocando) {
 
     player.pause();
@@ -657,7 +656,6 @@ async function tocarRadio() {
     return;
   }
 
-  // PRIMEIRA VEZ
   if (filaAtual.length === 0) {
 
     pastaAtual = getPastaInicialPorHorario();

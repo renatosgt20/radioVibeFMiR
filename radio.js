@@ -2,7 +2,7 @@
 // VIBE FM - Rádio
 // ==============================
 
-const player = new Audio();
+ const player = new Audio();
 
 let tocando = false;
 let pastaAtual = "";

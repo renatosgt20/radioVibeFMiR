@@ -658,7 +658,7 @@ async function tocarRadio() {
   }
 
   // PRIMEIRA VEZ
-  if (!player.src) {
+  if (filaAtual.length === 0) {
 
     pastaAtual = getPastaInicialPorHorario();
 

@@ -1,11 +1,13 @@
-# TODO - Correção Botão Programação Vibe FM
+# TODO - Vibe FM (fundaovibe / chilldrive)
 
-## Status: Iniciando
+- [ ] Atualizar `radio.js` adicionando novas pastas lógicas no objeto `PASTAS`:
+  - [ ] `fundaovibe: { arquivos: [] }`
+  - [ ] `chilldrive: { arquivos: [] }`
+- [ ] Atualizar a função `getPastaInicialPorHorario()` para usar as regras solicitadas:
+  - [ ] `fundaovibe`: 06:00-08:00 (seg-dom)
+  - [ ] `fundaovibe`: 17:00-19:00 (seg-sex)
+  - [ ] `chilldrive`: 04:00-06:00 (seg-sex)
+  - [ ] `chilldrive`: 04:00-06:00 (domingo)
+- [ ] Ajustar menu (se existir) para exibir as novas opções (opcional, só se necessário).
+- [ ] Testar trocas de pasta em horários simulados (revisar lógica).
 
-- [x] Passo 1: Adicionar função toggleProgramacao() melhorada no radio.js
-- [x] Passo 2: Editar index.html - remover scripts inline duplicados e ajustar HTML
-- [ ] Passo 3: Testar no browser (dropdown abre/fecha, player funciona)
-- [ ] Passo 4: Criar pastas de músicas placeholder ou usar streams reais
-- [ ] Passo 5: Finalizar e marcar como concluído
-
-**Problema atual:** Dropdown do botão \"Programação Vibe FM\" não abre (display não muda de none para flex).

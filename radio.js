@@ -1,5 +1,5 @@
 // ==============================
-// VIBE FM - Rádio Corrigida
+// VIBE FM - Rádio 
 // ==============================
 
 const player = new Audio();
@@ -12,7 +12,11 @@ const PASTAS = {
   psy: { arquivos: [] },
   grove: { arquivos: [] },
   night: { arquivos: [] },
-  forest: { arquivos: [] }
+  forest: { arquivos: [] },
+
+  // Novas programações (cole aqui os links .mp3)
+  fundaovibe: { arquivos: [] },
+  chilldrive: { arquivos: [] }
 };
 
 let filaAtual = [];
@@ -130,22 +134,124 @@ function inicializarListas() {
 
   // ==============================
   // PASTAS SÁBADO / DOMINGO
-  // Preencha SOMENTE com links .mp3
   // ==============================
   PASTAS.grove.arquivos = [
-    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3"
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778329906/musica24_unepzg.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778329901/musica9_shx3zx.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778329888/musica36_zmhxza.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778329878/musica30_dsxonw.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778329849/musica1_y6zvwy.mp3",
+
+
   ];
 
   PASTAS.night.arquivos = [
-    "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932734/musica10_canhmr.mp3"
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331304/musica19_b896ns.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331301/musica21_g5aruq.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331274/musica5_bgsobh.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331273/musica8_pqoazn.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331272/musica4_lno4ei.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331271/musica7_b2nb1g.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331268/musica23_rzbcmc.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331266/musica3_h9x1qd.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331263/musica1_vztl9k.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331258/musica22_jfd7ek.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331255/musica16_ptvcaa.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331255/musica15_ffa4lr.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331255/musica14_phr43s.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331254/musica17_hbaqxd.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331254/musica18_rseser.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331252/musica9_b58qg0.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331248/musica10_vpmua5.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331249/musica11_re2itx.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331248/musica13_bskgk8.mp3",
+    
   ];
 
   PASTAS.forest.arquivos = [
-    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3"
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333154/musica5_uine2m.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333148/musica16_m9p18d.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333109/musica17_c8h8yn.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333050/musica14_gpbgcg.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333035/musica7_ec9k0y.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333030/musica15_x1eijg.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333029/musica6_shea6q.mp3",
+
+  ];
+
+   PASTAS.fundaovibe.arquivos = [
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341199/musica47_ww86hb.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341195/musica45_dmmzrg.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341190/musica44_dj6xun.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341188/musica43_zsfaze.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341184/musica41_tluppn.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341183/musica40_ez6lcv.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341179/musica38_wodvqr.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341176/musica36_owo7gp.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341176/musica35_kkxhrf.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341170/musica32_fad3by.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341170/musica34_fvu7lc.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341165/musica29_yo0p7p.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341164/musica30_tizyll.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341160/musica28_uxolsk.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341159/musica27_piauie.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341155/musica17_v8z0wv.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341152/musica15_hrj00d.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341149/musica13_cuqpfw.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341148/musica10_dfzbde.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341146/musica12_pfc7is.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341144/musica11_m6s1jh.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341138/musica9_dxqqdg.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341136/musica8_neyujt.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341132/musica5_iqjngy.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341129/musica4_dfumqd.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341128/musica99_rmwqlp.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341126/musica109_th3xop.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341124/musica108_weukef.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341119/musica98_zzqnzb.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341116/musica97_ickcvr.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341111/musica95_b6brgq.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341108/musica91_b2rgga.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341107/musica90_yfnkjs.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341106/musica87_fdn5ek.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341100/musica84_ajaxl8.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341097/musica81_q7crt1.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341095/musica80_kreqfa.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341092/musica76_pzpjbm.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341089/musica75_mqed4p.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341085/musica73_nhwgvi.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341083/musica72_qdmyoq.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341080/musica68_rktiop.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341078/musica64_anfxht.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341074/musica63_gynbgb.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341071/musica61_mpckmg.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341069/musica55_r8nbm7.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341065/musica54_r0halu.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341063/musica49_pfdoon.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341062/musica51_ba8utk.mp3",
+   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778335625/musica87_t0dr5l.mp3",
+   
+
+ 
   ];
 
 
+  PASTAS.chilldrive.arquivos = [
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778345961/musica11_ozii3j.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778345952/musica6_ppsesg.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778345943/musica2_korjuu.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778345931/musica1_btgtrk.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778345918/musica10_g2wmmy.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778345909/musica7_yoorrp.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778345907/musica5_lvmmqh.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778345904/musica8_tbe4m1.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778345887/musica3_n4ft9o.mp3",
+
+  
+   ];
+
   PASTAS.hitsnoite.arquivos = [
+
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932734/musica10_canhmr.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932771/musica70_slnbr4.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932739/musica24_rehlhm.mp3",
@@ -380,30 +486,42 @@ function embaralhar(array) {
 
 function getPastaInicialPorHorario() {
   const now = new Date();
-  const day = now.getDay(); // 0=Dom, 6=Sáb
+  const day = now.getDay(); // 0=Dom, 1=Seg, ... 6=Sáb
   const h = now.getHours();
 
-  // Programação normal (Seg- Dom, exceto sábado 18:00 -> domingo 06:00)
-  const normalPasta = h >= 6 && h < 18 ? "hitsnoite" : "lofi";
+  // Regras:
+  // - 08:00-12:00 => hitsnoite
+  // - 12:00-15:00 => lofi
+  // - 15:00-17:00 => lofi (continua como lofi até 17h)
+  // - 17:00-19:00 => fundaovibe (seg-sex)
+  // - 19:00-00:00 => hitsnoite
+  // - 00:00-04:00 => lofi
+  // - 04:00-06:00 => chilldrive (seg-sex)
+  // - Domingo: 04:00-06:00 => lofi
 
-  // Sábado: 18:00-22:00 grove | 22:00-00:00 night | 00:00-04:00 forest | 04:00-06:00 grove
-  if (day === 6) {
-    if (h >= 18 && h < 22) return "grove";
-    if (h >= 22) return "night";
-    if (h >= 0 && h < 4) return "forest";
-    if (h >= 4 && h < 6) return "grove";
-    // 06:00-18:00 => normal
-    return normalPasta;
-  }
+  // Seg-Sex
+  const diaUtil = day >= 1 && day <= 5;
 
-  // Domingo: 00:00-04:00 forest | 04:00-06:00 grove | 06:00+ => normal
-  if (day === 0) {
-    if (h >= 0 && h < 4) return "forest";
-    if (h >= 4 && h < 6) return "grove";
-    return normalPasta;
-  }
+  // 00:00-04:00
+  if (h >= 0 && h < 4) return "lofi";
 
-  return normalPasta;
+  // 04:00-06:00
+  if (h >= 4 && h < 6) return diaUtil ? "chilldrive" : "lofi";
+
+  // 06:00-08:00
+  if (h >= 6 && h < 8) return "lofi";
+
+  // 08:00-12:00
+  if (h >= 8 && h < 12) return "hitsnoite";
+
+  // 12:00-17:00
+  if (h >= 12 && h < 17) return "lofi";
+
+  // 17:00-19:00
+  if (h >= 17 && h < 19) return diaUtil ? "fundaovibe" : "hitsnoite";
+
+  // 19:00-24:00
+  return "hitsnoite";
 }
 
 // ==============================
@@ -504,31 +622,36 @@ async function tocarRadio() {
     return;
   }
 
-  // PRIMEIRA INICIALIZAÇÃO
-  if (!player.src) {
-    inicializarListas();
-    pastaAtual = getPastaInicialPorHorario();
+// PRIMEIRA INICIALIZAÇÃO
+if (!player.src) {
+  inicializarListas();
+  pastaAtual = getPastaInicialPorHorario();
 
-    // Garantir que exista fila na pasta atual
-    if (!PASTAS[pastaAtual] || !PASTAS[pastaAtual].arquivos || PASTAS[pastaAtual].arquivos.length === 0) {
-      console.warn(`Pasta vazia: ${pastaAtual}. Fallback para lofi/hitsnoite (normal).`);
-      pastaAtual = "lofi";
-    }
-
-    const prep = prepararFila(pastaAtual);
-    filaAtual = prep.fila;
-    idxAtual = 0;
-
-    player.onended = () => {
-      if (tocando) proximaMusica();
-    };
-
-    proximaMusica();
-
-  } else {
-    player.play();
+  // Garantir que exista fila na pasta atual
+  if (!PASTAS[pastaAtual] || !PASTAS[pastaAtual].arquivos || PASTAS[pastaAtual].arquivos.length === 0) {
+    console.warn(`Pasta vazia: ${pastaAtual}. Fallback para lofi/hitsnoite (normal).`);
+    pastaAtual = "lofi";
   }
 
-  tocando = true;
-  if (btn) btn.innerHTML = "⏸ PARAR";
+  const prep = prepararFila(pastaAtual);
+  filaAtual = prep.fila;
+  idxAtual = 0;
+
+  player.onended = () => {
+    if (tocando) proximaMusica();
+  };
+
+  proximaMusica();
+
+} else {
+
+  try {
+    await player.play();
+  } catch (e) {
+    console.error("Erro ao tocar:", e);
+
+     }
+
+  }
+
 }

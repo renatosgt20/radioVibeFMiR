@@ -646,7 +646,12 @@ function proximaMusica() {
 // BOTÃO PLAY
 // ==============================
 
-async function tocarRadio() {
+ async function tocarRadio() {
+
+  // garante que os handlers visuais/áudio sempre funcionem mesmo se #audio não existir
+  const elAudio = document.getElementById('audio');
+  if (elAudio && !player.src && elAudio.src) player.src = elAudio.src;
+
 
   const btn = document.getElementById("btnRadio");
 

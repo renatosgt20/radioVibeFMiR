@@ -703,15 +703,37 @@ function proximaMusica() {
 
     try {
 
-      await player.play();
+      // tenta tocar via element (<audio>) primeiro (melhor compat).
+      // Em seguida, também tenta via Audio() se ainda não estiver tocando.
+      const elAudio = document.getElementById('audio');
+      if (elAudio) {
+        if (!elAudio.src || elAudio.src === window.location.href) {
+          // nada: manter
+        }
+        await elAudio.play();
+      }
 
+      await player.play();
       tocando = true;
 
     } catch (e) {
 
-      console.log(e);
-      tocando = false;
-      setEqualizerState(false);
+      console.log('player.play() falhou:', e);
+
+      // fallback: tenta setar src e tocar de novo
+      try {
+        const elAudio = document.getElementById('audio');
+        if (elAudio) {
+          elAudio.src = player.src;
+          await elAudio.play();
+        }
+        tocando = true;
+      } catch (e2) {
+        console.log('fallback elAudio.play() falhou:', e2);
+        tocando = false;
+        setEqualizerState(false);
+      }
+
     }
   }
 

@@ -741,3 +741,16 @@ function proximaMusica() {
     btn.innerHTML = "⏸ PAUSAR";
   }
 }
+// Quando a música terminar
+player.addEventListener("ended", () => {
+  proximaMusica();
+});
+
+// Quando der erro no áudio/link
+player.addEventListener("error", () => {
+  console.log("⚠️ Erro na música, pulando para próxima...");
+
+  setTimeout(() => {
+    proximaMusica();
+  }, 1000);
+});

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Painel VibeFM</title>
+  <style>
+    body { font-family: Arial; background:#111; color:#fff; padding:20px; }
+    input, button { padding:10px; margin:5px; }
+    .msg { background:#222; padding:10px; margin:10px 0; border-radius:8px; }
+  </style>
+</head>
+
+<body>
+
+<h2>🔐 Painel Admin VibeFM</h2>
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <input id="email" placeholder="Email"><br>
+  <input id="password" type="password" placeholder="Senha"><br>
+  <button onclick="login()">Entrar</button>
+</div>
+
+<!-- PAINEL -->
+<div id="panel" style="display:none">
+  <h3>💬 Mensagens dos ouvintes</h3>
+  <div id="msgs"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { getFirestore, collection, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "SUA_API_KEY",
+  authDomain: "vibefm-radio-ad326.firebaseapp.com",
+  projectId: "vibefm-radio-ad326",
+  storageBucket: "vibefm-radio-ad326.firebasestorage.app",
+  messagingSenderId: "1021295101262",
+  appId: "SEU_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// LOGIN
+window.login = function () {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  signInWithEmailAndPassword(auth, email, password)
+    .then(() => {
+      document.getElementById("loginBox").style.display = "none";
+      document.getElementById("panel").style.display = "block";
+      loadMessages();
+    })
+    .catch(err => alert("Erro: " + err.message));
+};
+
+// MENSAGENS
+function loadMessages() {
+  const msgsDiv = document.getElementById("msgs");
+
+  onSnapshot(collection(db, "mensagens"), (snapshot) => {
+    msgsDiv.innerHTML = "";
+
+    snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+
+      msgsDiv.innerHTML += `
+        <div class="msg">
+          <b>${data.nome}</b><br>
+          ${data.mensagem}<br><br>
+          <button onclick="delMsg('${docSnap.id}')">Apagar</button>
+        </div>
+      `;
+    });
+  });
+}
+
+// APAGAR
+window.delMsg = function(id) {
+  deleteDoc(doc(db, "mensagens", id));
+};
+</script>
+
+</body>
+</html>

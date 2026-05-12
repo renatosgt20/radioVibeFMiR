@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -459,16 +459,29 @@ function toggleChat() {
 
 function enviarMsg() {
   const input = document.getElementById("input-msg");
-  const mensagens = document.getElementById("mensagens");
+  const mensagensDiv = document.getElementById("mensagens");
 
   if (!input.value) return;
 
-  let msg = document.createElement("div");
-  msg.textContent = input.value;
-  mensagens.appendChild(msg);
+  const text = input.value.trim();
+  if(!text) return;
+
+  // cria UI local (feedback imediato)
+  let msgEl = document.createElement("div");
+  msgEl.textContent = text;
+  mensagensDiv.appendChild(msgEl);
+  mensagensDiv.scrollTop = mensagensDiv.scrollHeight;
 
   input.value = "";
-  mensagens.scrollTop = mensagens.scrollHeight;
+
+  // (neste seu index.html atual não está enviando no Firestore;
+  // se você quer que o admin receba, precisamos conectar o envio aqui).
+  // trySendToFirestore(text);
+
+// neste index.html atual não existe implementação de Firestore.
+  // o envio real precisa usar Firebase/Firestore (addDoc/setDoc) na coleção `mensagens`.
+  // trySendToFirestore(text);
+
 }
 
 window.addEventListener("resize", () => {
@@ -507,16 +520,29 @@ window.addEventListener("resize", () => {
     <span id="admStatusDot" style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block;"></span>
     <span>ADM: <span id="admStatusText">OFF</span></span>
   </div>
+  <div style="margin-top:6px;display:flex;align-items:center;gap:8px;">
+<button id="admLoginBtn" style="padding:4px 8px;font-size:11px;width:auto;">Login ADM</button>
+  </div>
   <div style="margin-top:6px;">👨‍💻 ADM online: <span id="admCount">—</span></div>
   <div>👥 Ouvintes: <span id="ouvintesCount">—</span></div>
   <div style="font-size: 11px; opacity: 0.8; margin-top: 6px;">Contagem indisponível.</div>
 </div>
 
 <script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
-// reusa o app já inicializado no script analytics lá embaixo
-const auth = getAuth();
+const firebaseConfig = {
+  apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
+  authDomain: "vibefm-radio-ad326.firebaseapp.com",
+  projectId: "vibefm-radio-ad326",
+  storageBucket: "vibefm-radio-ad326.appspot.com",
+  messagingSenderId: "1021295101262",
+  appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
 function setAdmUI(isOnline){
   const dot = document.getElementById('admStatusDot');
@@ -531,6 +557,11 @@ setAdmUI(false);
 
 onAuthStateChanged(auth, (user)=>{
   setAdmUI(!!user);
+});
+
+// abre o admin.html no login admin (sem atrapalhar o resto do site)
+document.getElementById('admLoginBtn')?.addEventListener('click', ()=>{
+  window.open('admin.html', '_blank', 'noopener');
 });
 </script>
 
@@ -563,23 +594,7 @@ function toggleProgramacao() {
 
 <!-- SEU SITE AQUI -->
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
-    authDomain: "vibefm-radio-ad326.firebaseapp.com",
-    projectId: "vibefm-radio-ad326",
-    storageBucket: "vibefm-radio-ad326.firebasestorage.app",
-    messagingSenderId: "1021295101262",
-    appId: "1:1021295101262:web:7b9e80e0287e041c494a1f",
-    measurementId: "G-NJ7FSS3D0Q"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+<!-- analytics (removido pra evitar conflitos com firebaseConfig/app redeclarados) -->
 
 </body>
 

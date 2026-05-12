@@ -1,4 +1,4 @@
-i<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
@@ -45,7 +45,6 @@ button{
   padding:20px;
 }
 
-/* CHAT STYLE */
 .chat-box{
   display:flex;
   gap:20px;
@@ -99,7 +98,7 @@ button{
 <!-- PAINEL -->
 <div id="panel">
 
-  <h2>💬 Painel de Chats</h2>
+  <h2>💬 Painel de Chats VibeFM</h2>
 
   <div class="chat-box">
 
@@ -120,8 +119,15 @@ button{
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-import { getFirestore, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+import {
+  getFirestore,
+  collection,
+  onSnapshot,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
+// 🔥 CONFIG FIREBASE (CORRETO)
 const firebaseConfig = {
   apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
   authDomain: "vibefm-radio-ad326.firebaseapp.com",
@@ -135,101 +141,94 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// 🔥 VARIÁVEIS GLOBAIS
 let currentUser = null;
+let unsubscribeChat = null;
 
-// Indicador ADM ON/OFF na página principal (se existir)
-function setAdmStatus(isOnline){
-  try{
-    const el = document.getElementById('admStatusDot');
-    const text = document.getElementById('admStatusText');
-    if(!el || !text) return;
-    el.style.background = isOnline ? '#22c55e' : '#ef4444';
-    el.style.boxShadow = isOnline ? '0 0 12px rgba(34,197,94,0.7)' : '0 0 12px rgba(239,68,68,0.7)';
-    text.textContent = isOnline ? 'ON' : 'OFF';
-  }catch(e){}
-}
-
-setAdmStatus(false);
-
-
+// =======================
 // LOGIN
+// =======================
 window.login = function(){
-  const emailEl = document.getElementById("email");
-  const passwordEl = document.getElementById("password");
-  const loginBoxEl = document.getElementById("loginBox");
-  const panelEl = document.getElementById("panel");
-
-  const email = (emailEl?.value || "").trim();
-  const password = passwordEl?.value || "";
-
-  if(!email){ alert("Informe o email."); return; }
-  if(!password){ alert("Informe a senha."); return; }
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
   signInWithEmailAndPassword(auth, email, password)
   .then(()=>{
-    loginBoxEl.style.display="none";
-    panelEl.style.display="block";
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("panel").style.display="block";
     loadUsers();
   })
   .catch(e=>{
-    alert("Erro no login: " + (e?.message || e));
+    alert("Erro login: " + e.message);
   });
 };
 
-// LISTA DE USUÁRIOS (simples agrupamento)
+// =======================
+// LISTA DE USUÁRIOS
+// =======================
 function loadUsers(){
 
   const usersDiv = document.getElementById("users");
 
   onSnapshot(collection(db, "mensagens"), (snap)=>{
 
-    let users = new Set();
+    const usersMap = new Map();
 
     snap.forEach(doc=>{
-      const data = doc.data() || {};
-      const nome = (data.nome || data.user || data.sender || data.email || "").toString().trim();
-      users.add(nome || "Anônimo");
-    });
+      const data = doc.data();
 
+      if(!data.uid) return;
+
+      if(!usersMap.has(data.uid)){
+        usersMap.set(data.uid, data.nome || "Anônimo");
+      }
+    });
 
     usersDiv.innerHTML = "<b>Ouvintes</b>";
 
-    users.forEach(u=>{
+    usersMap.forEach((nome, uid)=>{
       usersDiv.innerHTML += `
-        <div class="user" onclick="openChat('${u}')">
-          👤 ${u}
+        <div class="user" onclick="openChat('${uid}','${nome}')">
+          👤 ${nome}
         </div>
       `;
     });
 
   });
-
 }
 
+// =======================
 // ABRIR CHAT
-window.openChat = function(user){
+// =======================
+window.openChat = function(uid, nome){
 
-  currentUser = user;
-  const chatTitleEl = document.getElementById("chatTitle");
-  chatTitleEl.innerText = "Chat: " + user;
+  currentUser = uid;
+
+  document.getElementById("chatTitle").innerText = "Chat: " + nome;
 
   const msgsDiv = document.getElementById("msgs");
 
-  // Compatibilidade: dependendo de como a mensagem foi salva no app do ouvinte,
-  // pode existir o campo `nome` ou outro identificador.
-  // Como `where` exige um único campo fixo, tentamos primeiro por `nome`.
-  const q = query(collection(db,"mensagens"), where("nome","==",user));
+  // 🔴 evita duplicar listener
+  if(unsubscribeChat) unsubscribeChat();
 
-  onSnapshot(q,(snap)=>{
+  const q = query(
+    collection(db, "mensagens"),
+    orderBy("createdAt")
+  );
 
-    msgsDiv.innerHTML="";
+  unsubscribeChat = onSnapshot(q,(snap)=>{
 
-    snap.forEach(d=>{
-      const data = d.data() || {};
-      const mensagem = (data.mensagem ?? data.msg ?? "").toString();
+    msgsDiv.innerHTML = "";
+
+    snap.forEach(doc=>{
+      const data = doc.data();
+
+      // filtra usuário atual
+      if(data.uid !== uid) return;
+
       msgsDiv.innerHTML += `
         <div class="msg">
-          💬 ${mensagem}
+          💬 ${data.mensagem || ""}
         </div>
       `;
     });

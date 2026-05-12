@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+am <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
@@ -373,6 +373,9 @@ button:hover {
 <div id="chat-btn" onclick="toggleChat()">💬</div>
 
 <div id="chat-box">
+  <div style="padding:6px 8px;font-size:12px;opacity:0.95;border-bottom:1px solid rgba(0,255,204,0.25);">
+    💬 Deixe sua mensagem
+  </div>
   <div id="mensagens"></div>
   <div>
     <input id="input-msg" placeholder="Digite...">
@@ -474,15 +477,11 @@ function enviarMsg() {
 
   input.value = "";
 
-  // (neste seu index.html atual não está enviando no Firestore;
-  // se você quer que o admin receba, precisamos conectar o envio aqui).
-  // trySendToFirestore(text);
-
-// neste index.html atual não existe implementação de Firestore.
-  // o envio real precisa usar Firebase/Firestore (addDoc/setDoc) na coleção `mensagens`.
-  // trySendToFirestore(text);
+  // Envio real para o Firestore (pra aparecer no admin)
+  trySendToFirestore(text);
 
 }
+
 
 window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;

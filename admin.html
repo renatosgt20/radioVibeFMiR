@@ -221,23 +221,16 @@ window.openChat = function(uid, nome){
     );
 
     unsubscribeChatLocal = onSnapshot(q,(snap)=>{
-
       msgsDiv.innerHTML = "";
-
       snap.forEach(doc=>{
         const data = doc.data();
-
-        // filtra usuário atual
         if(data.uid !== uid) return;
-
         msgsDiv.innerHTML += `
           <div class="msg">
-            
             <i class="fa-solid fa-user"></i> ${data.mensagem || ""}
           </div>
         `;
       });
-
     });
   } catch (e) {
     const q = collection(db, "mensagens");
@@ -248,7 +241,6 @@ window.openChat = function(uid, nome){
         if(data.uid !== uid) return;
         msgsDiv.innerHTML += `
           <div class="msg">
-            
             <i class="fa-solid fa-user"></i> ${data.mensagem || ""}
           </div>
         `;
@@ -259,6 +251,7 @@ window.openChat = function(uid, nome){
   unsubscribeChat = unsubscribeChatLocal;
 
 };
+
 
 
 </script>

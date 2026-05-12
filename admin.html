@@ -137,23 +137,43 @@ const db = getFirestore(app);
 
 let currentUser = null;
 
+// Indicador ADM ON/OFF na página principal (se existir)
+function setAdmStatus(isOnline){
+  try{
+    const el = document.getElementById('admStatusDot');
+    const text = document.getElementById('admStatusText');
+    if(!el || !text) return;
+    el.style.background = isOnline ? '#22c55e' : '#ef4444';
+    el.style.boxShadow = isOnline ? '0 0 12px rgba(34,197,94,0.7)' : '0 0 12px rgba(239,68,68,0.7)';
+    text.textContent = isOnline ? 'ON' : 'OFF';
+  }catch(e){}
+}
+
+setAdmStatus(false);
+
+
 // LOGIN
 window.login = function(){
+  const emailEl = document.getElementById("email");
+  const passwordEl = document.getElementById("password");
+  const loginBoxEl = document.getElementById("loginBox");
+  const panelEl = document.getElementById("panel");
 
-  const email = email.value;
-  const password = password.value;
+  const email = (emailEl?.value || "").trim();
+  const password = passwordEl?.value || "";
+
+  if(!email){ alert("Informe o email."); return; }
+  if(!password){ alert("Informe a senha."); return; }
 
   signInWithEmailAndPassword(auth, email, password)
   .then(()=>{
-
-    loginBox.style.display="none";
-    panel.style.display="block";
-
+    loginBoxEl.style.display="none";
+    panelEl.style.display="block";
     loadUsers();
-
   })
-  .catch(e=>alert(e.message));
-
+  .catch(e=>{
+    alert("Erro no login: " + (e?.message || e));
+  });
 };
 
 // LISTA DE USUÁRIOS (simples agrupamento)
@@ -166,8 +186,11 @@ function loadUsers(){
     let users = new Set();
 
     snap.forEach(doc=>{
-      users.add(doc.data().nome || "Anônimo");
+      const data = doc.data() || {};
+      const nome = (data.nome || data.user || data.sender || data.email || "").toString().trim();
+      users.add(nome || "Anônimo");
     });
+
 
     usersDiv.innerHTML = "<b>Ouvintes</b>";
 
@@ -187,10 +210,14 @@ function loadUsers(){
 window.openChat = function(user){
 
   currentUser = user;
-  chatTitle.innerText = "Chat: " + user;
+  const chatTitleEl = document.getElementById("chatTitle");
+  chatTitleEl.innerText = "Chat: " + user;
 
   const msgsDiv = document.getElementById("msgs");
 
+  // Compatibilidade: dependendo de como a mensagem foi salva no app do ouvinte,
+  // pode existir o campo `nome` ou outro identificador.
+  // Como `where` exige um único campo fixo, tentamos primeiro por `nome`.
   const q = query(collection(db,"mensagens"), where("nome","==",user));
 
   onSnapshot(q,(snap)=>{
@@ -198,9 +225,11 @@ window.openChat = function(user){
     msgsDiv.innerHTML="";
 
     snap.forEach(d=>{
+      const data = d.data() || {};
+      const mensagem = (data.mensagem ?? data.msg ?? "").toString();
       msgsDiv.innerHTML += `
         <div class="msg">
-          💬 ${d.data().mensagem}
+          💬 ${mensagem}
         </div>
       `;
     });

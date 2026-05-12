@@ -4,25 +4,22 @@
 <meta charset="UTF-8">
 <title>Painel Admin VibeFM</title>
 
-<!-- ÍCONES -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 body{
   font-family: Arial;
-  background: #0f172a;
-  color: #fff;
+  background:#0b1220;
+  color:white;
   margin:0;
 }
 
-/* LOGIN */
 #loginBox{
-  width: 300px;
-  margin: 100px auto;
-  background:#1e293b;
+  width:320px;
+  margin:100px auto;
+  background:#111827;
   padding:20px;
   border-radius:12px;
-  text-align:center;
 }
 
 input{
@@ -34,58 +31,58 @@ input{
 }
 
 button{
-  padding:10px;
   width:100%;
-  background:#22c55e;
+  padding:10px;
   border:none;
-  color:white;
   border-radius:6px;
+  background:#22c55e;
+  color:white;
   cursor:pointer;
 }
 
-button:hover{
-  background:#16a34a;
-}
-
-/* PAINEL */
 #panel{
   display:none;
   padding:20px;
 }
 
-h2{
-  margin-bottom:20px;
+/* CHAT STYLE */
+.chat-box{
+  display:flex;
+  gap:20px;
 }
 
-/* MENSAGENS */
-.msg{
-  background:#1e293b;
-  padding:15px;
-  margin:10px 0;
+.users{
+  width:30%;
+  background:#111827;
+  padding:10px;
   border-radius:10px;
-  border-left:4px solid #22c55e;
-  position:relative;
+  height:80vh;
+  overflow:auto;
 }
 
-.msg i{
-  margin-right:5px;
+.chat{
+  width:70%;
+  background:#111827;
+  padding:10px;
+  border-radius:10px;
+  height:80vh;
+  overflow:auto;
 }
 
-.del-btn{
-  position:absolute;
-  right:10px;
-  top:10px;
-  background:#ef4444;
-  border:none;
-  padding:6px 10px;
-  border-radius:6px;
+.user{
+  padding:10px;
+  margin:5px 0;
+  background:#1f2937;
+  border-radius:8px;
   cursor:pointer;
 }
 
-.del-btn:hover{
-  background:#dc2626;
+.msg{
+  background:#1f2937;
+  padding:10px;
+  margin:8px 0;
+  border-radius:8px;
 }
-
 </style>
 </head>
 
@@ -93,42 +90,38 @@ h2{
 
 <!-- LOGIN -->
 <div id="loginBox">
-  <h2><i class="fa fa-lock"></i> Admin Login</h2>
-
+  <h3>Admin Login</h3>
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="password" placeholder="Senha">
-
-  <button onclick="login()">
-    Entrar
-  </button>
+  <button onclick="login()">Entrar</button>
 </div>
 
 <!-- PAINEL -->
 <div id="panel">
-  <h2><i class="fa fa-comments"></i> Mensagens Recebidas</h2>
-  <div id="msgs"></div>
-</div>
 
+  <h2>💬 Painel de Chats</h2>
+
+  <div class="chat-box">
+
+    <div class="users" id="users">
+      <b>Ouvintes</b>
+    </div>
+
+    <div class="chat">
+      <h3 id="chatTitle">Selecione um usuário</h3>
+      <div id="msgs"></div>
+    </div>
+
+  </div>
+
+</div>
 
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { getFirestore, collection, onSnapshot, query, where } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-import {
-  getAuth,
-  signInWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-
-import {
-  getFirestore,
-  collection,
-  onSnapshot,
-  deleteDoc,
-  doc
-} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-
-
-// FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
   authDomain: "vibefm-radio-ad326.firebaseapp.com",
@@ -138,74 +131,82 @@ const firebaseConfig = {
   appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
 };
 
-
-// INIT
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+let currentUser = null;
 
 // LOGIN
 window.login = function(){
 
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
+  const email = email.value;
+  const password = password.value;
 
   signInWithEmailAndPassword(auth, email, password)
   .then(()=>{
 
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("panel").style.display = "block";
+    loginBox.style.display="none";
+    panel.style.display="block";
 
-    loadMessages();
+    loadUsers();
 
   })
-  .catch(err=>{
-    alert("Erro: " + err.message);
-  });
+  .catch(e=>alert(e.message));
 
 };
 
+// LISTA DE USUÁRIOS (simples agrupamento)
+function loadUsers(){
 
-// MENSAGENS
-function loadMessages(){
+  const usersDiv = document.getElementById("users");
 
-  const msgsDiv = document.getElementById("msgs");
+  onSnapshot(collection(db, "mensagens"), (snap)=>{
 
-  onSnapshot(collection(db, "mensagens"), (snapshot)=>{
+    let users = new Set();
 
-    msgsDiv.innerHTML = "";
+    snap.forEach(doc=>{
+      users.add(doc.data().nome || "Anônimo");
+    });
 
-    if(snapshot.empty){
-      msgsDiv.innerHTML = "<p>Nenhuma mensagem ainda...</p>";
-      return;
-    }
+    usersDiv.innerHTML = "<b>Ouvintes</b>";
 
-    snapshot.forEach((docSnap)=>{
-
-      const data = docSnap.data();
-
-      msgsDiv.innerHTML += `
-        <div class="msg">
-          <i class="fa fa-user"></i> <b>${data.nome || "Anônimo"}</b><br><br>
-          <i class="fa fa-message"></i> ${data.mensagem || ""}
-
-          <button class="del-btn" onclick="delMsg('${docSnap.id}')">
-            <i class="fa fa-trash"></i>
-          </button>
+    users.forEach(u=>{
+      usersDiv.innerHTML += `
+        <div class="user" onclick="openChat('${u}')">
+          👤 ${u}
         </div>
       `;
-
     });
 
   });
 
 }
 
+// ABRIR CHAT
+window.openChat = function(user){
 
-// DELETE
-window.delMsg = async function(id){
-  await deleteDoc(doc(db, "mensagens", id));
+  currentUser = user;
+  chatTitle.innerText = "Chat: " + user;
+
+  const msgsDiv = document.getElementById("msgs");
+
+  const q = query(collection(db,"mensagens"), where("nome","==",user));
+
+  onSnapshot(q,(snap)=>{
+
+    msgsDiv.innerHTML="";
+
+    snap.forEach(d=>{
+      msgsDiv.innerHTML += `
+        <div class="msg">
+          💬 ${d.data().mensagem}
+        </div>
+      `;
+    });
+
+  });
+
 };
 
 </script>

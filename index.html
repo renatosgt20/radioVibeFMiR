@@ -338,13 +338,14 @@ button:hover {
 <!-- Planeta Terra girando -->
 <div class="solar">
   <div class="solar_systm">
-    <div class="earth planet">
+  <div class="earth planet">
       <div class="overlay"></div>
     </div>
   </div>
 </div>
 
 <div class="conteudo">
+
   <div class="titulo">🎧 VIBE FM 🔊</div>
   <p>🌌 Rádio digital Online ⚡ - PA-Brasil 🚀</p>
 
@@ -524,8 +525,8 @@ window.addEventListener("resize", () => {
   </div>
   <div style="margin-top:6px;">👨‍💻 ADM online: <span id="admCount">—</span></div>
   <div>👥 Ouvintes: <span id="ouvintesCount">—</span></div>
-  <div style="font-size: 11px; opacity: 0.8; margin-top: 6px;">Contagem indisponível/Mensagem indisponivel .</div>
-</div>
+  <div style="font-size: 11px; opacity: 0.8; margin-top: 6px;">Contagem indisponível.</div>
+
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
@@ -573,6 +574,7 @@ function toggleProgramacao() {
 }
 </script>
 
+
 <script>
 // Garante que o equalizador volte a animar no primeiro clique/execução.
 // (Se algum trecho travar o `tocar()` do player, isso reativa o estado visual.)
@@ -589,13 +591,6 @@ function toggleProgramacao() {
 
 <script src="radio2.js?v=1"></script>
 
-<body>
-
-<!-- SEU SITE AQUI -->
-
-<!-- analytics (removido pra evitar conflitos com firebaseConfig/app redeclarados) -->
-
-</body>
-
 </body>
 </html>
+

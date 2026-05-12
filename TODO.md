@@ -1,7 +1,9 @@
-- [x] Identificar a lógica atual de troca por horário no `getPastaInicialPorHorario()`
-- [x] Implementar blocos de sábado/domingo no `getPastaInicialPorHorario()`
-- [ ] Corrigir `Meu_Site/Radio/radio.js` (está corrompido/sintaxe inválida)
-- [ ] Restaurar `Meu_Site/Radio/radio.js` a uma base funcional (ex: `Meu_Site/teste/radio.js`) e reaplicar somente as regras de sábado/domingo
-- [ ] Garantir lista/playlist da pasta `psy` (se continuar vazio, horários 18-21 não terão conteúdo)
-- [ ] Testar botão e troca automática com refresh
+# TODO - Correções index/admin (VibeFM)
+
+- [x] Ler `index.html`, `admin.html` e identificar problemas.
+- [x] Ler `radio2.js` para verificar schema do Firestore.
+- [x] Corrigir `index.html`: remover estrutura HTML inválida (tag `<body>` duplicada e conteúdo fora do body).
+- [x] Corrigir `admin.html`: tornar o `orderBy("createdAt")` tolerante quando `createdAt` não existe.
+- [ ] Confirmar funcionamento do chat/admin após login (usuários e mensagens aparecendo).
+- [ ] Opcional: alinhar schema de mensagens entre `index.html`/envio e `admin.html` (exigir `uid`, `nome`, `mensagem`, `createdAt`).
 

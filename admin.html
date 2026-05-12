@@ -211,31 +211,55 @@ window.openChat = function(uid, nome){
   // 🔴 evita duplicar listener
   if(unsubscribeChat) unsubscribeChat();
 
-  const q = query(
-    collection(db, "mensagens"),
-    orderBy("createdAt")
-  );
+  // Se não houver createdAt salvo, o Firestore vai reclamar do orderBy.
+  // Para não quebrar o admin, tentamos ordenar e, se falhar, exibimos sem order.
+  let unsubscribeChatLocal = null;
+  try {
+    const q = query(
+      collection(db, "mensagens"),
+      orderBy("createdAt")
+    );
 
-  unsubscribeChat = onSnapshot(q,(snap)=>{
+    unsubscribeChatLocal = onSnapshot(q,(snap)=>{
 
-    msgsDiv.innerHTML = "";
+      msgsDiv.innerHTML = "";
 
-    snap.forEach(doc=>{
-      const data = doc.data();
+      snap.forEach(doc=>{
+        const data = doc.data();
 
-      // filtra usuário atual
-      if(data.uid !== uid) return;
+        // filtra usuário atual
+        if(data.uid !== uid) return;
 
-      msgsDiv.innerHTML += `
-        <div class="msg">
-          💬 ${data.mensagem || ""}
-        </div>
-      `;
+        msgsDiv.innerHTML += `
+          <div class="msg">
+            
+            <i class="fa-solid fa-user"></i> ${data.mensagem || ""}
+          </div>
+        `;
+      });
+
     });
+  } catch (e) {
+    const q = collection(db, "mensagens");
+    unsubscribeChatLocal = onSnapshot(q,(snap)=>{
+      msgsDiv.innerHTML = "";
+      snap.forEach(doc=>{
+        const data = doc.data();
+        if(data.uid !== uid) return;
+        msgsDiv.innerHTML += `
+          <div class="msg">
+            
+            <i class="fa-solid fa-user"></i> ${data.mensagem || ""}
+          </div>
+        `;
+      });
+    });
+  }
 
-  });
+  unsubscribeChat = unsubscribeChatLocal;
 
 };
+
 
 </script>
 

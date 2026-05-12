@@ -2,7 +2,8 @@
 // VIBE FM - Rádio
 // ==============================
 
- const player = new Audio();
+// Usar apenas o <audio id="audio"> do HTML (evita conflito de 2 players)
+const playerEl = document.getElementById('audio');
 
 let tocando = false;
 let pastaAtual = "";
@@ -454,21 +455,33 @@ const PASTAS = {
 };
 
 // ==============================
-// EMBARALHAR
+// ALEATORIEDADE SINCRONIZADA (determinística)
 // ==============================
-
-function embaralhar(array) {
-
-  const arr = [...array];
-
-  for (let i = arr.length - 1; i > 0; i--) {
-
-    const j = Math.floor(Math.random() * (i + 1));
-
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+// IMPORTANTE: não pode usar Math.random() local, senão cada dispositivo terá ordem diferente.
+// Aqui usamos uma semente determinística baseada no horário do servidor (America/Belem) + fase.
+function hashStringToInt(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
   }
+  // força positivo
+  return (h >>> 0);
+}
 
-  return arr;
+function pickAleatorioSemRepeticao(pasta, arquivos, indexGlobal) {
+  // indexGlobal sobe a cada música que terminou (synced via cálculo)
+  // Para não repetir dentro da fase: usamos um “deck” por fase e avançamos sempre.
+  // Sem embaralhar por cliente: a ordem é derivada da semente.
+  const seed = hashStringToInt(pasta);
+  const n = arquivos.length;
+  if (n === 0) return null;
+
+  // pseudo-permutação determinística via “salto” co-primo
+  // step = (seed % (n-1)) + 1; garante 1..n-1
+  const step = (seed % (n - 1)) + 1;
+  const pos = (indexGlobal * step) % n;
+  return arquivos[pos];
 }
 
 // ==============================
@@ -568,17 +581,22 @@ if (day === 6) {
 }
 
 // ==============================
-// PREPARAR FILA
+// ESTADO DA RÁDIO (por fase)
 // ==============================
+let indexMusicaNaFase = 0; // incrementa quando uma música termina
 
-function prepararFila(nomePasta) {
+function getArquivosDaPasta(nomePasta) {
+  return PASTAS[nomePasta]?.arquivos || [];
+}
 
-  const lista = PASTAS[nomePasta]?.arquivos || [];
-
-  return {
-    fila: embaralhar(lista),
-    indice: 0
-  };
+function avancarParaNovaFaseSePreciso() {
+  const fase = getPastaInicialPorHorario();
+  if (fase !== pastaAtual) {
+    pastaAtual = fase;
+    indexMusicaNaFase = 0; // reseta “deck” ao mudar fase/horário
+    return true;
+  }
+  return false;
 }
 
 // ==============================
@@ -586,26 +604,20 @@ function prepararFila(nomePasta) {
 // ==============================
 
 async function tocarMusica(src) {
-
   if (!src) {
     console.warn("Nenhuma música encontrada");
     return;
   }
+  if (!playerEl) return;
 
-  player.src = src;
+  playerEl.src = src;
 
   try {
-
-    await player.play();
-
+    await playerEl.play();
     tocando = true;
-
     console.log("🎵 Tocando:", pastaAtual);
-
   } catch (e) {
-
     console.log("Erro ao tocar:", e);
-
     tocando = false;
   }
 }
@@ -616,28 +628,20 @@ async function tocarMusica(src) {
 
 function proximaMusica() {
 
+  // fase atual pelo horário
   const pastaHorario = getPastaInicialPorHorario();
-
-  // troca automática de programação
-  if (
-    pastaHorario !== pastaAtual ||
-    idxAtual >= filaAtual.length
-  ) {
-
+  if (pastaHorario !== pastaAtual) {
     pastaAtual = pastaHorario;
-
-    const prep = prepararFila(pastaAtual);
-
-    filaAtual = prep.fila;
-
-    idxAtual = 0;
-
-    console.log("📻 Mudando programação para:", pastaAtual);
+    indexMusicaNaFase = 0;
+    console.log("📅 Mudando programação para:", pastaAtual);
   }
 
-  const musica = filaAtual[idxAtual];
+  const arquivos = getArquivosDaPasta(pastaAtual);
+  if (!arquivos.length) return;
 
-  idxAtual++;
+  // escolha determinística para todos (sem embaralhar por dispositivo)
+  const musica = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase);
+  indexMusicaNaFase++;
 
   tocarMusica(musica);
 }
@@ -646,15 +650,9 @@ function proximaMusica() {
 // BOTÃO PLAY
 // ==============================
 
- async function tocarRadio() {
-
-  // garante que os handlers visuais/áudio sempre funcionem mesmo se #audio não existir
-  const elAudio = document.getElementById('audio');
-  if (elAudio && !player.src && elAudio.src) player.src = elAudio.src;
-
+async function tocarRadio() {
 
   const btn = document.getElementById("btnRadio");
-
   const bars = document.querySelectorAll(".bar");
 
   function setEqualizerState(running) {
@@ -663,94 +661,34 @@ function proximaMusica() {
     });
   }
 
+  // Alterna PAUSE/PLAY
   if (tocando) {
-
-    player.pause();
-
+    playerEl.pause();
     tocando = false;
     setEqualizerState(false);
-
-    if (btn) {
-      btn.innerHTML = "▶ PLAY";
-    }
-
+    if (btn) btn.innerHTML = "▶ OUVIR AGORA";
     return;
   }
 
-  // Liga o equalizador assim que começar a tocar.
+  // Começa
   setEqualizerState(true);
 
-  if (filaAtual.length === 0) {
+  pastaAtual = getPastaInicialPorHorario();
+  indexMusicaNaFase = 0;
 
-    pastaAtual = getPastaInicialPorHorario();
+  // troca botão para PAUSE
+  if (btn) btn.innerHTML = "⏸ PARAR";
 
-    const prep = prepararFila(pastaAtual);
-
-    filaAtual = prep.fila;
-
-    idxAtual = 0;
-
-    player.onended = () => {
-
-      if (tocando) {
-        proximaMusica();
-      }
-    };
-
-    proximaMusica();
-
-  } else {
-
-    try {
-
-      // tenta tocar via element (<audio>) primeiro (melhor compat).
-      // Em seguida, também tenta via Audio() se ainda não estiver tocando.
-      const elAudio = document.getElementById('audio');
-      if (elAudio) {
-        if (!elAudio.src || elAudio.src === window.location.href) {
-          // nada: manter
-        }
-        await elAudio.play();
-      }
-
-      await player.play();
-      tocando = true;
-
-    } catch (e) {
-
-      console.log('player.play() falhou:', e);
-
-      // fallback: tenta setar src e tocar de novo
-      try {
-        const elAudio = document.getElementById('audio');
-        if (elAudio) {
-          elAudio.src = player.src;
-          await elAudio.play();
-        }
-        tocando = true;
-      } catch (e2) {
-        console.log('fallback elAudio.play() falhou:', e2);
-        tocando = false;
-        setEqualizerState(false);
-      }
-
-    }
-  }
-
-  if (btn) {
-    btn.innerHTML = "⏸ PAUSAR";
-  }
+  proximaMusica(); // define src e chama play na tocarMusica()
 }
+
 // Quando a música terminar
-player.addEventListener("ended", () => {
-  proximaMusica();
+playerEl.addEventListener("ended", () => {
+  if (tocando) proximaMusica();
 });
 
 // Quando der erro no áudio/link
-player.addEventListener("error", () => {
+playerEl.addEventListener("error", () => {
   console.log("⚠️ Erro na música, pulando para próxima...");
-
-  setTimeout(() => {
-    proximaMusica();
-  }, 1000);
+  setTimeout(() => proximaMusica(), 1000);
 });

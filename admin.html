@@ -1,3 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Painel Admin</title>
+
+  <style>
+    body { font-family: Arial; background:#111; color:#fff; }
+    #panel { display:none; }
+    .msg { background:#222; padding:10px; margin:10px 0; border-radius:8px; }
+    button { cursor:pointer; }
+  </style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="loginBox">
+  <h2>Login Admin</h2>
+
+  <input type="email" id="email" placeholder="Email"><br><br>
+  <input type="password" id="password" placeholder="Senha"><br><br>
+
+  <button onclick="login()">Entrar</button>
+</div>
+
+<!-- PAINEL -->
+<div id="panel">
+  <h2>Painel de Mensagens</h2>
+  <div id="msgs"></div>
+</div>
+
+
 <script type="module">
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
@@ -16,29 +49,20 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
 
-// CONFIG FIREBASE
+// CONFIG FIREBASE (CORRIGIDO)
 const firebaseConfig = {
-
   apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
-
   authDomain: "vibefm-radio-ad326.firebaseapp.com",
-
   projectId: "vibefm-radio-ad326",
-
-  storageBucket: "vibefm-radio-ad326.firebasestorage.app",
-
+  storageBucket: "vibefm-radio-ad326.appspot.com", // ✅ CORRIGIDO
   messagingSenderId: "1021295101262",
-
   appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
-
 };
 
 
-// INICIAR FIREBASE
+// INIT FIREBASE
 const app = initializeApp(firebaseConfig);
-
 const auth = getAuth(app);
-
 const db = getFirestore(app);
 
 
@@ -46,27 +70,20 @@ const db = getFirestore(app);
 window.login = function () {
 
   const email = document.getElementById("email").value;
-
   const password = document.getElementById("password").value;
 
   signInWithEmailAndPassword(auth, email, password)
-
     .then(() => {
 
       document.getElementById("loginBox").style.display = "none";
-
       document.getElementById("panel").style.display = "block";
 
       loadMessages();
 
     })
-
     .catch((err) => {
-
       alert("Erro no login: " + err.message);
-
       console.error(err);
-
     });
 
 };
@@ -86,46 +103,37 @@ function loadMessages() {
       const data = docSnap.data();
 
       msgsDiv.innerHTML += `
-
         <div class="msg">
-
           <b>${data.nome || "Anônimo"}</b><br><br>
-
           ${data.mensagem || ""}<br><br>
 
           <button onclick="delMsg('${docSnap.id}')">
-
             Apagar
-
           </button>
-
         </div>
-
       `;
 
     });
+
   });
 
 }
 
 
-// APAGAR
+// APAGAR MENSAGEM
 window.delMsg = async function(id) {
 
   try {
-
     await deleteDoc(doc(db, "mensagens", id));
-
-    alert("Mensagem apagada!");
-
   } catch (err) {
-
     console.error(err);
-
     alert("Erro ao apagar!");
-
   }
 
 };
 
+</script>
+
+</body>
+</html>
 </script>

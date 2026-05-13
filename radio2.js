@@ -470,16 +470,35 @@ function hashStringToInt(str) {
 }
 
 function pickAleatorioSemRepeticao(pasta, arquivos, indexGlobal) {
-  // indexGlobal sobe a cada música que terminou (synced via cálculo)
-  // Para não repetir dentro da fase: usamos um “deck” por fase e avançamos sempre.
-  // Sem embaralhar por cliente: a ordem é derivada da semente.
-  const seed = hashStringToInt(pasta);
+  // Garante rotação determinística sem repetir dentro da mesma “fase”
+  // Para isso, usamos um permutador por pasta + indexGlobal.
   const n = arquivos.length;
   if (n === 0) return null;
+  if (n === 1) return arquivos[0];
 
-  // pseudo-permutação determinística via “salto” co-primo
-  // step = (seed % (n-1)) + 1; garante 1..n-1
-  const step = (seed % (n - 1)) + 1;
+  // step precisa ser coprimo de n para percorrer todos os índices antes de repetir.
+  // Vamos achar um step determinístico que seja coprimo.
+  const seed = hashStringToInt(pasta);
+
+  function gcd(a, b) {
+    while (b !== 0) {
+      const t = b;
+      b = a % b;
+      a = t;
+    }
+    return a;
+  }
+
+  let step = 1;
+  // tenta steps determinísticos até achar um coprimo (no máximo n tentativas)
+  for (let k = 1; k <= n; k++) {
+    const candidate = ((seed + k) % (n - 1)) + 1; // 1..n-1
+    if (gcd(candidate, n) === 1) {
+      step = candidate;
+      break;
+    }
+  }
+
   const pos = (indexGlobal * step) % n;
   return arquivos[pos];
 }
@@ -489,45 +508,34 @@ function pickAleatorioSemRepeticao(pasta, arquivos, indexGlobal) {
 // ==============================
 
 function getPastaInicialPorHorario() {
+  const now = new Date(
+    new Date().toLocaleString("en-US", {
+      timeZone: "America/Belem"
+    })
+  );
 
-const now = new Date(
-  new Date().toLocaleString("en-US", {
-    timeZone: "America/Belem"
-  })
-);
-
-const day = now.getDay();
-const h = now.getHours();
-
-console.log("DIA:", day);
-console.log("HORA:", h);
-
+  const day = now.getDay(); // 0=Dom, 6=Sáb
+  const h = now.getHours();
 
   // =========================================
-  // SÁBADO
+  // SÁBADO (mantém como está)
   // =========================================
+  if (day === 6) {
+    // 18h até 21h
+    if (h >= 18 && h < 21) {
+      return "grove";
+    }
 
-if (day === 6) {
-
-  // 18h até 21h
-  if (h >= 18 && h < 21) {
-    return "grove";
+    // 21h até 23:59
+    if (h >= 21 && h <= 23) {
+      return "night";
+    }
   }
 
-  // 21h até 23:59
-  if (h >= 21 && h <= 23) {
-    return "night";
-  }
-}
-
   // =========================================
-  // DOMINGO
+  // DOMINGO (00h até 06h mantêm como está)
   // =========================================
-
   if (day === 0) {
-
-  // madrugada continua o evento
-
     // 00h até 05h = forest
     if (h >= 0 && h < 5) {
       return "forest";
@@ -537,15 +545,11 @@ if (day === 6) {
     if (h >= 5 && h < 6) {
       return "grove";
     }
-
   }
 
   // =========================================
-  // PROGRAMAÇÃO NORMAL
+  // SEG-SEX e DOM (após 06h): grade nova
   // =========================================
-
-  const diaUtil = day >= 1 && day <= 5;
-
   // 00h até 04h
   if (h >= 0 && h < 4) {
     return "lofi";
@@ -553,27 +557,32 @@ if (day === 6) {
 
   // 04h até 06h
   if (h >= 4 && h < 6) {
-    return diaUtil ? "chilldrive" : "lofi";
+    return "chilldrive";
   }
 
-  // 06h até 08h
-  if (h >= 6 && h < 8) {
+  // 06h até 09h
+  if (h >= 6 && h < 9) {
     return "fundaovibe";
   }
 
-  // 08h até 12h
-  if (h >= 8 && h < 12) {
+  // 09h até 12h
+  if (h >= 9 && h < 12) {
     return "hitsnoite";
   }
 
-  // 12h até 17h
-  if (h >= 12 && h < 17) {
+  // 12h até 15h
+  if (h >= 12 && h < 15) {
     return "lofi";
+  }
+
+  // 15h até 17h
+  if (h >= 15 && h < 17) {
+    return "hitsnoite";
   }
 
   // 17h até 19h
   if (h >= 17 && h < 19) {
-    return diaUtil ? "fundaovibe" : "hitsnoite";
+    return "fundaovibe";
   }
 
   // 19h até 00h

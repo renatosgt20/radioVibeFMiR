@@ -460,53 +460,65 @@ const PASTAS = {
 };
 
 // ==============================
-// ALEATORIEDADE SINCRONIZADA (determinística)
+// ALEATORIEDADE SINCRONIZADA (determinística mas “embaralhada”)
 // ==============================
-// IMPORTANTE: não pode usar Math.random() local, senão cada dispositivo terá ordem diferente.
-// Aqui usamos uma semente determinística baseada no horário do servidor (America/Belem) + fase.
+// Mantém a mesma sequência para todos (sem Math.random), mas a ordem dentro da pasta
+// não fica na ordem do array.
+
+// FNV-1a 32-bit
 function hashStringToInt(str) {
   let h = 2166136261;
   for (let i = 0; i < str.length; i++) {
     h ^= str.charCodeAt(i);
     h = Math.imul(h, 16777619);
   }
-  // força positivo
   return (h >>> 0);
 }
 
+// Mulberry32 PRNG determinístico (gera “aleatoriedade” igual em todos)
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0;
+    a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function shuffleDeterministico(array, seed) {
+  const arr = array.slice();
+  const rand = mulberry32(seed);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+function getFaseKey() {
+  // Usamos (pasta + data/hora) no timezone da rádio para manter sincronização por faixa/horário.
+  const now = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "America/Belem" })
+  );
+  // chave por hora (ajuste se quiser granulação diferente)
+  return `${now.getDay()}-${now.getHours()}-${now.getDate()}`;
+}
+
 function pickAleatorioSemRepeticao(pasta, arquivos, indexGlobal) {
-  // Garante rotação determinística sem repetir dentro da mesma “fase”
-  // Para isso, usamos um permutador por pasta + indexGlobal.
   const n = arquivos.length;
   if (n === 0) return null;
   if (n === 1) return arquivos[0];
 
-  // step precisa ser coprimo de n para percorrer todos os índices antes de repetir.
-  // Vamos achar um step determinístico que seja coprimo.
-  const seed = hashStringToInt(pasta);
+  // embaralha uma vez por “fase de horário” e pega o indexGlobal na ordem embaralhada.
+  const faseKey = getFaseKey();
+  const seed = hashStringToInt(`${pasta}|${faseKey}`);
+  const filaEmbaralhada = shuffleDeterministico(arquivos, seed);
 
-  function gcd(a, b) {
-    while (b !== 0) {
-      const t = b;
-      b = a % b;
-      a = t;
-    }
-    return a;
-  }
-
-  let step = 1;
-  // tenta steps determinísticos até achar um coprimo (no máximo n tentativas)
-  for (let k = 1; k <= n; k++) {
-    const candidate = ((seed + k) % (n - 1)) + 1; // 1..n-1
-    if (gcd(candidate, n) === 1) {
-      step = candidate;
-      break;
-    }
-  }
-
-  const pos = (indexGlobal * step) % n;
-  return arquivos[pos];
+  return filaEmbaralhada[indexGlobal % n];
 }
+
 
 // ==============================
 // PROGRAMADOR AUTOMÁTICO

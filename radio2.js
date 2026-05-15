@@ -122,13 +122,19 @@ const PASTAS = {
 
   hitsnoite: {
     arquivos: [
-      "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932734/musica10_canhmr.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932734/musica10_canhmr.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932771/musica70_slnbr4.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932739/musica24_rehlhm.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778886665/musica1113_zbztuf.mp3",
 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932776/musica74_j7vyix.mp3",
 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932758/musica55_avwhjt.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778886663/musica1115_ycfwhl.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778886662/musica1116_zppj89.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778886662/musica1112_z2fmni.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778886662/musica1101_oovujo.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778886654/musica1114_tpik4f.mp3",
 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932730/musica6_hybjkn.mp3",
 
@@ -376,7 +382,6 @@ const PASTAS = {
    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341097/musica81_q7crt1.mp3",
    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341095/musica80_kreqfa.mp3",
    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341092/musica76_pzpjbm.mp3",
-   "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341089/musica75_mqed4p.mp3",
    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341085/musica73_nhwgvi.mp3",
    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341083/musica72_qdmyoq.mp3",
    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778341080/musica68_rktiop.mp3",

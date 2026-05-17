@@ -10,7 +10,7 @@ am <!DOCTYPE html>
 
     <meta property="og:title" content="VIBE FM">
     <meta property="og:description" content="Rádio online 🚀">
-    <meta property="og:url" content="https://statuesque-jelly-dcc24f.netlify.app/">
+    <meta property="og:url" content="https://radiovibefm.vibefmbr.workers.dev/">
     <meta property="og:type" content="website">
 </head>
 
@@ -20,6 +20,12 @@ am <!DOCTYPE html>
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+}
+
+/* garante que imagens não estouram no layout responsivo */
+img{
+  max-width: 100%;
+  height: auto;
 }
 
 .top-buttons {
@@ -205,6 +211,19 @@ body {
   }
 }
 
+/* width/max-width para layout responsivo (PC e celular) */
+.conteudo{
+  width: 100%;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+img{
+  max-width: 100%;
+  height: auto;
+}
+
 body::before {
   content: "";
   position: fixed;
@@ -348,6 +367,7 @@ button:hover {
     position:absolute;
 right: 32%;
 
+
 top: 290px;
 
 
@@ -360,6 +380,44 @@ color: #00ffcc;
     opacity: 0.95;
     pointer-events:none;
   }
+
+  /* AJUSTE GERAL PARA CELULAR */
+  @media (max-width: 768px){
+    
+    body{
+      overflow-x: hidden;
+    }
+
+    .container{
+      width: 100%;
+      padding: 10px;
+    }
+
+    .logo{
+      width: 180px;
+    }
+
+    .player{
+      width: 100%;
+    }
+
+    .botoes{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    button{
+      width: 100%;
+      max-width: 300px;
+    }
+
+    h1{
+      font-size: 24px;
+    }
+
+  } 
 
 </style>
 </head>
@@ -379,7 +437,7 @@ color: #00ffcc;
 <img src="logo.png" alt="Vibe FM" id="bg-logo" />
 
 <!-- Selo Vibe FM (sobreposto na direita para destacar o “FM”) -->
-<div id="fm-badge" aria-hidden="true">FM</div>
+<div id="fm-badge" aria-hidden="true">FM⚡</div>
 
 
   </div>
@@ -544,10 +602,10 @@ window.addEventListener("resize", () => {
     <button class="btn programacao" onclick="toggleProgramacao()">📻 Programação Vibe FM</button>
     
     <div id="prog-opcoes" class="programacao-opcoes">
-      <div class="programacao-btn">🔥 Fundão da Vibe: Seg-Sáb 06:00-08:00</div>
-      <div class="programacao-btn">🎵 In Vibe: Seg-Dom 08:00-12:00</div>
-      <div class="programacao-btn">⭐ Hits Vibe: Seg-Dom 12:00-21:00</div>
-      <div class="programacao-btn">💃 Balada Vibe: Seg-Sex 21:00-00:00</div>
+      <div class="programacao-btn">🔥 Fundão da Vibe: Seg-Sáb 06:00-09:00</div>
+      <div class="programacao-btn">🎵 In Vibe: Seg-Dom 09:00-12:00</div>
+      <div class="programacao-btn">⭐ Hits Vibe: Seg-Dom 12:00-14:00</div>
+      <div class="programacao-btn">💃 Balada Vibe: Seg-Sex 19:00-00:00</div>
       <div class="programacao-btn">☕ Lo-Fi Vibe: Seg-sex 00:00-04:00</div>
       <div class="programacao-btn">🎧 Chill Vibe: Seg-Sex e Dom 04:00-06:00</div>
       <div class="programacao-btn">🌀 *Psy-Vibe*: -Sáb-> Do pôr do Sol ao Amanhecer 18:00-06:00</div>

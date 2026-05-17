@@ -342,18 +342,15 @@ body::before{
     transform:scale(.92);
     transform-origin:top left;
   }
-#bg-logo{
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
 
-  width: 85vw;
-  max-width: 380px;
-
-  top: -20px;
-
-  object-fit: contain;
-}
+  .conteudo{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    text-align:center;
+  }
 
   .painel-online{
     width:150px;
@@ -362,46 +359,52 @@ body::before{
     top:6px;
   }
 
-#bg-logo{
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  /* LOGO (mobile central correto) */
+  #bg-logo{
+    position:relative;
+    left:50%;
+    transform:translateX(-50%);
 
-  width: min(110vw, 500px);
-  max-height: none;
+    width:85vw;
+    max-width:380px;
 
-  margin-top: -160px;
+    margin-top:-40px;
 
-  object-fit: contain;
-  opacity: .98;
-}
+    object-fit:contain;
   }
 
+  /* FM badge */
   #fm-badge{
     top:170px;
     right:calc(50% - 90px);
     font-size:20px;
   }
 
+  /* SLOGAN */
   .slogan{
     font-size:13px;
     padding:0 10px;
 
-    position: relative;
-    top: -90px;
+    position:relative;
+    top:-90px;
+  }
 
-#btnRadio{
-  font-size:16px;
-  padding:12px 28px;
-  margin-top:20px;
+  /* BOTÃO */
+  #btnRadio{
+    font-size:16px;
+    padding:12px 28px;
+    margin-top:20px;
 
-  transform: scale(0.9);
-}
+    transform:scale(0.9);
+  }
+
+  /* EQUALIZER */
   .equalizer{
     width:180px;
     height:40px;
   }
 
+  /* PLANETA */
   .earth{
     width:260px;
     height:260px;
@@ -412,6 +415,7 @@ body::before{
     width:360px;
     left:-50px;
   }
+
 }
 </style>
 </head>

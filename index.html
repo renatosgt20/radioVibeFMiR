@@ -1,658 +1,484 @@
-am <!DOCTYPE html>
+# index.html corrigido e responsivo
+
+Substitua TODO o conteúdo do seu `index.html` por este.
+
+```html
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/727/727245.png">
+<link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/727/727245.png">
 
-    <title>Vibe FM</title>
+<title>Vibe FM</title>
 
-    <meta property="og:title" content="VIBE FM">
-    <meta property="og:description" content="Rádio online 🚀">
-    <meta property="og:url" content="https://radiovibefm.vibefmbr.workers.dev/">
-    <meta property="og:type" content="website">
-</head>
+<meta property="og:title" content="VIBE FM">
+<meta property="og:description" content="Rádio online 🚀">
+<meta property="og:url" content="https://statuesque-jelly-dcc24f.netlify.app/">
+<meta property="og:type" content="website">
 
 <style>
-/* base responsiva */
-html{
-  overflow-x:hidden;
-}
 *{
+  margin:0;
+  padding:0;
   box-sizing:border-box;
+  -webkit-user-select:none;
+  user-select:none;
 }
 
-/* evita zoom excessivo no mobile */
-meta{ }
-
-* {
-
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+body{
+  background:black;
+  overflow:hidden;
+  font-family:Arial,sans-serif;
+  color:white;
 }
 
-/* garante que imagens não estouram no layout responsivo */
-img{
-  max-width: 100%;
-  height: auto;
+canvas{
+  position:fixed;
+  inset:0;
+  z-index:0;
 }
 
-.top-buttons {
-  position: fixed;
-  top: 2px;
-  left: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 0px;  /* No gap - buttons together */ 
-  width: 120px;
-  z-index: 999;
-}
-
-.btn {
-  box-sizing: border-box;
-  flex-shrink: 0;
-}
-
-.btn {
-  border: none;
-  padding: 3px 5px;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: bold;
-  backdrop-filter: blur(10px);
-  background: rgba(0,0,0,0.4);
-  color: #fff;
-  transition: 0.3s;
-  width: 120px;
-  height: 28px;
-  font-size: 9px; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn:hover {
-  transform: scale(1.05);
-}
-
-.programacao {
-  background: linear-gradient(45deg, #00ffcc, #cc00ff);
-  white-space: nowrap;
-}
-
-.programacao-opcoes {
-  display: none;
-  position: absolute;
-  left: 0;
-  top: 100%;
-  flex-direction: column;
-  gap: 2px;
-  background: rgba(0,0,0,0.95);
-  padding: 5px;
-  border-radius: 8px;
-  z-index: 1000;
-  min-width: 120px;
-}
-
-.programacao-btn {
-  font-size: 9px;
-  padding: 4px 8px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background: rgba(255,255,255,0.1);
-  color: #fff;
-  transition: 0.3s;
-}
-
-.programacao-btn:hover {
-  background: #cc00ff;
-  color: white;
-}
-
-.in-vibe { background: #00ffcc; color: black; }
-.fundao { background: #00ffcc; }
-.lofi { background: #00ffcc; }
-.hits { background: #00ffcc; color: white; }
-
-.doador {
-  background: rgba(255,255,255,0.1);
-}
-
-.parceiro {
-  background: rgba(255,255,255,0.1);
-}
-
-.contato {
-  background: rgba(255,255,255,0.1);
-  font-size: 9px !important;
-  line-height: 1 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  padding: 3px 5px !important;
-}
-
-.painel-online {
-  position: fixed;
-  top: 10px;
-  right: 10px;
-  padding: 10px;
-  border-radius: 12px;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(10px);
-  color: white;
-  font-size: 13px;
-  z-index: 999;
-}
-
-body {
-  margin: 0;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  background: black;
-  font-family: Arial, sans-serif;
-  color: white;
-  text-align: center;
-  max-width: 100%;
-}
-
-/* evita overflow horizontal por elementos posicionados */
-html{
-  overflow-x: hidden;
-}
-
-
-.solar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-}
-
-
-.solar_systm {
-  pointer-events: none;
-  height: 100%;
-  width: 100%;
-  position: absolute;
-}
-
-.earth.planet {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: auto;
-  bottom: -200px;
-  transform: translateY(0);
-  margin: auto;
-  height: 300px;
-  width: 300px;
-  border-radius: 50%;
-  background: url("https://img00.deviantart.net/04ef/i/2009/114/3/e/new_earth_texture_map_by_lightondesigns.jpg");
-  background-size: 300px 300px !important;
-  box-shadow: 
-    0 -150px 50px black inset, 
-    0 0px 40px 15px #8cbaff inset, 
-    0 0px 10px 2px #8cbaff inset, 
-    0 -6px 30px #7894a9;
-  transform: translateZ(0px) rotateX(4deg) scaleX(0.89);
-  animation: spinPlanet 8s linear infinite;
-}
-
-.overlay {
-  border-bottom: 260px solid black;
-  width: 460px;
-  height: 160px;
-  top: auto;
-  -webkit-transform: none;
-  transform: none;
-  top: -60px;
-  left: -80px;
-  opacity: 1;
-  border-radius: 50%;
-  z-index: 0;
-  box-shadow: 0px -50px 60px 30px black inset;
-  position: absolute;
-}
-
-@keyframes spinPlanet {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 300px 0;
-  }
-}
-
-/* width/max-width para layout responsivo (PC e celular) */
-.conteudo{
-  width: 100%;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-img{
-  max-width: 100%;
-  height: auto;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
   background:
-    radial-gradient(circle at 20% 30%, rgba(138,43,226,0.12), transparent),
-    radial-gradient(circle at 80% 70%, rgba(0,0,255,0.12), transparent);
-  z-index: 0;
+  radial-gradient(circle at 20% 30%, rgba(138,43,226,.10), transparent 40%),
+  radial-gradient(circle at 80% 70%, rgba(0,255,204,.08), transparent 40%);
+  z-index:0;
+  pointer-events:none;
 }
 
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 0;
+/* PLANETA */
+.solar{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
 }
 
-.conteudo {
-  position: relative;
-  z-index: 2;
-  margin-top: 80px;
+.earth{
+  position:absolute;
+  left:50%;
+  bottom:-180px;
+  transform:translateX(-50%) scaleX(.92);
+  width:320px;
+  height:320px;
+  border-radius:50%;
+  background:url("https://img00.deviantart.net/04ef/i/2009/114/3/e/new_earth_texture_map_by_lightondesigns.jpg");
+  background-size:cover;
+  box-shadow:
+  0 -150px 50px black inset,
+  0 0 40px 15px #8cbaff inset,
+  0 0 10px 2px #8cbaff inset,
+  0 -6px 30px #7894a9;
+  animation:spinPlanet 8s linear infinite;
 }
 
-.titulo {
-  font-size: 60px;
-  color: #00ffcc;
-  text-shadow: 0 0 10px #00ffcc, 0 0 30px #8a2be2;
+.overlay{
+  position:absolute;
+  top:-60px;
+  left:-70px;
+  width:450px;
+  height:160px;
+  border-bottom:230px solid rgba(0,0,0,.85);
+  border-radius:50%;
 }
 
-button {
-  margin-top: 30px;
-  padding: 15px 45px;
-  font-size: 18px;
-  background: transparent;
-  border: 2px solid #00ffcc;
-  color: #00ffcc;
-  border-radius: 30px;
-  cursor: pointer;
+@keyframes spinPlanet{
+  from{background-position:0 0;}
+  to{background-position:300px 0;}
 }
 
-button:hover {
-  background: #00ffcc;
-  color: black;
-   box-shadow: 0 0 20px #00ffcc, 0 0 40px #8a2be2;
-}
-
-.equalizer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 3px;
-  margin: 15px auto 0 auto;
-  width: 200px;
-  height: 40px;
-}
-
-.bar {
-  flex: 1;
-  height: 100%;
-  background: linear-gradient(to top, #00ffcc, #cc00ff);
-  animation: som 0.8s ease-in-out infinite;
-  animation-play-state: paused;
-  border-radius: 3px;
-  min-width: 8px;
-}
-
-.bar:nth-child(1) { animation-delay: 0s; }
-.bar:nth-child(2) { animation-delay: 0.1s; }
-.bar:nth-child(3) { animation-delay: 0.2s; }
-.bar:nth-child(4) { animation-delay: 0.3s; }
-.bar:nth-child(5) { animation-delay: 0.4s; }
-.bar:nth-child(6) { animation-delay: 0.5s; }
-.bar:nth-child(7) { animation-delay: 0.6s; }
-.bar:nth-child(8) { animation-delay: 0.7s; }
-
-@keyframes som {
-  0% { height: 20%; }
-  50% { height: 100%; }
-  100% { height: 20%; }
-}
-
-#chat-btn {
-  position: fixed;
-  bottom: 15px;
-  right: 15px;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: rgba(0,255,204,0.8);
-  color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  z-index: 3;
-}
-
-#chat-box {
-  position: fixed;
-  bottom: 70px;
-  right: 15px;
-  width: 220px;
-  height: 260px;
-  background: rgba(0,0,0,0.6);
-  border: 1px solid #00ffcc;
-  border-radius: 10px;
-  display: none;
-  flex-direction: column;
-  z-index: 3;
-}
-
-#mensagens {
-  flex: 1;
-  overflow-y: auto;
-  font-size: 12px;
-  padding: 5px;
-}
-
-#input-msg {
-  width: 70%;
-  background: black;
-  color: #00ffcc;
-  border: 1px solid #00ffcc;
+/* CONTEÚDO */
+.main{
+  position:relative;
+  z-index:3;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  text-align:center;
 }
 
 #bg-logo{
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  top: -8px;
-  width: 72%;
-  height: 480px;
-  object-fit: contain;
-  z-index: 2;
-  pointer-events: none;
-  opacity: 0.95;
+  width:min(110vw,700px);
+  max-height:600px;
+  object-fit:contain;
+  margin-top:-40px;
+  opacity:.98;
+}
+
+#fm-badge{
+  position:absolute;
+  top:250px;
+ right:calc(50% - 240px);
+
+  font-size:24px;
+  font-weight:900;
+
+  color:#00ffcc;
+
+  text-shadow:
+  0 0 10px #00ffcc,
+  0 0 20px #00ffcc;
+
+  opacity:.95;
+  pointer-events:none;
 }
 
 
-#fm-badge{
-    position:absolute;
-right: 32%;
+.slogan{
+  margin-top:10px;
+  font-size:16px;
+  color:#ffffff;
+  text-shadow:0 0 8px rgba(255,255,255,.4);
+}
 
+#btnRadio{
+  margin-top:28px;
+  padding:14px 34px;
+  border:none;
+  border-radius:40px;
+  background:linear-gradient(45deg,#00ffcc,#8a2be2);
+  color:white;
+  font-size:18px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s;
+  box-shadow:0 0 20px rgba(0,255,204,.35);
+}
 
-top: 290px;
+#btnRadio:hover{
+  transform:scale(1.05);
+}
 
+.equalizer{
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:4px;
+  margin-top:25px;
+  height:50px;
+  width:220px;
+}
 
-    z-index: 10;
-    font-family: Arial, sans-serif;
-    font-weight: 800;
-    font-size: 22px;
-color: #00ffcc;
-    text-shadow: 0 0 8px rgba(57,255,20,0.9), 0 0 18px rgba(57,255,20,0.6);
-    opacity: 0.95;
-    pointer-events:none;
+.bar{
+  width:10px;
+  height:20%;
+  border-radius:5px;
+  background:linear-gradient(to top,#00ffcc,#cc00ff);
+  animation:som .8s ease-in-out infinite;
+  animation-play-state:paused;
+}
+
+.bar:nth-child(1){animation-delay:.1s}
+.bar:nth-child(2){animation-delay:.2s}
+.bar:nth-child(3){animation-delay:.3s}
+.bar:nth-child(4){animation-delay:.4s}
+.bar:nth-child(5){animation-delay:.5s}
+.bar:nth-child(6){animation-delay:.6s}
+.bar:nth-child(7){animation-delay:.7s}
+.bar:nth-child(8){animation-delay:.8s}
+
+@keyframes som{
+  0%{height:20%}
+  50%{height:100%}
+  100%{height:20%}
+}
+
+/* BOTÕES SUPERIORES */
+.top-buttons{
+  position:fixed;
+  top:10px;
+  left:10px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  z-index:999;
+}
+
+.btn{
+  width:140px;
+  padding:8px;
+  border:none;
+  border-radius:12px;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(10px);
+  color:white;
+  font-size:11px;
+  cursor:pointer;
+  transition:.3s;
+  text-decoration:none;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.btn:hover{
+  transform:scale(1.05);
+}
+
+.programacao{
+  background:linear-gradient(45deg,#00ffcc,#cc00ff);
+}
+
+.programacao-opcoes{
+  display:none;
+  position:absolute;
+  top:100%;
+  left:0;
+  width:250px;
+  background:rgba(0,0,0,.92);
+  border-radius:10px;
+  padding:8px;
+  margin-top:5px;
+}
+
+.programacao-btn{
+  background:rgba(255,255,255,.08);
+  padding:7px;
+  border-radius:8px;
+  font-size:11px;
+  margin-bottom:5px;
+}
+
+/* PAINEL */
+.painel-online{
+  position:fixed;
+  top:10px;
+  right:10px;
+  width:180px;
+  background:rgba(0,0,0,.45);
+  backdrop-filter:blur(10px);
+  padding:12px;
+  border-radius:14px;
+  z-index:999;
+  font-size:12px;
+}
+
+#admLoginBtn{
+  margin-top:8px;
+  width:100%;
+  padding:8px;
+  border:none;
+  border-radius:10px;
+  background:#00ffcc;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* CHAT */
+#chat-btn{
+  position:fixed;
+  right:15px;
+  bottom:15px;
+  width:55px;
+  height:55px;
+  border-radius:50%;
+  background:#00ffcc;
+  color:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  cursor:pointer;
+  z-index:999;
+}
+
+#chat-box{
+  position:fixed;
+  right:15px;
+  bottom:80px;
+  width:260px;
+  height:320px;
+  background:rgba(0,0,0,.88);
+  border:1px solid rgba(0,255,204,.5);
+  border-radius:14px;
+  display:none;
+  flex-direction:column;
+  overflow:hidden;
+  z-index:999;
+}
+
+#mensagens{
+  flex:1;
+  padding:10px;
+  overflow-y:auto;
+  font-size:13px;
+}
+
+.chat-bottom{
+  display:flex;
+}
+
+#input-msg{
+  flex:1;
+  padding:10px;
+  border:none;
+  outline:none;
+  background:#111;
+  color:#00ffcc;
+}
+
+.chat-send{
+  width:60px;
+  border:none;
+  background:#00ffcc;
+  color:black;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+
+  .top-buttons{
+    left:6px;
+    top:6px;
+    transform:scale(.92);
+    transform-origin:top left;
   }
 
-  /* Ajustes mobile (mobile-first) */
-@media (max-width: 768px){
-    /* player e textos fixos agora são controlados por CSS (sem valores px do inline) */
-    #radio-status{
-      position: fixed;
-      top: 28vh;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      font-size: 16px;
-      padding: 0 10px;
-      width: 100%;
-      max-width: 360px;
-    }
-    #btnRadio{
-      position: fixed;
-      top: 36vh;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-      width: min(92vw, 320px);
-      padding-left: 22px;
-      padding-right: 22px;
-      margin-top: 0;
-    }
-    #equalizerBox{
-      position: fixed;
-      top: 44vh;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 9;
-      width: min(52vw, 220px);
-      height: 40px;
-    }
-
-    html, body{
-      width: 100%;
-      max-width: 100%;
-      overflow-x: hidden;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    /* evita zoom/estouro em iPhone Safari */
-    body{
-      touch-action: manipulation;
-    }
-
-    /* background/logo */
-    #bg-logo{
-      top: -6px;
-      width: 86%;
-      height: auto;
-      max-height: 38vh;
-    }
-
-    .earth.planet{
-      width: 55vw;
-      height: 55vw;
-      max-width: 300px;
-      max-height: 300px;
-      bottom: -140px;
-    }
-
-    .overlay{
-      width: 70vw;
-      max-width: 380px;
-      border-bottom-width: 25vw;
-      border-bottom-color: black;
-      height: 100px;
-      left: -10vw;
-      opacity: 0.95;
-    }
-
-    #fm-badge{
-      right: 10px;
-      left: auto;
-      top: 28vh;
-      font-size: 18px;
-    }
-
-    /* centraliza conteúdo e reduz margens fixas */
-    .conteudo{
-      margin-top: 70px;
-      padding: 0 12px;
-      max-width: 1000px;
-    }
-
-    /* player/controle */
-    #chat-box{
-      right: 10px;
-      width: min(92vw, 320px);
-      height: min(55vh, 320px);
-      bottom: 72px;
-    }
-
-    #chat-btn{
-      right: 12px;
-      bottom: 12px;
-    }
-
-    #input-msg{
-      width: 100%;
-      flex: 1;
-      min-width: 0;
-    }
-
-    #mensagens{
-      font-size: 13px;
-    }
-
-    /* equalizer */
-    .equalizer{
-      top: 44vh !important;
-      width: 52vw;
-      max-width: 220px;
-    }
-
-    /* botão ouvir */
-    #btnRadio{
-      top: 38vh !important;
-      width: min(92vw, 320px) !important;
-      padding-left: 22px;
-      padding-right: 22px;
-    }
-
-    /* layout dos botões fixos do topo */
-    .top-buttons{
-      left: 6px;
-      top: 4px;
-      width: 92px;
-    }
-
-    .btn{
-      width: 92px;
-      height: 26px;
-      font-size: 8px;
-    }
-
-    /* menu de programação */
-    .programacao-opcoes{
-      min-width: 92px;
-      max-width: 92vw;
-      right: 0;
-    }
-  } 
-
-  /* ===== MOBILE ===== */
-  @media screen and (max-width: 768px){
-
-    body{
-      overflow-x:hidden;
-    }
-
-    *{
-      max-width:100%;
-      box-sizing:border-box;
-    }
-
-    .container,
-    .main,
-    .player,
-    .card,
-    .box{
-      width:100% !important;
-    }
-
-    img{
-      max-width:100%;
-      height:auto;
-    }
-
-    .buttons,
-    .controls{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:center;
-      gap:10px;
-    }
-
-    h1{
-      font-size:24px !important;
-    }
-
-    p{
-      font-size:15px !important;
-    }
-
+  .painel-online{
+    width:150px;
+    font-size:11px;
+    right:6px;
+    top:6px;
   }
 
+  #bg-logo{
+    width:95vw;
+    margin-top:-20px;
+  }
+
+  #fm-badge{
+    top:170px;
+    right:calc(50% - 90px);
+    font-size:20px;
+  }
+
+  .slogan{
+    font-size:13px;
+    padding:0 10px;
+
+    position: relative;
+    top: -35px;
+
+  #btnRadio{
+    font-size:16px;
+    padding:12px 28px;
+    margin-top:20px;
+  }
+
+  .equalizer{
+    width:180px;
+    height:40px;
+  }
+
+  .earth{
+    width:260px;
+    height:260px;
+    bottom:-150px;
+  }
+
+  .overlay{
+    width:360px;
+    left:-50px;
+  }
+}
 </style>
 </head>
-
 <body>
 
 <canvas id="espaco"></canvas>
 
-<!-- Planeta Terra girando -->
 <div class="solar">
-  <div class="solar_systm">
-  <div class="earth planet">
-      <div class="overlay"></div>
-    </div>
-
-  <!-- Logo como fundo/overlay até o botão ▶ OUVIR AGORA -->
-<img src="logo.png" alt="Vibe FM" id="bg-logo" />
-
-<!-- Selo Vibe FM (sobreposto na direita para destacar o “FM”) -->
-<div id="fm-badge" aria-hidden="true">FM⚡</div>
-
-
+  <div class="earth">
+    <div class="overlay"></div>
   </div>
 </div>
 
+<div class="main">
 
-<div class="conteudo">
+<img src="logo.png" alt="Vibe FM" id="bg-logo">
+<div id="fm-badge">FM</div>
 
-  
-<p id="radio-status">🌌 Rádio digital Online ⚡ - PA-Brasil 🚀</p>
+<p class="slogan">🌌 Rádio digital Online ⚡ - PA-Brasil 🚀</p>
 
 <button id="btnRadio" onclick="tocarRadio()">▶ OUVIR AGORA</button>
 
-
 <audio id="audio" crossorigin="anonymous" preload="none"></audio>
 
+<div class="equalizer">
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
 
-
-
-
-<div id="equalizerBox" class="equalizer">
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-    <div class="bar"></div>
-  </div>
 </div>
 
 <!-- CHAT -->
 <div id="chat-btn" onclick="toggleChat()">💬</div>
 
 <div id="chat-box">
-  <div style="padding:6px 8px;font-size:12px;opacity:0.95;border-bottom:1px solid rgba(0,255,204,0.25);">
-    💬 Deixe sua mensagem
-  </div>
-  <div id="mensagens"></div>
-  <div>
-    <input id="input-msg" placeholder="Digite...">
-    <button onclick="enviarMsg()">➤</button>
-  </div>
+<div style="padding:10px;border-bottom:1px solid rgba(255,255,255,.1)">
+💬 Deixe sua mensagem
+</div>
+
+<div id="mensagens"></div>
+
+<div class="chat-bottom">
+<input id="input-msg" placeholder="Digite...">
+<button class="chat-send" onclick="enviarMsg()">➤</button>
+</div>
+</div>
+
+<!-- BOTÕES -->
+<div class="top-buttons">
+
+<a href="https://link.mercadopago.com.br/vibefm" target="_blank" class="btn">💖 Seja Doador</a>
+
+<a href="https://wa.me/5591982283924" target="_blank" class="btn">📱 Contato</a>
+
+<button class="btn">🤝 Seja Parceiro</button>
+
+<div style="position:relative">
+<button class="btn programacao" onclick="toggleProgramacao()">📻 Programação Vibe FM</button>
+
+<div id="prog-opcoes" class="programacao-opcoes">
+<div class="programacao-btn">🔥 Fundão da Vibe: Seg-Sáb 06:00-08:00</div>
+<div class="programacao-btn">🎵 In Vibe: Seg-Dom 08:00-12:00</div>
+<div class="programacao-btn">⭐ Hits Vibe: Seg-Dom 12:00-21:00</div>
+<div class="programacao-btn">💃 Balada Vibe: Seg-Sex 21:00-00:00</div>
+<div class="programacao-btn">☕ Lo-Fi Vibe: Seg-Sex 00:00-04:00</div>
+<div class="programacao-btn">🎧 Chill Vibe: 04:00-06:00</div>
+<div class="programacao-btn">🌀 Psy-Vibe: Sáb 18:00-06:00</div>
+</div>
+</div>
+</div>
+
+<!-- PAINEL -->
+<div class="painel-online">
+<div style="display:flex;align-items:center;gap:8px;">
+<span id="admStatusDot" style="width:10px;height:10px;border-radius:50%;background:#ef4444"></span>
+<span>ADM: <span id="admStatusText">OFF</span></span>
+</div>
+
+<button id="admLoginBtn">Login ADM</button>
+
+<div style="margin-top:10px;">👨‍💻 ADM online: <span id="admCount">—</span></div>
+<div style="margin-top:5px;">👥 Ouvintes: <span id="ouvintesCount">—</span></div>
 </div>
 
 <script>
@@ -662,55 +488,33 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// ⭐ FUNDO (80%) - mais estrelas pulsando
-let fundo = [];
-for (let i = 0; i < 5000; i++) {
-  fundo.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    size: Math.random() * 2,
-    alpha: Math.random(),
-    speed: Math.random() * 0.03 + 0.005
+let estrelas = [];
+
+for(let i=0;i<2500;i++){
+  estrelas.push({
+    x:Math.random()*canvas.width,
+    y:Math.random()*canvas.height,
+    size:Math.random()*2,
+    alpha:Math.random(),
+    speed:Math.random()*0.03
   });
 }
 
-// 🚀 MOVIMENTO (20%)
-let movimento = [];
-for (let i = 0; i < 500; i++) {
-  movimento.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    z: Math.random() * canvas.width
-  });
-}
+function animar(){
+  ctx.fillStyle="black";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
 
-function animar() {
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // ⭐ fundo com brilho
-  fundo.forEach(e => {
+  estrelas.forEach(e=>{
     e.alpha += e.speed;
-    if (e.alpha <= 0 || e.alpha >= 1) e.speed *= -1;
+
+    if(e.alpha <= 0 || e.alpha >= 1){
+      e.speed *= -1;
+    }
 
     ctx.beginPath();
-    ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${e.alpha})`;
+    ctx.arc(e.x,e.y,e.size,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${e.alpha})`;
     ctx.fill();
-  });
-
-  // 🚀 profundidade
-  movimento.forEach(e => {
-    e.z -= 2;
-    if (e.z <= 0) e.z = canvas.width;
-
-    let x = (e.x - canvas.width/2) * (canvas.width/e.z) + canvas.width/2;
-    let y = (e.y - canvas.height/2) * (canvas.width/e.z) + canvas.height/2;
-
-    let size = (1 - e.z/canvas.width) * 2.5;
-
-    ctx.fillStyle = "white";
-    ctx.fillRect(x, y, size, size);
   });
 
   requestAnimationFrame(animar);
@@ -718,187 +522,113 @@ function animar() {
 
 animar();
 
-// 🎧 player
-function tocar() {
-  document.getElementById("audio").play();
-  document.querySelectorAll(".bar").forEach(b => {
-    b.style.animationPlayState = "running";
-  });
-}
-
-// 💬 chat
-function toggleChat() {
-  const c = document.getElementById("chat-box");
-  c.style.display = (c.style.display === "flex") ? "none" : "flex";
-}
-
-function enviarMsg() {
-  const input = document.getElementById("input-msg");
-  const mensagensDiv = document.getElementById("mensagens");
-
-  if (!input.value) return;
-
-  const text = input.value.trim();
-  if(!text) return;
-
-  // cria UI local (feedback imediato)
-  let msgEl = document.createElement("div");
-  msgEl.textContent = text;
-  mensagensDiv.appendChild(msgEl);
-  mensagensDiv.scrollTop = mensagensDiv.scrollHeight;
-
-  input.value = "";
-
-  // Envio real para o Firestore (pra aparecer no admin)
-  trySendToFirestore(text);
-
-}
-
-
-window.addEventListener("resize", () => {
+window.addEventListener("resize",()=>{
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 });
+
+function toggleChat(){
+  const box = document.getElementById("chat-box");
+  box.style.display = box.style.display === "flex" ? "none" : "flex";
+}
+
+function enviarMsg(){
+  const input = document.getElementById("input-msg");
+  const mensagensDiv = document.getElementById("mensagens");
+
+  if(!input.value.trim()) return;
+
+  const div = document.createElement("div");
+  div.style.marginBottom = "8px";
+  div.textContent = input.value;
+
+  mensagensDiv.appendChild(div);
+  mensagensDiv.scrollTop = mensagensDiv.scrollHeight;
+
+  trySendToFirestore(input.value);
+
+  input.value = "";
+}
+
+function toggleProgramacao(){
+  const menu = document.getElementById("prog-opcoes");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+(function(){
+  function setRunning(){
+    document.querySelectorAll('.bar').forEach(b=>{
+      b.style.animationPlayState='running';
+    });
+  }
+
+  window.addEventListener('click', setRunning);
+  window.addEventListener('touchstart', setRunning);
+
+  setTimeout(setRunning,500);
+})();
 </script>
-<!-- BOTÕES SUPERIORES -->
-<div class="top-buttons">
-
-  <a href="https://link.mercadopago.com.br/vibefm" target="_blank"><button class="btn doador">💖 Seja Doador</button></a>
-
-  <a href="https://wa.me/5591982283924" target="_blank" class="btn contato">📱 Contato</a>
-
-  <button class="btn parceiro">🤝 Seja Parceiro</button>
-
-  <div style="position:relative">
-    <button class="btn programacao" onclick="toggleProgramacao()">📻 Programação Vibe FM</button>
-    
-    <div id="prog-opcoes" class="programacao-opcoes">
-      <div class="programacao-btn">🔥 Fundão da Vibe: Seg-Sáb 06:00-09:00</div>
-      <div class="programacao-btn">🎵 In Vibe: Seg-Dom 09:00-12:00</div>
-      <div class="programacao-btn">⭐ Hits Vibe: Seg-Dom 12:00-14:00</div>
-      <div class="programacao-btn">💃 Balada Vibe: Seg-Sex 19:00-00:00</div>
-      <div class="programacao-btn">☕ Lo-Fi Vibe: Seg-sex 00:00-04:00</div>
-      <div class="programacao-btn">🎧 Chill Vibe: Seg-Sex e Dom 04:00-06:00</div>
-      <div class="programacao-btn">🌀 *Psy-Vibe*: -Sáb-> Do pôr do Sol ao Amanhecer 18:00-06:00</div>
-    </div>
-  </div>
-
-</div>
-
-<!-- PAINEL ONLINE -->
-<div class="painel-online">
-  <div style="display:flex;align-items:center;gap:8px;">
-    <span id="admStatusDot" style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block;"></span>
-    <span>ADM: <span id="admStatusText">OFF</span></span>
-  </div>
-  <div style="margin-top:6px;display:flex;align-items:center;gap:8px;">
-<button id="admLoginBtn" style="padding:4px 8px;font-size:11px;width:auto;">Login ADM</button>
-  </div>
-  <div style="margin-top:6px;">👨‍💻 ADM online: <span id="admCount">—</span></div>
-  <div>👥 Ouvintes: <span id="ouvintesCount">—</span></div>
-  <div style="font-size: 11px; opacity: 0.8; margin-top: 6px;">Contagem indisponível.</div>
-
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import {
+getFirestore,
+collection,
+addDoc,
+serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-  window.__firebaseConfigChat = window.__firebaseConfigChat || {
-    apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
-    authDomain: "vibefm-radio-ad326.firebaseapp.com",
-    projectId: "vibefm-radio-ad326",
-    storageBucket: "vibefm-radio-ad326.appspot.com",
-    messagingSenderId: "1021295101262",
-    appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
-  };
+window.__firebaseConfigChat = {
+apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
+authDomain: "vibefm-radio-ad326.firebaseapp.com",
+projectId: "vibefm-radio-ad326",
+storageBucket: "vibefm-radio-ad326.appspot.com",
+messagingSenderId: "1021295101262",
+appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
+};
 
-  const appAuth = getApps().length ? getApps()[0] : initializeApp(window.__firebaseConfigChat);
-  const auth = getAuth(appAuth);
+const app = getApps().length ? getApps()[0] : initializeApp(window.__firebaseConfigChat);
 
+const auth = getAuth(app);
+const db = getFirestore(app);
 
+window.trySendToFirestore = async function(text){
+try{
+await addDoc(collection(db,"mensagens"),{
+texto:text,
+criadoEm:serverTimestamp()
+});
+console.log("Mensagem enviada");
+}catch(err){
+console.error(err);
+}
+};
 
 function setAdmUI(isOnline){
-  const dot = document.getElementById('admStatusDot');
-  const text = document.getElementById('admStatusText');
-  if(!dot || !text) return;
-  dot.style.background = isOnline ? '#22c55e' : '#ef4444';
-  dot.style.boxShadow = isOnline ? '0 0 12px rgba(34,197,94,0.7)' : '0 0 12px rgba(239,68,68,0.7)';
-  text.textContent = isOnline ? 'ON' : 'OFF';
+const dot = document.getElementById('admStatusDot');
+const text = document.getElementById('admStatusText');
+
+if(!dot || !text) return;
+
+if(isOnline){
+  dot.style.background='#22c55e';
+  text.textContent='ON';
+}else{
+  dot.style.background='#ef4444';
+  text.textContent='OFF';
+}
 }
 
 setAdmUI(false);
 
-onAuthStateChanged(auth, (user)=>{
-  setAdmUI(!!user);
+onAuthStateChanged(auth,(user)=>{
+setAdmUI(!!user);
 });
 
-// abre o admin.html no login admin (sem atrapalhar o resto do site)
-document.getElementById('admLoginBtn')?.addEventListener('click', ()=>{
-  window.open('admin.html', '_blank', 'noopener');
+document.getElementById('admLoginBtn')?.addEventListener('click',()=>{
+window.open('admin.html','_blank');
 });
-</script>
-
-
-
-<script>
-// PROGRAMAÇÃO VIBE FM
-function toggleProgramacao() {
-  const menu = document.getElementById("prog-opcoes");
-  if (!menu) return;
-  menu.style.display = (menu.style.display === "flex") ? "none" : "flex";
-}
-</script>
-
-
-<script>
-// Garante que o equalizador volte a animar no primeiro clique/execução.
-// (Se algum trecho travar o `tocar()` do player, isso reativa o estado visual.)
-(function(){
-  function setRunning(){
-    document.querySelectorAll('.bar').forEach(b=>{ b.style.animationPlayState='running'; });
-  }
-  window.addEventListener('click', setRunning, { once:false });
-  window.addEventListener('touchstart', setRunning, { once:false });
-  // tenta também após carregar
-  setTimeout(setRunning, 500);
-})();
-</script>
-
-
-<!-- Firestore (usa um único bloco para evitar redeclarações do firebaseConfig/app) -->
-<script type="module">
-  import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-  import {
-    getFirestore,
-    collection,
-    addDoc,
-    serverTimestamp
-  } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-
-  // usa a config global (evita redeclare em outro <script>)
-  const firebaseConfigChat = window.__firebaseConfigChat;
-
-
-
-  // Reaproveita app existente se já foi inicializado em outro <script type="module">
-  const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfigChat);
-
-  const db = getFirestore(app);
-  // garante que não quebra se scripts rodarem em ordem diferente
-  // (window.trySendToFirestore usado no envio do chat)
-
-
-  window.trySendToFirestore = async function(text){
-    try {
-      await addDoc(collection(db, "mensagens"), {
-        texto: text,
-        criadoEm: serverTimestamp()
-      });
-      console.log("✅ Mensagem enviada");
-    } catch(err){
-      console.error("❌ Erro Firestore:", err);
-    }
-  };
 </script>
 
 <script src="radio2.js?v=1"></script>

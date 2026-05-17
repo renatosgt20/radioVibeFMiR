@@ -502,6 +502,49 @@ color: #00ffcc;
     }
   } 
 
+  /* ===== MOBILE ===== */
+  @media screen and (max-width: 768px){
+
+    body{
+      overflow-x:hidden;
+    }
+
+    *{
+      max-width:100%;
+      box-sizing:border-box;
+    }
+
+    .container,
+    .main,
+    .player,
+    .card,
+    .box{
+      width:100% !important;
+    }
+
+    img{
+      max-width:100%;
+      height:auto;
+    }
+
+    .buttons,
+    .controls{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+    }
+
+    h1{
+      font-size:24px !important;
+    }
+
+    p{
+      font-size:15px !important;
+    }
+
+  }
+
 </style>
 </head>
 

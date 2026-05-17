@@ -682,6 +682,9 @@ async function tocarRadio() {
   const bars = document.querySelectorAll(".bar");
 
   function setEqualizerState(running) {
+    const box = document.getElementById('equalizerBox');
+    if (box) box.classList.toggle('is-playing', running);
+
     bars.forEach(b => {
       b.style.animationPlayState = running ? "running" : "paused";
     });

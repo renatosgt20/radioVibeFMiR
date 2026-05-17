@@ -146,9 +146,10 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
+  z-index: 1;
   pointer-events: none;
 }
+
 
 .solar_systm {
   pointer-events: none;
@@ -328,6 +329,21 @@ button:hover {
   color: #00ffcc;
   border: 1px solid #00ffcc;
 }
+
+#bg-logo{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: -8px;
+width: 72%;
+height: 480px;
+  object-fit: contain;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.95;
+}
+
+
 </style>
 </head>
 
@@ -341,15 +357,20 @@ button:hover {
   <div class="earth planet">
       <div class="overlay"></div>
     </div>
+
+  <!-- Logo como fundo/overlay até o botão ▶ OUVIR AGORA -->
+  <img src="logo.png" alt="Vibe FM" id="bg-logo" />
+
   </div>
 </div>
 
+
 <div class="conteudo">
 
-  <div class="titulo">🎧 VIBE FM 🔊</div>
-  <p>🌌 Rádio digital Online ⚡ - PA-Brasil 🚀</p>
+  
+<p style="position:fixed; top: 565px; left: 50%; transform: translateX(-50%); z-index: 10;">🌌 Rádio digital Online ⚡ - PA-Brasil 🚀</p>
 
-<button id="btnRadio" onclick="tocarRadio()">▶ OUVIR AGORA</button>
+<button id="btnRadio" onclick="tocarRadio()" style="position:fixed; top: 360px; left: 50%; transform: translateX(-50%); z-index: 10;">▶ OUVIR AGORA</button>
 
 
 <audio id="audio" crossorigin="anonymous" preload="none"></audio>
@@ -358,7 +379,7 @@ button:hover {
 
 
 
-  <div class="equalizer">
+<div class="equalizer" style="position:fixed; top: 440px; left: 50%; transform: translateX(-50%); z-index: 9;">
     <div class="bar"></div>
     <div class="bar"></div>
     <div class="bar"></div>
@@ -532,17 +553,18 @@ window.addEventListener("resize", () => {
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
-  const firebaseConfigChat = {
+  window.__firebaseConfigChat = window.__firebaseConfigChat || {
     apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
-  authDomain: "vibefm-radio-ad326.firebaseapp.com",
-  projectId: "vibefm-radio-ad326",
-  storageBucket: "vibefm-radio-ad326.appspot.com",
-  messagingSenderId: "1021295101262",
-  appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
-};
+    authDomain: "vibefm-radio-ad326.firebaseapp.com",
+    projectId: "vibefm-radio-ad326",
+    storageBucket: "vibefm-radio-ad326.appspot.com",
+    messagingSenderId: "1021295101262",
+    appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
+  };
 
-  const appAuth = getApps().length ? getApps()[0] : initializeApp(firebaseConfigChat);
+  const appAuth = getApps().length ? getApps()[0] : initializeApp(window.__firebaseConfigChat);
   const auth = getAuth(appAuth);
+
 
 
 function setAdmUI(isOnline){
@@ -603,14 +625,10 @@ function toggleProgramacao() {
     serverTimestamp
   } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-  const firebaseConfigChat = {
-    apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
-    authDomain: "vibefm-radio-ad326.firebaseapp.com",
-    projectId: "vibefm-radio-ad326",
-    storageBucket: "vibefm-radio-ad326.appspot.com",
-    messagingSenderId: "1021295101262",
-    appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
-  };
+  // usa a config global (evita redeclare em outro <script>)
+  const firebaseConfigChat = window.__firebaseConfigChat;
+
+
 
   // Reaproveita app existente se já foi inicializado em outro <script type="module">
   const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfigChat);
@@ -637,4 +655,3 @@ function toggleProgramacao() {
 
 </body>
 </html>
-

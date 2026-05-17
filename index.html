@@ -139,12 +139,20 @@ img{
 
 body {
   margin: 0;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
   background: black;
   font-family: Arial, sans-serif;
   color: white;
   text-align: center;
+  max-width: 100%;
 }
+
+/* evita overflow horizontal por elementos posicionados */
+html{
+  overflow-x: hidden;
+}
+
 
 .solar {
   position: fixed;
@@ -381,42 +389,117 @@ color: #00ffcc;
     pointer-events:none;
   }
 
-  /* AJUSTE GERAL PARA CELULAR */
+  /* Ajustes mobile (mobile-first) */
   @media (max-width: 768px){
-    
-    body{
+    html, body{
+      width: 100%;
+      max-width: 100%;
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
     }
 
-    .container{
-      width: 100%;
-      padding: 10px;
+    /* evita zoom/estouro em iPhone Safari */
+    body{
+      touch-action: manipulation;
     }
 
-    .logo{
-      width: 180px;
+    /* background/logo */
+    #bg-logo{
+      top: -6px;
+      width: 86%;
+      height: auto;
+      max-height: 38vh;
     }
 
-    .player{
-      width: 100%;
-    }
-
-    .botoes{
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
-
-    button{
-      width: 100%;
+    .earth.planet{
+      width: 55vw;
+      height: 55vw;
       max-width: 300px;
+      max-height: 300px;
+      bottom: -140px;
     }
 
-    h1{
-      font-size: 24px;
+    .overlay{
+      width: 70vw;
+      max-width: 380px;
+      border-bottom-width: 25vw;
+      border-bottom-color: black;
+      height: 100px;
+      left: -10vw;
+      opacity: 0.95;
     }
 
+    #fm-badge{
+      right: 10px;
+      left: auto;
+      top: 28vh;
+      font-size: 18px;
+    }
+
+    /* centraliza conteúdo e reduz margens fixas */
+    .conteudo{
+      margin-top: 70px;
+      padding: 0 12px;
+      max-width: 1000px;
+    }
+
+    /* player/controle */
+    #chat-box{
+      right: 10px;
+      width: min(92vw, 320px);
+      height: min(55vh, 320px);
+      bottom: 72px;
+    }
+
+    #chat-btn{
+      right: 12px;
+      bottom: 12px;
+    }
+
+    #input-msg{
+      width: 100%;
+      flex: 1;
+      min-width: 0;
+    }
+
+    #mensagens{
+      font-size: 13px;
+    }
+
+    /* equalizer */
+    .equalizer{
+      top: 44vh !important;
+      width: 52vw;
+      max-width: 220px;
+    }
+
+    /* botão ouvir */
+    #btnRadio{
+      top: 38vh !important;
+      width: min(92vw, 320px) !important;
+      padding-left: 22px;
+      padding-right: 22px;
+    }
+
+    /* layout dos botões fixos do topo */
+    .top-buttons{
+      left: 6px;
+      top: 4px;
+      width: 92px;
+    }
+
+    .btn{
+      width: 92px;
+      height: 26px;
+      font-size: 8px;
+    }
+
+    /* menu de programação */
+    .programacao-opcoes{
+      min-width: 92px;
+      max-width: 92vw;
+      right: 0;
+    }
   } 
 
 </style>

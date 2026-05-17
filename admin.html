@@ -68,6 +68,20 @@ button{
   overflow:auto;
 }
 
+@media (max-width: 768px){
+  .chat-box{
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .users,
+  .chat{
+    width: 100%;
+    height: auto;
+    max-height: 75vh;
+  }
+}
+
 .user{
   padding:10px;
   margin:5px 0;

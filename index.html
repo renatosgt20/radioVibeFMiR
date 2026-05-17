@@ -342,11 +342,17 @@ body::before{
     transform:scale(.92);
     transform-origin:top left;
   }
-  #bg-logo{
-  width:130vw;
-  max-height:700px;
+#bg-logo{
+  position: relative;
 
-  margin-top:-120px;
+  width: 170vw !important;
+  max-width: none !important;
+  max-height: none !important;
+
+  margin-top: -180px;
+
+  left: 50%;
+  transform: translateX(-50%);
 }
 
   .painel-online{

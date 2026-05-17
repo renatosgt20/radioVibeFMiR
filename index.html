@@ -362,11 +362,18 @@ body::before{
     top:6px;
   }
 
-  #bg-logo{
-  width:130vw;
-  max-height:700px;
+#bg-logo{
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 
-  margin-top:-120px;
+  width: min(150vw, 650px);
+  max-height: none;
+
+  margin-top: -160px;
+
+  object-fit: contain;
+  opacity: .98;
 }
   }
 

@@ -1,4 +1,4 @@
-// ==============================
+l// ==============================
 // VIBE FM - Rádio
 // ==============================
 
@@ -588,12 +588,12 @@ function getPastaInicialPorHorario() {
   }
 
   // 12h até 15h
-  if (h >= 12 && h < 15) {
+  if (h >= 12 && h < 14) {
     return "lofi";
   }
 
   // 15h até 17h
-  if (h >= 15 && h < 17) {
+  if (h >= 14 && h < 17) {
     return "hitsnoite";
   }
 

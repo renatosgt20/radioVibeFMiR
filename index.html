@@ -508,11 +508,15 @@ let estrelas = [];
 
 for(let i=0;i<2500;i++){
   estrelas.push({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    size:Math.random()*2,
-    alpha:Math.random(),
-    speed:Math.random()*0.03
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    size: Math.random()*2,
+
+    alpha: Math.random(),
+    speed: Math.random()*0.03,
+
+    // ⭐ 20% estrelas em “viagem”
+    warp: Math.random() < 0.08
   });
 }
 
@@ -521,10 +525,22 @@ function animar(){
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
   estrelas.forEach(e=>{
-    e.alpha += e.speed;
 
+    // ⭐ brilho (igual ao seu)
+    e.alpha += e.speed;
     if(e.alpha <= 0 || e.alpha >= 1){
       e.speed *= -1;
+    }
+
+    // 🚀 EFEITO VIAGEM (SÓ 20%)
+    if(e.warp){
+     e.y += 0.4;// velocidade da viagem
+
+      // volta pro topo quando sair da tela
+      if(e.y > canvas.height){
+        e.y = 0;
+        e.x = Math.random()*canvas.width;
+      }
     }
 
     ctx.beginPath();

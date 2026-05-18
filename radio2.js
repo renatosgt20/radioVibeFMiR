@@ -1,9 +1,12 @@
-l// ==============================
 // VIBE FM - Rádio
 // ==============================
 
 // Usar apenas o <audio id="audio"> do HTML (evita conflito de 2 players)
-const playerEl = document.getElementById('audio');
+let playerEl;
+
+window.addEventListener("DOMContentLoaded", () => {
+  playerEl = document.getElementById("audio");
+});
 
 let tocando = false;
 let pastaAtual = "";
@@ -711,13 +714,23 @@ async function tocarRadio() {
   proximaMusica(); // define src e chama play na tocarMusica()
 }
 
-// Quando a música terminar
-playerEl.addEventListener("ended", () => {
-  if (tocando) proximaMusica();
-});
+// ==============================
+// EVENTOS DO ÁUDIO
+// ==============================
 
-// Quando der erro no áudio/link
-playerEl.addEventListener("error", () => {
-  console.log("⚠️ Erro na música, pulando para próxima...");
-  setTimeout(() => proximaMusica(), 1000);
+function setupAudioEvents() {
+  if (!playerEl) return;
+
+  playerEl.addEventListener("ended", () => {
+    if (tocando) proximaMusica();
+  });
+
+  playerEl.addEventListener("error", () => {
+    console.log("⚠️ Erro na música, pulando para próxima...");
+    setTimeout(() => proximaMusica(), 1000);
+  });
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+  setupAudioEvents();
 });

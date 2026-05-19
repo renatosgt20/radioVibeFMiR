@@ -570,8 +570,8 @@ function getPastaInicialPorHorario() {
   // =========================================
   // SEG-SEX e DOM (após 06h): grade nova
   // =========================================
-  // 00h até 04h
-  if (h >= 0 && h < 4) {
+  // 02h até 04h
+  if (h >= 2 && h < 4) {
     return "lofi";
   }
 
@@ -590,12 +590,12 @@ function getPastaInicialPorHorario() {
     return "hitsnoite";
   }
 
-  // 12h até 15h
+  // 12h até 14h
   if (h >= 12 && h < 14) {
     return "lofi";
   }
 
-  // 15h até 17h
+  // 14h até 17h
   if (h >= 14 && h < 17) {
     return "hitsnoite";
   }
@@ -604,9 +604,17 @@ function getPastaInicialPorHorario() {
   if (h >= 17 && h < 19) {
     return "fundaovibe";
   }
+  
+  // 19h até 02h
+  // 19h-24h => hitsnoite
+  // 00h-02h => hitsnoite
+  if (h >= 19 || h < 2) {
+    return "hitsnoite";
+  }
 
-  // 19h até 00h
-  return "hitsnoite";
+  // se não entrou em nenhum bloco acima, é 02h-04h => lofi
+  // (demais regras já cobrem o resto do dia)
+  return "lofi";
 }
 
 // ==============================

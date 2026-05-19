@@ -30,10 +30,28 @@ body{
   color:white;
 }
 
+#bg-video{
+  position:fixed;
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  object-fit:cover;
+
+  z-index:0;
+
+  opacity:0.18;
+
+  mix-blend-mode:screen;
+
+  pointer-events:none;
+}
+
 canvas{
   position:fixed;
   inset:0;
-  z-index:0;
+  z-index:1;
 }
 
 body::before{
@@ -82,6 +100,7 @@ body::before{
   border-bottom:230px solid rgba(0,0,0,.85);
   border-radius:50%;
 }
+/* PARA TELA PC  */
 
 @keyframes spinPlanet{
   from{background-position:0 0;}
@@ -101,14 +120,35 @@ body::before{
   text-align:center;
 }
 
-#bg-logo{
+#logo-video{
   width:min(110vw,750px);
-  max-height:600px;
-  object-fit:contain;
 
-  transform: translateY(-80px);
+  max-height:600px;
+
+  object-fit:cover;
+
+  transform:translateY(-40px);
 
   opacity:.98;
+
+  border-radius:40px;
+
+  mix-blend-mode:screen;
+
+  mask-image: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(0,0,0,0) 82%);
+-webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(0,0,0,0) 82%);
+
+filter:
+blur(.1px)
+brightness(1.12)
+contrast(1.15)
+saturate(1.35)
+drop-shadow(0 0 25px rgba(0,255,255,.18))
+drop-shadow(0 0 45px rgba(168,85,247,.14));
+
+  box-shadow:
+  0 0 80px rgba(0,255,204,.10),
+  0 0 120px rgba(138,43,226,.08);
 }
 
 #fm-badge{
@@ -127,7 +167,7 @@ body::before{
   pointer-events:none;
 }
 #btnRadio{
-  margin-top:-80px;
+  margin-top:-110px;
   padding:14px 34px;
   border:none;
   border-radius:40px;
@@ -233,7 +273,66 @@ body::before{
   font-size:11px;
   margin-bottom:5px;
 }
+/* QUADRO EM BREVE */
+.quadro-breve{
+  position:fixed;
 
+  left:10px;
+  top:170px;
+
+  width:170px;
+  height:85px;
+
+  background:rgba(0,0,0,.25);
+
+  backdrop-filter:blur(10px);
+
+  border:1px solid rgba(0,255,204,.35);
+
+  border-radius:18px;
+
+  z-index:999;
+
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+
+  box-shadow:
+  0 0 20px rgba(0,255,204,.10);
+}
+
+.breve-titulo{
+  font-size:12px;
+  font-weight:bold;
+
+  color:#00ffcc;
+
+  margin-bottom:6px;
+
+  text-align:center;
+}
+
+.linha-breve{
+  width:70%;
+
+  height:1px;
+
+  background:rgba(255,255,255,.15);
+
+  margin-bottom:8px;
+}
+
+.breve-texto{
+  font-size:18px;
+
+  font-weight:900;
+
+  color:#d946ef;
+
+  text-shadow:
+  0 0 10px rgba(217,70,239,.5);
+}
 /* PAINEL */
 .painel-online{
   position:fixed;
@@ -321,6 +420,18 @@ body::before{
   font-weight:bold;
   cursor:pointer;
 }
+.slogan{
+  font-size:16px;
+  color:#00ffcc;
+
+  text-shadow:0 0 10px #00ffcc;
+
+  position:relative;
+
+  top:40px;
+
+  z-index:10;
+}
 
 /* MOBILE */
 @media(max-width:768px){
@@ -349,18 +460,15 @@ body::before{
   }
 
   /* LOGO (mobile central correto) */
-  #bg-logo{
-    position:relative;
-    left:50%;
-    transform:translateX(-50%);
+#logo-video{
+  width:90vw;
 
-    width:85vw;
-    max-width:380px;
+  max-width:380px;
 
-    margin-top:-40px;
+  border-radius:20px;
 
-    object-fit:contain;
-  }
+  transform:translateY(0);
+}
 
   /* FM badge */
 #fm-badge{
@@ -369,22 +477,22 @@ body::before{
   font-size:20px;
 }
 .slogan{
-  font-size: 16px;
-  color: #fff;
-  text-shadow: 0 0 8px rgba(255,255,255,.4);
+  font-size:16px;
+  color:#00ffcc !important;
 
-  margin-top: 0 !important;
+  text-shadow:0 0 10px #00ffcc;
 
-  position: relative;
-  top: -60px !important;
+  position:relative;
 
-  z-index: 10;
+  top:90px !important;
+
+  z-index:10;
 }
   /* BOTÃO */
   #btnRadio{
     font-size:16px;
     padding:12px 28px;
-    margin-top:20px;
+    margin-top:-90px;
 
     transform:scale(0.9);
   }
@@ -412,6 +520,10 @@ body::before{
 </head>
 <body>
 
+  <video autoplay muted loop playsinline id="bg-video">
+  <source src="background.mp4" type="video/mp4">
+</video>
+
 <canvas id="espaco"></canvas>
 
 <div class="solar">
@@ -421,11 +533,14 @@ body::before{
 </div>
 
 <div class="main">
+  <video autoplay muted loop playsinline id="logo-video">
+  <source src="background.mp4" type="video/mp4">
+</video>
 
-<img src="logo.png" alt="Vibe FM" id="bg-logo">
-<div id="fm-badge">FM 🚀 </div>
 
-<p class="slogan">🌌 Rádio digital Online ⚡ - PA-Brasil 🚀</p>
+
+
+<p class="slogan">🌌 Web Rádio  ⚡ - PA-Brasil 🚀</p>
 
 <button id="btnRadio" onclick="tocarRadio()">▶ OUVIR AGORA</button>
 
@@ -463,7 +578,7 @@ body::before{
 <!-- BOTÕES -->
 <div class="top-buttons">
 
-<a href="https://link.mercadopago.com.br/vibefm" target="_blank" class="btn">💖 Seja Doador</a>
+<a href="https://link.mercadopago.com.br/vibefm" target="_blank" class="btn">💖 Apoiar </a>
 
 <a href="https://wa.me/5591982283924" target="_blank" class="btn">📱 Contato</a>
 
@@ -483,7 +598,14 @@ body::before{
 </div>
 </div>
 </div>
+<!-- QUADRO NA TELA MENSAGEM -->
+<div class="quadro-breve">
+  <div class="breve-titulo">📩 MENSAGEM</div>
 
+  <div class="linha-breve"></div>
+
+  <div class="breve-texto">“EM BREVE”</div>
+</div>
 <!-- PAINEL -->
 <div class="painel-online">
 <div style="display:flex;align-items:center;gap:8px;">

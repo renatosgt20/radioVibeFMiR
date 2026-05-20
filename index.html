@@ -982,7 +982,8 @@ from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 import {
 getDatabase,
 ref,
-push
+push,
+onChildAdded
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
@@ -1004,6 +1005,7 @@ const db = getDatabase(app);
 
 window.trySendToFirestore = async function(text){
 
+
 try{
 
 const uid =
@@ -1023,6 +1025,51 @@ uid: uid,
 nome: nome,
 texto: text,
 timestamp: Date.now()
+});
+
+const mensagensRef = ref(db, "mensagens");
+
+onChildAdded(mensagensRef, (snapshot)=>{
+
+const data = snapshot.val();
+
+if(!data) return;
+
+// pega uid do visitante atual
+const meuUid = localStorage.getItem("vibe_uid");
+
+// mostra somente:
+// mensagens do visitante
+// OU respostas do admin pra ele
+if(data.uid !== meuUid) return;
+
+const mensagensDiv =
+document.getElementById("mensagens");
+
+const div = document.createElement("div");
+
+div.style.marginBottom = "8px";
+
+const isAdm = data.admin === true;
+
+div.innerHTML = `
+<div style="
+background:${isAdm ? '#8a2be2' : '#00ffcc'};
+color:${isAdm ? 'white' : 'black'};
+padding:8px 12px;
+border-radius:12px;
+display:inline-block;
+max-width:80%;
+">
+${data.texto}
+</div>
+`;
+
+mensagensDiv.appendChild(div);
+
+mensagensDiv.scrollTop =
+mensagensDiv.scrollHeight;
+
 });
 
 console.log("Mensagem enviada");

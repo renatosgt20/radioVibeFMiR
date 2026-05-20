@@ -434,15 +434,10 @@ document.getElementById("replyInput");
 if(!input.value.trim()) return;
 
 push(ref(db,"mensagens"),{
-
-uid:currentUid,
-
-texto:"🎙️ ADM: " + input.value,
-
-adm:true,
-
-timestamp:Date.now()
-
+uid: uidDoUsuario,
+texto: resposta,
+admin: true,
+timestamp: Date.now()
 });
 
 input.value="";

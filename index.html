@@ -904,22 +904,49 @@ function toggleChat(){
   box.style.display = box.style.display === "flex" ? "none" : "flex";
 }
 
-function enviarMsg(){
+async function enviarMsg(){
+
   const input = document.getElementById("input-msg");
-  const mensagensDiv = document.getElementById("mensagens");
 
   if(!input.value.trim()) return;
 
+  const texto = input.value;
+
+  // limpa instantaneamente
+  input.value = "";
+
+  const mensagensDiv =
+  document.getElementById("mensagens");
+
   const div = document.createElement("div");
+
   div.style.marginBottom = "8px";
-  div.textContent = input.value;
+
+  div.innerHTML = `
+    <div style="
+      background:#00ffcc;
+      color:black;
+      padding:8px 12px;
+      border-radius:12px;
+      display:inline-block;
+      max-width:80%;
+      margin-left:auto;
+    ">
+      ${texto}
+    </div>
+  `;
 
   mensagensDiv.appendChild(div);
-  mensagensDiv.scrollTop = mensagensDiv.scrollHeight;
 
-  trySendToFirestore(input.value);
+  mensagensDiv.scrollTop =
+  mensagensDiv.scrollHeight;
 
-  input.value = "";
+  try{
+    await trySendToFirestore(texto);
+  }catch(e){
+    console.error(e);
+  }
+
 }
 
 function toggleProgramacao(){
@@ -942,17 +969,25 @@ function toggleProgramacao(){
 </script>
 
 <script type="module">
-import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
+import { initializeApp, getApps }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+getAuth,
+onAuthStateChanged
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
 import {
 getDatabase,
 ref,
-push,
-serverTimestamp
-} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+push
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 window.__firebaseConfigChat = {
-apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
+apiKey: "SUA_KEY",
 authDomain: "vibefm-radio-ad326.firebaseapp.com",
 projectId: "vibefm-radio-ad326",
 storageBucket: "vibefm-radio-ad326.appspot.com",
@@ -960,22 +995,45 @@ messagingSenderId: "1021295101262",
 appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
 };
 
-const app = getApps().length ? getApps()[0] : initializeApp(window.__firebaseConfigChat);
+const app = getApps().length
+? getApps()[0]
+: initializeApp(window.__firebaseConfigChat);
 
 const auth = getAuth(app);
-const db = getFirestore(app);
+const db = getDatabase(app);
 
 window.trySendToFirestore = async function(text){
+
 try{
-await addDoc(collection(db,"mensagens"),{
-texto:text,
-criadoEm:serverTimestamp()
+
+const uid =
+localStorage.getItem("vibe_uid")
+|| crypto.randomUUID();
+
+localStorage.setItem("vibe_uid", uid);
+
+const nome =
+localStorage.getItem("vibe_nome")
+|| ("Visitante-" + Math.floor(Math.random()*9999));
+
+localStorage.setItem("vibe_nome", nome);
+
+await push(ref(db,"mensagens"),{
+uid: uid,
+nome: nome,
+texto: text,
+timestamp: Date.now()
 });
+
 console.log("Mensagem enviada");
+
 }catch(err){
 console.error(err);
 }
+
 };
+
+</script>
 
 function setAdmUI(isOnline){
 const dot = document.getElementById('admStatusDot');

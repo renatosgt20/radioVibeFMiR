@@ -2,274 +2,470 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Painel Admin VibeFM</title>
+<title>VibeFM Admin</title>
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
-body{
-  font-family: Arial;
-  background:#0b1220;
-  color:white;
-  margin:0;
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
 }
 
+body{
+background:#050816;
+color:white;
+height:100vh;
+overflow:hidden;
+}
+
+/* LOGIN */
+
 #loginBox{
-  width:320px;
-  margin:100px auto;
-  background:#111827;
-  padding:20px;
-  border-radius:12px;
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:320px;
+background:#111827;
+padding:25px;
+border-radius:16px;
+box-shadow:0 0 30px rgba(0,255,255,.2);
+z-index:10;
+}
+
+#loginBox h2{
+margin-bottom:15px;
+text-align:center;
 }
 
 input{
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border:none;
-  border-radius:6px;
+width:100%;
+padding:12px;
+margin:8px 0;
+border:none;
+border-radius:10px;
+background:#1f2937;
+color:white;
 }
 
 button{
-  width:100%;
-  padding:10px;
-  border:none;
-  border-radius:6px;
-  background:#22c55e;
-  color:white;
-  cursor:pointer;
+width:100%;
+padding:12px;
+border:none;
+border-radius:10px;
+background:#00ffaa;
+color:black;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
 }
+
+button:hover{
+transform:scale(1.02);
+}
+
+/* PAINEL */
 
 #panel{
-  display:none;
-  padding:20px;
+display:none;
+width:100%;
+height:100vh;
+display:flex;
 }
 
-.chat-box{
-  display:flex;
-  gap:20px;
+/* RADIO */
+
+.radio-side{
+width:50%;
+height:100%;
+border-right:1px solid rgba(255,255,255,.1);
 }
+
+.radio-side iframe{
+width:100%;
+height:100%;
+border:none;
+}
+
+/* CHAT */
+
+.chat-side{
+width:50%;
+display:flex;
+flex-direction:column;
+background:#0b1220;
+}
+
+.top{
+padding:15px;
+border-bottom:1px solid rgba(255,255,255,.1);
+font-size:20px;
+font-weight:bold;
+color:#00ffaa;
+}
+
+.chat-container{
+display:flex;
+flex:1;
+overflow:hidden;
+}
+
+/* USERS */
 
 .users{
-  width:30%;
-  background:#111827;
-  padding:10px;
-  border-radius:10px;
-  height:80vh;
-  overflow:auto;
-}
-
-.chat{
-  width:70%;
-  background:#111827;
-  padding:10px;
-  border-radius:10px;
-  height:80vh;
-  overflow:auto;
-}
-
-@media (max-width: 768px){
-  .chat-box{
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .users,
-  .chat{
-    width: 100%;
-    height: auto;
-    max-height: 75vh;
-  }
+width:35%;
+border-right:1px solid rgba(255,255,255,.1);
+overflow:auto;
+padding:10px;
 }
 
 .user{
-  padding:10px;
-  margin:5px 0;
-  background:#1f2937;
-  border-radius:8px;
-  cursor:pointer;
+padding:12px;
+margin-bottom:10px;
+background:#111827;
+border-radius:12px;
+cursor:pointer;
+transition:.2s;
+}
+
+.user:hover{
+background:#1f2937;
+}
+
+/* MESSAGES */
+
+.messages{
+width:65%;
+display:flex;
+flex-direction:column;
+}
+
+#msgs{
+flex:1;
+overflow:auto;
+padding:15px;
 }
 
 .msg{
-  background:#1f2937;
-  padding:10px;
-  margin:8px 0;
-  border-radius:8px;
+background:#111827;
+padding:10px;
+border-radius:12px;
+margin-bottom:10px;
+max-width:80%;
 }
+
+.msg.adm{
+background:#00ffaa;
+color:black;
+margin-left:auto;
+}
+
+.send-box{
+display:flex;
+padding:10px;
+border-top:1px solid rgba(255,255,255,.1);
+gap:10px;
+}
+
+.send-box input{
+flex:1;
+margin:0;
+}
+
+.send-box button{
+width:70px;
+}
+
+/* MOBILE */
+
+@media(max-width:900px){
+
+#panel{
+flex-direction:column;
+}
+
+.radio-side{
+width:100%;
+height:35%;
+}
+
+.chat-side{
+width:100%;
+height:65%;
+}
+
+}
+
 </style>
 </head>
 
 <body>
 
 <!-- LOGIN -->
+
 <div id="loginBox">
-  <h3>Admin Login</h3>
-  <input type="email" id="email" placeholder="Email">
-  <input type="password" id="password" placeholder="Senha">
-  <button onclick="login()">Entrar</button>
+
+<h2>🎧 VibeFM Admin</h2>
+
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Senha">
+
+<button onclick="login()">ENTRAR</button>
+
 </div>
 
 <!-- PAINEL -->
+
 <div id="panel">
 
-  <h2>💬 Painel de Chats VibeFM</h2>
+<div class="radio-side">
 
-  <div class="chat-box">
+<iframe src="https://radiovibefm.vibefmbr.workers.dev/"></iframe>
 
-    <div class="users" id="users">
-      <b>Ouvintes</b>
-    </div>
+</div>
 
-    <div class="chat">
-      <h3 id="chatTitle">Selecione um usuário</h3>
-      <div id="msgs"></div>
-    </div>
+<div class="chat-side">
 
-  </div>
+<div class="top">
+💬 Painel de Ouvintes
+</div>
+
+<div class="chat-container">
+
+<div class="users" id="users"></div>
+
+<div class="messages">
+
+<div id="msgs"></div>
+
+<div class="send-box">
+
+<input id="replyInput" placeholder="Responder ouvinte...">
+
+<button onclick="sendReply()">
+➤
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+import { initializeApp,getApps }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
 import {
-  getFirestore,
-  collection,
-  onSnapshot,
-  query,
-  orderBy
-} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+getAuth,
+signInWithEmailAndPassword
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
-// 🔥 CONFIG FIREBASE (CORRETO)
+import {
+getDatabase,
+ref,
+push,
+onValue
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
-  authDomain: "vibefm-radio-ad326.firebaseapp.com",
-  projectId: "vibefm-radio-ad326",
-  storageBucket: "vibefm-radio-ad326.appspot.com",
-  messagingSenderId: "1021295101262",
-  appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
+
+apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
+
+authDomain: "vibefm-radio-ad326.firebaseapp.com",
+
+databaseURL:
+"https://vibefm-radio-ad326-default-rtdb.firebaseio.com",
+
+projectId: "vibefm-radio-ad326",
+
+storageBucket: "vibefm-radio-ad326.appspot.com",
+
+messagingSenderId: "1021295101262",
+
+appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
+
 };
 
-// Evita instâncias/conflictos quando o admin é carregado junto com outros scripts
-import { getApps } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+const app =
+getApps().length
+? getApps()[0]
+: initializeApp(firebaseConfig);
 
-const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db = getFirestore(app);
 
-// 🔥 VARIÁVEIS GLOBAIS
-let currentUser = null;
-let unsubscribeChat = null;
+const db = getDatabase(app);
 
-// =======================
-// LOGIN
-// =======================
+let currentUid = null;
+
+/* LOGIN */
+
 window.login = function(){
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
 
-  signInWithEmailAndPassword(auth, email, password)
-  .then(()=>{
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("panel").style.display="block";
-    loadUsers();
-  })
-  .catch(e=>{
-    alert("Erro login: " + e.message);
-  });
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+signInWithEmailAndPassword(auth,email,password)
+
+.then(()=>{
+
+document.getElementById("loginBox").style.display="none";
+
+document.getElementById("panel").style.display="flex";
+
+loadUsers();
+
+})
+
+.catch(err=>{
+
+alert(err.message);
+
+});
+
 };
 
-// =======================
-// LISTA DE USUÁRIOS
-// =======================
+/* USERS */
+
 function loadUsers(){
 
-  const usersDiv = document.getElementById("users");
+const usersDiv =
+document.getElementById("users");
 
-  onSnapshot(collection(db, "mensagens"), (snap)=>{
+onValue(ref(db,"mensagens"),snapshot=>{
 
-    const usersMap = new Map();
+const data = snapshot.val();
 
-    snap.forEach(doc=>{
-      const data = doc.data();
+usersDiv.innerHTML = "";
 
-      if(!data.uid) return;
+if(!data) return;
 
-      if(!usersMap.has(data.uid)){
-        usersMap.set(data.uid, data.nome || "Anônimo");
-      }
-    });
+const usersMap = {};
 
-    usersDiv.innerHTML = "<b>Ouvintes</b>";
+Object.entries(data).forEach(([id,msg])=>{
 
-    usersMap.forEach((nome, uid)=>{
-      usersDiv.innerHTML += `
-        <div class="user" onclick="openChat('${uid}','${nome}')">
-          👤 ${nome}
-        </div>
-      `;
-    });
+if(!msg.uid) return;
 
-  });
+usersMap[msg.uid] = msg.nome || "Ouvinte";
+
+});
+
+Object.entries(usersMap).forEach(([uid,nome])=>{
+
+usersDiv.innerHTML += `
+
+<div class="user"
+onclick="openChat('${uid}','${nome}')">
+
+👤 ${nome}
+
+</div>
+
+`;
+
+});
+
+});
+
 }
 
-// =======================
-// ABRIR CHAT
-// =======================
-window.openChat = function(uid, nome){
+/* CHAT */
 
-  currentUser = uid;
+window.openChat = function(uid,nome){
 
-  document.getElementById("chatTitle").innerText = "Chat: " + nome;
+currentUid = uid;
 
-  const msgsDiv = document.getElementById("msgs");
+const msgsDiv =
+document.getElementById("msgs");
 
-  // 🔴 evita duplicar listener
-  if(unsubscribeChat) unsubscribeChat();
+onValue(ref(db,"mensagens"),snapshot=>{
 
-  // Se não houver createdAt salvo, o Firestore vai reclamar do orderBy.
-  // Para não quebrar o admin, tentamos ordenar e, se falhar, exibimos sem order.
-  let unsubscribeChatLocal = null;
-  try {
-    const q = query(
-      collection(db, "mensagens"),
-      orderBy("createdAt")
-    );
+const data = snapshot.val();
 
-    unsubscribeChatLocal = onSnapshot(q,(snap)=>{
-      msgsDiv.innerHTML = "";
-      snap.forEach(doc=>{
-        const data = doc.data();
-        if(data.uid !== uid) return;
-        msgsDiv.innerHTML += `
-          <div class="msg">
-            <i class="fa-solid fa-user"></i> ${data.mensagem || ""}
-          </div>
-        `;
-      });
-    });
-  } catch (e) {
-    const q = collection(db, "mensagens");
-    unsubscribeChatLocal = onSnapshot(q,(snap)=>{
-      msgsDiv.innerHTML = "";
-      snap.forEach(doc=>{
-        const data = doc.data();
-        if(data.uid !== uid) return;
-        msgsDiv.innerHTML += `
-          <div class="msg">
-            <i class="fa-solid fa-user"></i> ${data.mensagem || ""}
-          </div>
-        `;
-      });
-    });
-  }
+msgsDiv.innerHTML = "";
 
-  unsubscribeChat = unsubscribeChatLocal;
+if(!data) return;
+
+Object.values(data).forEach(msg=>{
+
+if(msg.uid !== uid) return;
+
+msgsDiv.innerHTML += `
+
+<div class="msg">
+
+${msg.texto}
+
+</div>
+
+`;
+
+});
+
+msgsDiv.scrollTop =
+msgsDiv.scrollHeight;
+
+});
 
 };
 
+/* RESPONDER */
 
+window.sendReply = function(){
+
+const input =
+document.getElementById("replyInput");
+
+if(!input.value.trim()) return;
+
+push(ref(db,"mensagens"),{
+
+uid:currentUid,
+
+texto:"🎙️ ADM: " + input.value,
+
+adm:true,
+
+timestamp:Date.now()
+
+});
+
+input.value="";
+
+};
+
+/* AUTO RESPOSTA */
+
+window.autoReply = function(uid){
+
+push(ref(db,"mensagens"),{
+
+uid:uid,
+
+texto:"🤖 Obrigado pela mensagem! Em breve o ADM vai responder você 🎧",
+
+adm:true,
+
+timestamp:Date.now()
+
+});
+
+};
 
 </script>
 

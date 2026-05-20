@@ -760,18 +760,30 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 
 
 
-```html
+<p class="slogan">🌌 Web Rádio  ⚡ - PA-Brasil 🚀</p>
+
+<button id="btnRadio" onclick="tocarRadio()">▶ OUVIR AGORA</button>
+
+<audio id="audio" crossorigin="anonymous" preload="none"></audio>
+
+<div class="equalizer">
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+<div class="bar"></div>
+</div>
+
+</div>
+
 <!-- CHAT -->
 <div id="chat-btn" onclick="toggleChat()">💬</div>
 
 <div id="chat-box">
-
-<div style="
-padding:10px;
-border-bottom:1px solid rgba(255,255,255,.1);
-font-weight:bold;
-color:#00ffcc;
-">
+<div style="padding:10px;border-bottom:1px solid rgba(255,255,255,.1)">
 💬 Deixe sua mensagem
 </div>
 
@@ -781,109 +793,130 @@ color:#00ffcc;
 <input id="input-msg" placeholder="Digite...">
 <button class="chat-send" onclick="enviarMsg()">➤</button>
 </div>
-
 </div>
 
 <!-- BOTÕES -->
 <div class="top-buttons">
 
-<a href="https://link.mercadopago.com.br/vibefm"
-target="_blank"
-class="btn">
-💖 Seja-Apoiador
-</a>
+<a href="https://link.mercadopago.com.br/vibefm" target="_blank" class="btn">💖 Seja-Apoiador </a>
 
-<a href="https://wa.me/5591982283924"
-target="_blank"
-class="btn">
-📱 Contato
-</a>
+<a href="https://wa.me/5591982283924" target="_blank" class="btn">📱 Contato</a>
 
-<button class="btn">
-🤝 Seja Parceiro
-</button>
+<button class="btn">🤝 Seja Parceiro</button>
 
 <div style="position:relative">
-
-<button class="btn programacao"
-onclick="toggleProgramacao()">
-📻 Programação Vibe FM
-</button>
+<button class="btn programacao" onclick="toggleProgramacao()">📻 Programação Vibe FM</button>
 
 <div id="prog-opcoes" class="programacao-opcoes">
-
-<div class="programacao-btn">
-🔥 Fundão da Vibe: Seg-Dom 06:00-09:00 / 17:00-19:00
-</div>
-
-<div class="programacao-btn">
-🎵 In Vibe: Seg-Dom 09:00-12:00
-</div>
-
-<div class="programacao-btn">
-☕ Lo-Fi Vibe: Seg-Dom 12:00-14:00
-</div>
-
-<div class="programacao-btn">
-⭐ Hits Vibe: Seg-Sex 14:00-02:00
-</div>
-
-<div class="programacao-btn">
-☕ Lo-Fi Vibe: Seg-Sex 02:00-04:00
-</div>
-
-<div class="programacao-btn">
-🎧 Chill Vibe: 04:00-06:00
-</div>
-
-<div class="programacao-btn">
-🌀 Psy-Vibe: Sáb 18:00-06:00
-</div>
-
+<div class="programacao-btn">🔥 Fundão da Vibe: Seg-Dom 06:00-09:00/17:00-19</div>
+<div class="programacao-btn">🎵 In Vibe: Seg-Dom 09:00-12:00</div>
+<div class="programacao-btn">☕ Lo-Fi Vibe: Seg-Dom 12:00-14:00</div>
+<div class="programacao-btn">⭐ Hits Vibe: Seg-Sex 14:00-02:00</div>
+<div class="programacao-btn">☕ Lo-Fi Vibe: Seg-Sex 02:00-04:00</div>
+<div class="programacao-btn">🎧 Chill Vibe: 04:00-06:00</div>
+<div class="programacao-btn">🌀 Psy-Vibe: Sáb 18:00-06:00</div>
 </div>
 </div>
 </div>
-
-<!-- QUADRO -->
+<!-- QUADRO NA TELA MENSAGEM -->
 <div class="quadro-breve">
-<span>🎵 Música 24h - A Vibe Sempre Com Você...</span>
-<span>🎙️ Locutores oficiais em breve</span>
-<span>🚫 Sem anúncios / Sem propagandas</span>
+  <span>🎵 Música-24h-A-Vibe-Sempre-Com-Você...</span>
+  <span>🎙️ Locutores oficiais em breve</span>
+  <span>🚫 Sem anúncios / Sem propagandas</span>
 </div>
-
-<!-- PAINEL ADM -->
+<!-- PAINEL -->
 <div class="painel-online">
-
-<div style="
-display:flex;
-align-items:center;
-gap:8px;
-margin-bottom:10px;
+  <!-- MINI LOGIN ADM -->
+<div id="admMiniLogin" style="
+display:none;
+position:fixed;
+top:80px;
+right:10px;
+width:260px;
+background:rgba(0,0,0,.92);
+border:1px solid rgba(0,255,204,.4);
+border-radius:16px;
+padding:15px;
+z-index:9999;
+backdrop-filter:blur(12px);
+box-shadow:0 0 25px rgba(0,255,204,.15);
 ">
 
-<span id="admStatusDot"
-style="
-width:10px;
-height:10px;
-border-radius:50%;
-background:#ef4444;
+<h3 style="
+margin-bottom:12px;
+color:#00ffcc;
+text-align:center;
 ">
-</span>
+🔐 Login ADM
+</h3>
 
-<span>
-ADM:
-<span id="admStatusText">OFF</span>
-</span>
-
-</div>
-
-<input id="admEmail"
+<input
+id="admEmail"
 type="email"
 placeholder="Email"
 style="
 width:100%;
-padding:8px;
+padding:10px;
+margin-bottom:10px;
+border:none;
+border-radius:10px;
+background:#111827;
+color:white;
+"
+/>
+
+<input
+id="admSenha"
+type="password"
+placeholder="Senha"
+style="
+width:100%;
+padding:10px;
+margin-bottom:12px;
+border:none;
+border-radius:10px;
+background:#111827;
+color:white;
+"
+/>
+
+<button onclick="abrirPainelAdm()" style="
+width:100%;
+padding:11px;
+border:none;
+border-radius:12px;
+background:linear-gradient(45deg,#00ffcc,#7c3aed);
+color:white;
+font-weight:bold;
+cursor:pointer;
+">
+ENTRAR
+</button>
+
+</div>
+<div style="display:flex;align-items:center;gap:8px;">
+<span id="admStatusDot" style="width:10px;height:10px;border-radius:50%;background:#ef4444"></span>
+<span>ADM: <span id="admStatusText">OFF</span></span>
+</div>
+
+<button id="admLoginBtn" onclick="toggleAdmLogin()">
+Login ADM
+</button>
+
+<div id="admMiniLogin" style="
+display:none;
+margin-top:10px;
+background:#111827;
+padding:10px;
+border-radius:10px;
+">
+
+<input id="admEmail"
+placeholder="Email"
+style="
+width:100%;
 margin-bottom:8px;
+padding:8px;
 border:none;
 border-radius:8px;
 ">
@@ -893,118 +926,164 @@ type="password"
 placeholder="Senha"
 style="
 width:100%;
-padding:8px;
 margin-bottom:8px;
+padding:8px;
 border:none;
 border-radius:8px;
 ">
 
-<button onclick="abrirPainelAdm()"
-style="
+<button onclick="abrirPainelAdm()" style="
 width:100%;
-padding:9px;
+padding:8px;
 border:none;
-border-radius:10px;
+border-radius:8px;
 background:#00ffcc;
-color:black;
 font-weight:bold;
 cursor:pointer;
 ">
-Login ADM
+Entrar
 </button>
 
-<div style="margin-top:10px;">
-👨‍💻 ADM online:
-<span id="admCount">—</span>
 </div>
 
-<div style="margin-top:5px;">
-👥 Ouvintes:
-<span id="ouvintesCount">—</span>
-</div>
-
+<div style="margin-top:10px;">👨‍💻 ADM online: <span id="admCount">—</span></div>
+<div style="margin-top:5px;">👥 Ouvintes: <span id="ouvintesCount">—</span></div>
 </div>
 
 <script>
+const canvas = document.getElementById("espaco");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let estrelas = [];
+
+for(let i=0;i<2500;i++){
+  estrelas.push({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    size: Math.random()*2,
+
+    alpha: Math.random(),
+    speed: Math.random()*0.03,
+
+    // ⭐ 20% estrelas em “viagem”
+    warp: Math.random() < 0.08
+  });
+}
+
+function animar(){
+  ctx.fillStyle="black";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  estrelas.forEach(e=>{
+
+    // ⭐ brilho (igual ao seu)
+    e.alpha += e.speed;
+    if(e.alpha <= 0 || e.alpha >= 1){
+      e.speed *= -1;
+    }
+
+    // 🚀 EFEITO VIAGEM (SÓ 20%)
+    if(e.warp){
+     e.y += 0.4;// velocidade da viagem
+
+      // volta pro topo quando sair da tela
+      if(e.y > canvas.height){
+        e.y = 0;
+        e.x = Math.random()*canvas.width;
+      }
+    }
+
+    ctx.beginPath();
+    ctx.arc(e.x,e.y,e.size,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${e.alpha})`;
+    ctx.fill();
+  });
+
+  requestAnimationFrame(animar);
+}
+
+animar();
+
+window.addEventListener("resize",()=>{
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
 
 function toggleChat(){
-
-const box =
-document.getElementById("chat-box");
-
-box.style.display =
-box.style.display === "flex"
-? "none"
-: "flex";
-
+  const box = document.getElementById("chat-box");
+  box.style.display = box.style.display === "flex" ? "none" : "flex";
 }
 
 async function enviarMsg(){
 
-const input =
-document.getElementById("input-msg");
+  const input = document.getElementById("input-msg");
 
-if(!input.value.trim()) return;
+  if(!input.value.trim()) return;
 
-const texto = input.value;
+  const texto = input.value;
 
-input.value = "";
+  // limpa instantaneamente
+  input.value = "";
 
-const mensagensDiv =
-document.getElementById("mensagens");
+  const mensagensDiv =
+  document.getElementById("mensagens");
 
-const div =
-document.createElement("div");
+  const div = document.createElement("div");
 
-div.style.marginBottom = "8px";
+  div.style.marginBottom = "8px";
 
-div.innerHTML = `
-<div style="
-background:#00ffcc;
-color:black;
-padding:8px 12px;
-border-radius:12px;
-display:inline-block;
-max-width:80%;
-margin-left:auto;
-">
-${texto}
-</div>
-`;
+  div.innerHTML = `
+    <div style="
+      background:#00ffcc;
+      color:black;
+      padding:8px 12px;
+      border-radius:12px;
+      display:inline-block;
+      max-width:80%;
+      margin-left:auto;
+    ">
+      ${texto}
+    </div>
+  `;
 
-mensagensDiv.appendChild(div);
+  mensagensDiv.appendChild(div);
 
-mensagensDiv.scrollTop =
-mensagensDiv.scrollHeight;
+  mensagensDiv.scrollTop =
+  mensagensDiv.scrollHeight;
 
-try{
-await trySendToFirestore(texto);
-}catch(e){
-console.error(e);
-}
+  try{
+    await trySendToFirestore(texto);
+  }catch(e){
+    console.error(e);
+  }
 
 }
 
 function toggleProgramacao(){
-
-const menu =
-document.getElementById("prog-opcoes");
-
-menu.style.display =
-menu.style.display === "block"
-? "none"
-: "block";
-
+  const menu = document.getElementById("prog-opcoes");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
 }
 
+(function(){
+  function setRunning(){
+    document.querySelectorAll('.bar').forEach(b=>{
+      b.style.animationPlayState='running';
+    });
+  }
+
+  window.addEventListener('click', setRunning);
+  window.addEventListener('touchstart', setRunning);
+
+  setTimeout(setRunning,500);
+})();
 </script>
 
 <script type="module">
 
-import {
-initializeApp,
-getApps
-}
+import { initializeApp, getApps }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
@@ -1022,37 +1101,23 @@ onChildAdded
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 window.__firebaseConfigChat = {
-
-apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
-
-authDomain:
-"vibefm-radio-ad326.firebaseapp.com",
-
-projectId:
-"vibefm-radio-ad326",
-
-storageBucket:
-"vibefm-radio-ad326.appspot.com",
-
-messagingSenderId:
-"1021295101262",
-
-appId:
-"1:1021295101262:web:7b9e80e0287e041c494a1f"
-
+apiKey: "SUA_KEY",
+authDomain: "vibefm-radio-ad326.firebaseapp.com",
+projectId: "vibefm-radio-ad326",
+storageBucket: "vibefm-radio-ad326.appspot.com",
+messagingSenderId: "1021295101262",
+appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
 };
 
-const app =
-getApps().length
+const app = getApps().length
 ? getApps()[0]
 : initializeApp(window.__firebaseConfigChat);
 
 const auth = getAuth(app);
-
 const db = getDatabase(app);
 
-window.trySendToFirestore =
-async function(text){
+window.trySendToFirestore = async function(text){
+
 
 try{
 
@@ -1069,26 +1134,13 @@ localStorage.getItem("vibe_nome")
 localStorage.setItem("vibe_nome", nome);
 
 await push(ref(db,"mensagens"),{
-
 uid: uid,
 nome: nome,
 texto: text,
 timestamp: Date.now()
-
 });
 
-console.log("Mensagem enviada");
-
-}catch(err){
-
-console.error(err);
-
-}
-
-};
-
-const mensagensRef =
-ref(db, "mensagens");
+const mensagensRef = ref(db, "mensagens");
 
 onChildAdded(mensagensRef, (snapshot)=>{
 
@@ -1096,21 +1148,22 @@ const data = snapshot.val();
 
 if(!data) return;
 
-const meuUid =
-localStorage.getItem("vibe_uid");
+// pega uid do visitante atual
+const meuUid = localStorage.getItem("vibe_uid");
 
+// mostra somente:
+// mensagens do visitante
+// OU respostas do admin pra ele
 if(data.uid !== meuUid) return;
 
 const mensagensDiv =
 document.getElementById("mensagens");
 
-const div =
-document.createElement("div");
+const div = document.createElement("div");
 
 div.style.marginBottom = "8px";
 
-const isAdm =
-data.admin === true;
+const isAdm = data.admin === true;
 
 div.innerHTML = `
 <div style="
@@ -1132,26 +1185,27 @@ mensagensDiv.scrollHeight;
 
 });
 
+console.log("Mensagem enviada");
+
+}catch(err){
+console.error(err);
+}
+
+};
+
+
 function setAdmUI(isOnline){
-
-const dot =
-document.getElementById("admStatusDot");
-
-const text =
-document.getElementById("admStatusText");
+const dot = document.getElementById('admStatusDot');
+const text = document.getElementById('admStatusText');
 
 if(!dot || !text) return;
 
 if(isOnline){
-
-dot.style.background="#22c55e";
-text.textContent="ON";
-
+  dot.style.background='#22c55e';
+  text.textContent='ON';
 }else{
-
-dot.style.background="#ef4444";
-text.textContent="OFF";
-
+  dot.style.background='#ef4444';
+  text.textContent='OFF';
 }
 
 }
@@ -1159,12 +1213,27 @@ text.textContent="OFF";
 setAdmUI(false);
 
 onAuthStateChanged(auth,(user)=>{
-
 setAdmUI(!!user);
-
 });
 
-window.abrirPainelAdm = function(){
+document.getElementById('admLoginBtn')
+?.addEventListener('click',()=>{
+toggleAdmLogin();
+});
+
+function toggleAdmLogin(){
+
+const box =
+document.getElementById("admMiniLogin");
+
+box.style.display =
+box.style.display === "block"
+? "none"
+: "block";
+
+}
+
+function abrirPainelAdm(){
 
 const email =
 document.getElementById("admEmail").value;
@@ -1173,12 +1242,14 @@ const senha =
 document.getElementById("admSenha").value;
 
 localStorage.setItem("admEmail", email);
-
 localStorage.setItem("admSenha", senha);
 
 window.open("admin.html","_blank");
 
 }
-
 </script>
-```
+
+<script src="radio2.js?v=1"></script>
+
+</body>
+</html>

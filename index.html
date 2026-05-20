@@ -826,29 +826,34 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 </div>
 <!-- PAINEL -->
 <div class="painel-online">
-  <!-- MINI LOGIN ADM -->
+
+<div style="display:flex;align-items:center;gap:8px;">
+<span id="admStatusDot"
+style="
+width:10px;
+height:10px;
+border-radius:50%;
+background:#ef4444;
+"></span>
+
+<span>
+ADM:
+<span id="admStatusText">OFF</span>
+</span>
+</div>
+
+<button id="admLoginBtn">
+Login ADM
+</button>
+
+<!-- MINI LOGIN -->
 <div id="admMiniLogin" style="
 display:none;
-position:fixed;
-top:80px;
-right:10px;
-width:260px;
-background:rgba(0,0,0,.92);
-border:1px solid rgba(0,255,204,.4);
-border-radius:16px;
-padding:15px;
-z-index:9999;
-backdrop-filter:blur(12px);
-box-shadow:0 0 25px rgba(0,255,204,.15);
+margin-top:10px;
+background:#111827;
+padding:10px;
+border-radius:12px;
 ">
-
-<h3 style="
-margin-bottom:12px;
-color:#00ffcc;
-text-align:center;
-">
-🔐 Login ADM
-</h3>
 
 <input
 id="admEmail"
@@ -856,14 +861,13 @@ type="email"
 placeholder="Email"
 style="
 width:100%;
-padding:10px;
-margin-bottom:10px;
+padding:8px;
+margin-bottom:8px;
 border:none;
-border-radius:10px;
-background:#111827;
+border-radius:8px;
+background:#0f172a;
 color:white;
-"
-/>
+">
 
 <input
 id="admSenha"
@@ -871,70 +875,19 @@ type="password"
 placeholder="Senha"
 style="
 width:100%;
-padding:10px;
-margin-bottom:12px;
-border:none;
-border-radius:10px;
-background:#111827;
-color:white;
-"
-/>
-
-<button onclick="abrirPainelAdm()" style="
-width:100%;
-padding:11px;
-border:none;
-border-radius:12px;
-background:linear-gradient(45deg,#00ffcc,#7c3aed);
-color:white;
-font-weight:bold;
-cursor:pointer;
-">
-ENTRAR
-</button>
-
-</div>
-<div style="display:flex;align-items:center;gap:8px;">
-<span id="admStatusDot" style="width:10px;height:10px;border-radius:50%;background:#ef4444"></span>
-<span>ADM: <span id="admStatusText">OFF</span></span>
-</div>
-
-<button id="admLoginBtn" onclick="toggleAdmLogin()">
-Login ADM
-</button>
-
-<div id="admMiniLogin" style="
-display:none;
-margin-top:10px;
-background:#111827;
-padding:10px;
-border-radius:10px;
-">
-
-<input id="admEmail"
-placeholder="Email"
-style="
-width:100%;
-margin-bottom:8px;
 padding:8px;
+margin-bottom:8px;
 border:none;
 border-radius:8px;
+background:#0f172a;
+color:white;
 ">
 
-<input id="admSenha"
-type="password"
-placeholder="Senha"
+<button
+onclick="abrirPainelAdm()"
 style="
 width:100%;
-margin-bottom:8px;
-padding:8px;
-border:none;
-border-radius:8px;
-">
-
-<button onclick="abrirPainelAdm()" style="
-width:100%;
-padding:8px;
+padding:9px;
 border:none;
 border-radius:8px;
 background:#00ffcc;
@@ -946,8 +899,16 @@ Entrar
 
 </div>
 
-<div style="margin-top:10px;">👨‍💻 ADM online: <span id="admCount">—</span></div>
-<div style="margin-top:5px;">👥 Ouvintes: <span id="ouvintesCount">—</span></div>
+<div style="margin-top:10px;">
+👨‍💻 ADM online:
+<span id="admCount">—</span>
+</div>
+
+<div style="margin-top:5px;">
+👥 Ouvintes:
+<span id="ouvintesCount">—</span>
+</div>
+
 </div>
 
 <script>
@@ -960,72 +921,86 @@ canvas.height = window.innerHeight;
 let estrelas = [];
 
 for(let i=0;i<2500;i++){
+
   estrelas.push({
     x: Math.random()*canvas.width,
     y: Math.random()*canvas.height,
     size: Math.random()*2,
-
     alpha: Math.random(),
     speed: Math.random()*0.03,
-
-    // ⭐ 20% estrelas em “viagem”
     warp: Math.random() < 0.08
   });
+
 }
 
 function animar(){
+
   ctx.fillStyle="black";
   ctx.fillRect(0,0,canvas.width,canvas.height);
 
   estrelas.forEach(e=>{
 
-    // ⭐ brilho (igual ao seu)
     e.alpha += e.speed;
+
     if(e.alpha <= 0 || e.alpha >= 1){
       e.speed *= -1;
     }
 
-    // 🚀 EFEITO VIAGEM (SÓ 20%)
     if(e.warp){
-     e.y += 0.4;// velocidade da viagem
 
-      // volta pro topo quando sair da tela
+      e.y += 0.4;
+
       if(e.y > canvas.height){
         e.y = 0;
         e.x = Math.random()*canvas.width;
       }
+
     }
 
     ctx.beginPath();
     ctx.arc(e.x,e.y,e.size,0,Math.PI*2);
-    ctx.fillStyle=`rgba(255,255,255,${e.alpha})`;
+
+    ctx.fillStyle =
+    `rgba(255,255,255,${e.alpha})`;
+
     ctx.fill();
+
   });
 
   requestAnimationFrame(animar);
+
 }
 
 animar();
 
 window.addEventListener("resize",()=>{
+
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+
 });
 
 function toggleChat(){
-  const box = document.getElementById("chat-box");
-  box.style.display = box.style.display === "flex" ? "none" : "flex";
+
+  const box =
+  document.getElementById("chat-box");
+
+  box.style.display =
+  box.style.display === "flex"
+  ? "none"
+  : "flex";
+
 }
 
 async function enviarMsg(){
 
-  const input = document.getElementById("input-msg");
+  const input =
+  document.getElementById("input-msg");
 
   if(!input.value.trim()) return;
 
   const texto = input.value;
 
-  // limpa instantaneamente
   input.value = "";
 
   const mensagensDiv =
@@ -1036,17 +1011,17 @@ async function enviarMsg(){
   div.style.marginBottom = "8px";
 
   div.innerHTML = `
-    <div style="
-      background:#00ffcc;
-      color:black;
-      padding:8px 12px;
-      border-radius:12px;
-      display:inline-block;
-      max-width:80%;
-      margin-left:auto;
-    ">
-      ${texto}
-    </div>
+  <div style="
+  background:#00ffcc;
+  color:black;
+  padding:8px 12px;
+  border-radius:12px;
+  display:inline-block;
+  max-width:80%;
+  margin-left:auto;
+  ">
+  ${texto}
+  </div>
   `;
 
   mensagensDiv.appendChild(div);
@@ -1055,42 +1030,67 @@ async function enviarMsg(){
   mensagensDiv.scrollHeight;
 
   try{
+
     await trySendToFirestore(texto);
+
   }catch(e){
+
     console.error(e);
+
   }
 
 }
 
 function toggleProgramacao(){
-  const menu = document.getElementById("prog-opcoes");
-  menu.style.display = menu.style.display === "block" ? "none" : "block";
+
+  const menu =
+  document.getElementById("prog-opcoes");
+
+  menu.style.display =
+  menu.style.display === "block"
+  ? "none"
+  : "block";
+
 }
 
 (function(){
+
   function setRunning(){
-    document.querySelectorAll('.bar').forEach(b=>{
-      b.style.animationPlayState='running';
+
+    document
+    .querySelectorAll('.bar')
+    .forEach(b=>{
+
+      b.style.animationPlayState =
+      'running';
+
     });
+
   }
 
   window.addEventListener('click', setRunning);
   window.addEventListener('touchstart', setRunning);
 
   setTimeout(setRunning,500);
+
 })();
 </script>
 
 <script type="module">
 
-import { initializeApp, getApps }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import {
+initializeApp,
+getApps
+}
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
 getAuth,
 onAuthStateChanged
 }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 import {
 getDatabase,
@@ -1098,26 +1098,41 @@ ref,
 push,
 onChildAdded
 }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 window.__firebaseConfigChat = {
-apiKey: "SUA_KEY",
-authDomain: "vibefm-radio-ad326.firebaseapp.com",
-projectId: "vibefm-radio-ad326",
-storageBucket: "vibefm-radio-ad326.appspot.com",
-messagingSenderId: "1021295101262",
-appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
+
+apiKey: "SUA_API_KEY",
+
+authDomain:
+"vibefm-radio-ad326.firebaseapp.com",
+
+projectId:
+"vibefm-radio-ad326",
+
+storageBucket:
+"vibefm-radio-ad326.appspot.com",
+
+messagingSenderId:
+"1021295101262",
+
+appId:
+"1:1021295101262:web:7b9e80e0287e041c494a1f"
+
 };
 
-const app = getApps().length
+const app =
+getApps().length
 ? getApps()[0]
 : initializeApp(window.__firebaseConfigChat);
 
 const auth = getAuth(app);
+
 const db = getDatabase(app);
 
-window.trySendToFirestore = async function(text){
-
+window.trySendToFirestore =
+async function(text){
 
 try{
 
@@ -1129,41 +1144,54 @@ localStorage.setItem("vibe_uid", uid);
 
 const nome =
 localStorage.getItem("vibe_nome")
-|| ("Visitante-" + Math.floor(Math.random()*9999));
+|| ("Visitante-" +
+Math.floor(Math.random()*9999));
 
 localStorage.setItem("vibe_nome", nome);
 
 await push(ref(db,"mensagens"),{
+
 uid: uid,
 nome: nome,
 texto: text,
 timestamp: Date.now()
+
 });
 
-const mensagensRef = ref(db, "mensagens");
+console.log("Mensagem enviada");
 
-onChildAdded(mensagensRef, (snapshot)=>{
+}catch(err){
+
+console.error(err);
+
+}
+
+};
+
+const mensagensRef =
+ref(db,"mensagens");
+
+onChildAdded(mensagensRef,(snapshot)=>{
 
 const data = snapshot.val();
 
 if(!data) return;
 
-// pega uid do visitante atual
-const meuUid = localStorage.getItem("vibe_uid");
+const meuUid =
+localStorage.getItem("vibe_uid");
 
-// mostra somente:
-// mensagens do visitante
-// OU respostas do admin pra ele
 if(data.uid !== meuUid) return;
 
 const mensagensDiv =
 document.getElementById("mensagens");
 
-const div = document.createElement("div");
+const div =
+document.createElement("div");
 
 div.style.marginBottom = "8px";
 
-const isAdm = data.admin === true;
+const isAdm =
+data.admin === true;
 
 div.innerHTML = `
 <div style="
@@ -1185,27 +1213,26 @@ mensagensDiv.scrollHeight;
 
 });
 
-console.log("Mensagem enviada");
-
-}catch(err){
-console.error(err);
-}
-
-};
-
-
 function setAdmUI(isOnline){
-const dot = document.getElementById('admStatusDot');
-const text = document.getElementById('admStatusText');
+
+const dot =
+document.getElementById('admStatusDot');
+
+const text =
+document.getElementById('admStatusText');
 
 if(!dot || !text) return;
 
 if(isOnline){
+
   dot.style.background='#22c55e';
   text.textContent='ON';
+
 }else{
+
   dot.style.background='#ef4444';
   text.textContent='OFF';
+
 }
 
 }
@@ -1213,15 +1240,12 @@ if(isOnline){
 setAdmUI(false);
 
 onAuthStateChanged(auth,(user)=>{
+
 setAdmUI(!!user);
+
 });
 
-document.getElementById('admLoginBtn')
-?.addEventListener('click',()=>{
-toggleAdmLogin();
-});
-
-function toggleAdmLogin(){
+window.toggleAdmLogin = function(){
 
 const box =
 document.getElementById("admMiniLogin");
@@ -1231,9 +1255,9 @@ box.style.display === "block"
 ? "none"
 : "block";
 
-}
+};
 
-function abrirPainelAdm(){
+window.abrirPainelAdm = function(){
 
 const email =
 document.getElementById("admEmail").value;
@@ -1246,7 +1270,16 @@ localStorage.setItem("admSenha", senha);
 
 window.open("admin.html","_blank");
 
-}
+};
+
+document
+.getElementById("admLoginBtn")
+.addEventListener("click",()=>{
+
+toggleAdmLogin();
+
+});
+
 </script>
 
 <script src="radio2.js?v=1"></script>

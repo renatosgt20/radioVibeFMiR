@@ -826,12 +826,125 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 </div>
 <!-- PAINEL -->
 <div class="painel-online">
+  <!-- MINI LOGIN ADM -->
+<div id="admMiniLogin" style="
+display:none;
+position:fixed;
+top:80px;
+right:10px;
+width:260px;
+background:rgba(0,0,0,.92);
+border:1px solid rgba(0,255,204,.4);
+border-radius:16px;
+padding:15px;
+z-index:9999;
+backdrop-filter:blur(12px);
+box-shadow:0 0 25px rgba(0,255,204,.15);
+">
+
+<h3 style="
+margin-bottom:12px;
+color:#00ffcc;
+text-align:center;
+">
+🔐 Login ADM
+</h3>
+
+<input
+id="admEmail"
+type="email"
+placeholder="Email"
+style="
+width:100%;
+padding:10px;
+margin-bottom:10px;
+border:none;
+border-radius:10px;
+background:#111827;
+color:white;
+"
+/>
+
+<input
+id="admSenha"
+type="password"
+placeholder="Senha"
+style="
+width:100%;
+padding:10px;
+margin-bottom:12px;
+border:none;
+border-radius:10px;
+background:#111827;
+color:white;
+"
+/>
+
+<button onclick="abrirPainelAdm()" style="
+width:100%;
+padding:11px;
+border:none;
+border-radius:12px;
+background:linear-gradient(45deg,#00ffcc,#7c3aed);
+color:white;
+font-weight:bold;
+cursor:pointer;
+">
+ENTRAR
+</button>
+
+</div>
 <div style="display:flex;align-items:center;gap:8px;">
 <span id="admStatusDot" style="width:10px;height:10px;border-radius:50%;background:#ef4444"></span>
 <span>ADM: <span id="admStatusText">OFF</span></span>
 </div>
 
-<button id="admLoginBtn">Login ADM</button>
+<button id="admLoginBtn" onclick="toggleAdmLogin()">
+Login ADM
+</button>
+
+<div id="admMiniLogin" style="
+display:none;
+margin-top:10px;
+background:#111827;
+padding:10px;
+border-radius:10px;
+">
+
+<input id="admEmail"
+placeholder="Email"
+style="
+width:100%;
+margin-bottom:8px;
+padding:8px;
+border:none;
+border-radius:8px;
+">
+
+<input id="admSenha"
+type="password"
+placeholder="Senha"
+style="
+width:100%;
+margin-bottom:8px;
+padding:8px;
+border:none;
+border-radius:8px;
+">
+
+<button onclick="abrirPainelAdm()" style="
+width:100%;
+padding:8px;
+border:none;
+border-radius:8px;
+background:#00ffcc;
+font-weight:bold;
+cursor:pointer;
+">
+Entrar
+</button>
+
+</div>
 
 <div style="margin-top:10px;">👨‍💻 ADM online: <span id="admCount">—</span></div>
 <div style="margin-top:5px;">👥 Ouvintes: <span id="ouvintesCount">—</span></div>
@@ -1080,7 +1193,6 @@ console.error(err);
 
 };
 
-</script>
 
 function setAdmUI(isOnline){
 const dot = document.getElementById('admStatusDot');
@@ -1103,9 +1215,37 @@ onAuthStateChanged(auth,(user)=>{
 setAdmUI(!!user);
 });
 
-document.getElementById('admLoginBtn')?.addEventListener('click',()=>{
-window.open('admin.html','_blank');
+document.getElementById('admLoginBtn')
+?.addEventListener('click',()=>{
+toggleAdmLogin();
 });
+
+window.toggleAdmLogin = function(){
+
+const box =
+document.getElementById("admMiniLogin");
+
+box.style.display =
+box.style.display === "block"
+? "none"
+: "block";
+
+}
+
+window.abrirPainelAdm = function(){
+
+const email =
+document.getElementById("admEmail").value;
+
+const senha =
+document.getElementById("admSenha").value;
+
+localStorage.setItem("admEmail", email);
+localStorage.setItem("admSenha", senha);
+
+window.open("admin.html","_blank");
+
+}
 </script>
 
 <script src="radio2.js?v=1"></script>

@@ -152,17 +152,31 @@ padding:15px;
 }
 
 .msg{
-background:#111827;
+background:linear-gradient(45deg,#0f172a,#0ea5e9);
 padding:10px;
-border-radius:12px;
+border-radius:14px;
 margin-bottom:10px;
 max-width:80%;
+color:white;
+box-shadow:0 0 18px rgba(0,255,204,.12);
 }
 
 .msg.adm{
-background:#00ffaa;
-color:black;
+background:linear-gradient(45deg,#7c3aed,#c026d3);
 margin-left:auto;
+text-align:right;
+box-shadow:0 0 22px rgba(192,38,211,.22);
+}
+
+.msg .badge{
+display:inline-block;
+font-size:11px;
+font-weight:800;
+padding:2px 8px;
+border-radius:999px;
+margin-bottom:6px;
+background:rgba(0,0,0,.25);
+border:1px solid rgba(255,255,255,.12);
 }
 
 .send-box{
@@ -410,7 +424,9 @@ if(!msg || msg.uid !== uid) return;
 
 msgsDiv.innerHTML += `
 
-<div class="msg">
+<div class="msg ${msg.admin === true ? 'adm' : ''}">
+
+<div class="badge">${msg.admin === true ? 'ADM' : 'OUVINTE'}</div>
 
 ${msg.texto}
 

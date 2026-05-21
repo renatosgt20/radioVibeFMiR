@@ -1152,8 +1152,13 @@ localStorage.setItem("vibe_nome", nome);
 await push(ref(db,"mensagens"),{
 
 uid: uid,
+
 nome: nome,
+
 texto: text,
+
+admin: false,
+
 timestamp: Date.now()
 
 });
@@ -1168,8 +1173,10 @@ console.error(err);
 
 };
 
-const mensagensRef =
-ref(db,"mensagens");
+const mensagensRef = ref(db,"mensagens");
+
+const processed = new Set();
+const meuUid = localStorage.getItem("vibe_uid");
 
 onChildAdded(mensagensRef,(snapshot)=>{
 
@@ -1177,21 +1184,18 @@ const data = snapshot.val();
 
 if(!data) return;
 
-const meuUid =
-localStorage.getItem("vibe_uid");
+// evita duplicar render (especialmente quando há reconnect)
+const msgId = snapshot.key;
+if(msgId && processed.has(msgId)) return;
+if(msgId) processed.add(msgId);
 
-if(data.uid !== meuUid) return;
+if(data.uid !== meuUid) return; // mostra apenas do próprio uid
 
-const mensagensDiv =
-document.getElementById("mensagens");
-
-const div =
-document.createElement("div");
-
+const mensagensDiv = document.getElementById("mensagens");
+const div = document.createElement("div");
 div.style.marginBottom = "8px";
 
-const isAdm =
-data.admin === true;
+const isAdm = data.admin === true;
 
 div.innerHTML = `
 <div style="
@@ -1207,9 +1211,7 @@ ${data.texto}
 `;
 
 mensagensDiv.appendChild(div);
-
-mensagensDiv.scrollTop =
-mensagensDiv.scrollHeight;
+mensagensDiv.scrollTop = mensagensDiv.scrollHeight;
 
 });
 

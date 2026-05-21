@@ -310,32 +310,27 @@ const db = getDatabase(app);
 
 let currentUid = null;
 
+
 /* LOGIN */
 
 window.login = function(){
 
-const email =
-document.getElementById("email").value;
+const email = document.getElementById("email").value;
+const senha = document.getElementById("password").value;
 
-const password =
-document.getElementById("password").value;
+if(!email || !senha) return;
 
-signInWithEmailAndPassword(auth,email,password)
-
+signInWithEmailAndPassword(auth, email, senha)
 .then(()=>{
 
 document.getElementById("loginBox").style.display="none";
 
 document.getElementById("panel").style.display="flex";
-
-loadUsers();
-
+	
+	loadUsers();
 })
-
-.catch(err=>{
-
-alert(err.message);
-
+.catch((err)=>{
+	alert(err.message);
 });
 
 };
@@ -357,9 +352,12 @@ if(!data) return;
 
 const usersMap = {};
 
+// listar ouvintes pelo uid, ignorando ADM
 Object.entries(data).forEach(([id,msg])=>{
 
-if(!msg.uid) return;
+if(!msg || !msg.uid) return;
+
+if(msg.admin === true) return;
 
 usersMap[msg.uid] = msg.nome || "Ouvinte";
 
@@ -434,9 +432,10 @@ document.getElementById("replyInput");
 if(!input.value.trim()) return;
 
 push(ref(db,"mensagens"),{
-uid: uidDoUsuario,
-texto: resposta,
+uid: currentUid,
+texto: input.value,
 admin: true,
+nome: "ADM",
 timestamp: Date.now()
 });
 

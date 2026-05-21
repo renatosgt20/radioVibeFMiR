@@ -1096,7 +1096,9 @@ import {
 getDatabase,
 ref,
 push,
-onChildAdded
+onChildAdded,
+set,
+onValue
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
@@ -1244,13 +1246,20 @@ if(isOnline){
 
 }
 
-setAdmUI(false);
+// listener de presença do ADM (Realtime Database)
+// onlineAdmins/main = true quando o ADM estiver autenticado
 
-onAuthStateChanged(auth,(user)=>{
+const admPresenceRef = ref(db, "onlineAdmins/main");
 
-setAdmUI(!!user);
+onValue(admPresenceRef, (snap) => {
+
+  setAdmUI(snap.val() === true);
 
 });
+
+// fallback inicial
+
+setAdmUI(false);
 
 window.toggleAdmLogin = function(){
 

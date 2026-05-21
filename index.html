@@ -1176,7 +1176,10 @@ console.error(err);
 const mensagensRef = ref(db,"mensagens");
 
 const processed = new Set();
-const meuUid = localStorage.getItem("vibe_uid");
+let meuUid = localStorage.getItem("vibe_uid");
+if(!meuUid){
+  meuUid = "";
+}
 
 onChildAdded(mensagensRef,(snapshot)=>{
 
@@ -1188,6 +1191,8 @@ if(!data) return;
 const msgId = snapshot.key;
 if(msgId && processed.has(msgId)) return;
 if(msgId) processed.add(msgId);
+
+if(!meuUid) return; // evita qualquer render se uid ainda não existir
 
 if(data.uid !== meuUid) return; // mostra apenas do próprio uid
 

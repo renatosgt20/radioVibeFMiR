@@ -131,11 +131,41 @@ background:#111827;
 border-radius:12px;
 cursor:pointer;
 transition:.2s;
+position:relative;
 }
 
 .user:hover{
 background:#1f2937;
 }
+
+.user .new-indicator{
+display:none;
+position:absolute;
+top:8px;
+right:10px;
+font-size:10px;
+font-weight:900;
+color:#ff2d55;
+text-shadow:0 0 10px rgba(255,45,85,.55);
+}
+
+/* Efeito de nova mensagem (coração no neon do sci-fi) */
+.user.has-new{
+box-shadow:0 0 0 1px rgba(0,255,204,.22), 0 0 20px rgba(0,255,204,.18);
+border:1px solid rgba(0,255,204,.35);
+animation:admPulse 1.1s ease-in-out infinite;
+}
+
+.user.has-new .new-indicator{
+display:block;
+}
+
+@keyframes admPulse{
+0%{transform:translateY(0); box-shadow:0 0 0 1px rgba(0,255,204,.18), 0 0 16px rgba(0,255,204,.15);}
+50%{transform:translateY(-3px); box-shadow:0 0 0 1px rgba(0,255,204,.40), 0 0 28px rgba(0,255,204,.32);}
+100%{transform:translateY(0); box-shadow:0 0 0 1px rgba(0,255,204,.18), 0 0 16px rgba(0,255,204,.15);}
+}
+
 
 /* MESSAGES */
 
@@ -361,10 +391,15 @@ document.getElementById("panel").style.display="flex";
 
 /* USERS */
 
+let renderedMap = {};
+
 function loadUsers(){
 
 const usersDiv =
 document.getElementById("users");
+
+// cache de visualização por uid
+renderedMap = renderedMap || {};
 
 onValue(ref(db,"mensagens"),snapshot=>{
 
@@ -383,18 +418,41 @@ if(!msg || !msg.uid) return;
 
 if(msg.admin === true) return;
 
+// guarda nome
 usersMap[msg.uid] = msg.nome || "Ouvinte";
 
 });
 
+// identifica novas mensagens por uid (sem depender do card atual)
+Object.entries(data).forEach(([id,msg])=>{
+
+if(!msg || !msg.uid) return;
+
+if(msg.admin === true) return;
+
+// marca uid como "tem nova" se msg tiver timestamp mais recente que o último visto
+const last = renderedMap[msg.uid]?.lastSeen || 0;
+if((msg.timestamp || 0) > last){
+  renderedMap[msg.uid] = renderedMap[msg.uid] || { lastSeen: last };
+  renderedMap[msg.uid].hasNew = true;
+}
+
+});
+
 Object.entries(usersMap).forEach(([uid,nome])=>{
+  const state = renderedMap[uid] || { lastSeen: 0, hasNew: false };
+  const hasNew = !!state.hasNew;
+  const clazz = hasNew ? 'user has-new' : 'user';
 
 usersDiv.innerHTML += `
 
-<div class="user"
+<div class="${clazz}"
+data-uid="${uid}"
 onclick="openChat('${uid}','${nome}')">
 
 👤 ${nome}
+
+<span class="new-indicator">🔴</span>
 
 </div>
 
@@ -411,6 +469,18 @@ onclick="openChat('${uid}','${nome}')">
 window.openChat = function(uid,nome){
 
 currentUid = uid;
+
+// marca como visualizada: remove badge e para de piscar para esse uid
+if(typeof renderedMap !== 'undefined' && renderedMap[uid]){
+  renderedMap[uid].hasNew = false;
+  renderedMap[uid].lastSeen = Date.now();
+}
+
+
+// remove badge/efeitos de "nova mensagem" ao abrir a conversa
+renderedMap[currentUid] = renderedMap[currentUid] || {};
+renderedMap[currentUid].lastSeen = Date.now();
+renderedMap[currentUid].hasNew = false;
 
 const msgsDiv = document.getElementById("msgs");
 

@@ -290,7 +290,8 @@ import {
 getDatabase,
 ref,
 push,
-onValue
+onValue,
+set
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
@@ -332,10 +333,19 @@ window.login = function(){
 const email = document.getElementById("email").value;
 const senha = document.getElementById("password").value;
 
+// se abrir de novo, garante que ao fechar a aba a presença seja desativada
+window.onbeforeunload = () => {
+  set(ref(db, "onlineAdmins/main"), false);
+};
+
+
 if(!email || !senha) return;
 
 signInWithEmailAndPassword(auth, email, senha)
 .then(()=>{
+
+// presença do ADM (para index.html)
+set(ref(db, "onlineAdmins/main"), true);
 
 document.getElementById("loginBox").style.display="none";
 

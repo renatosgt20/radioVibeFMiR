@@ -388,10 +388,15 @@ window.openChat = function(uid,nome){
 
 currentUid = uid;
 
-const msgsDiv =
-document.getElementById("msgs");
+const msgsDiv = document.getElementById("msgs");
 
-onValue(ref(db,"mensagens"),snapshot=>{
+// Se já existe um listener do chat aberto, remove para evitar duplicação.
+if(window.__admChatUnsub){
+  window.__admChatUnsub();
+}
+
+// listener único para o uid selecionado
+window.__admChatUnsub = onValue(ref(db,"mensagens"),snapshot=>{
 
 const data = snapshot.val();
 
@@ -401,7 +406,7 @@ if(!data) return;
 
 Object.values(data).forEach(msg=>{
 
-if(msg.uid !== uid) return;
+if(!msg || msg.uid !== uid) return;
 
 msgsDiv.innerHTML += `
 
@@ -415,8 +420,7 @@ ${msg.texto}
 
 });
 
-msgsDiv.scrollTop =
-msgsDiv.scrollHeight;
+msgsDiv.scrollTop = msgsDiv.scrollHeight;
 
 });
 

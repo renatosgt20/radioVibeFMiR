@@ -321,7 +321,8 @@ getDatabase,
 ref,
 push,
 onValue,
-set
+set,
+remove
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
@@ -466,6 +467,9 @@ onclick="openChat('${uid}','${nome}')">
 
 /* CHAT */
 
+// Armazena as chaves das mensagens por uid do ouvinte
+window.msgKeysMap = {};
+
 window.openChat = function(uid,nome){
 
 currentUid = uid;
@@ -489,6 +493,9 @@ if(window.__admChatUnsub){
   window.__admChatUnsub();
 }
 
+// inicializa mapa de chaves para este uid
+window.msgKeysMap[uid] = [];
+
 // listener único para o uid selecionado
 window.__admChatUnsub = onValue(ref(db,"mensagens"),snapshot=>{
 
@@ -498,9 +505,16 @@ msgsDiv.innerHTML = "";
 
 if(!data) return;
 
-Object.values(data).forEach(msg=>{
+window.msgKeysMap[uid] = [];
+
+Object.entries(data).forEach(([key,msg])=>{
 
 if(!msg || msg.uid !== uid) return;
+
+window.msgKeysMap[uid].push(key);
+
+const delBtn = msg.admin !== true ?
+`<button onclick="excluirMsg('${key}')" style="margin-top:5px;background:#ff4444;border:none;border-radius:6px;color:white;padding:4px 8px;cursor:pointer;font-size:10px;">🗑️ Excluir</button>` : '';
 
 msgsDiv.innerHTML += `
 
@@ -509,6 +523,8 @@ msgsDiv.innerHTML += `
 <div class="badge">${msg.admin === true ? 'ADM' : 'OUVINTE'}</div>
 
 ${msg.texto}
+
+${delBtn}
 
 </div>
 
@@ -558,6 +574,16 @@ adm:true,
 timestamp:Date.now()
 
 });
+
+};
+
+/* EXCLUIR MENSAGEM */
+
+window.excluirMsg = function(key){
+
+if(!confirm("Excluir esta mensagem?")) return;
+
+remove(ref(db,"mensagens/" + key));
 
 };
 

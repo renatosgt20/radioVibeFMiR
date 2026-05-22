@@ -658,7 +658,7 @@ async function tocarMusica(src) {
 // PRÓXIMA MÚSICA
 // ==============================
 
-function proximaMusica() {
+async function proximaMusica() {
 
   // fase atual pelo horário
   const pastaHorario = getPastaInicialPorHorario();
@@ -675,7 +675,7 @@ function proximaMusica() {
   const musica = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase);
   indexMusicaNaFase++;
 
-  tocarMusica(musica);
+  await tocarMusica(musica);
   atualizarBtnAgora();
 }
 

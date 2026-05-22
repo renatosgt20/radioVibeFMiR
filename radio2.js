@@ -742,7 +742,7 @@ async function tocarRadio() {
   // troca botão para PAUSE
   if (btn) btn.innerHTML = "⏸ PARAR";
 
-  proximaMusica(); // define src e chama play na tocarMusica()
+  await proximaMusica(); // define src e chama play na tocarMusica()
   atualizarBtnAgora();
 }
 

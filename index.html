@@ -581,32 +581,37 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     CONTAINER GERAL
+     CONTAINER GERAL - TODO CONTEUDO NO CENTRO/BAIXO
   ========================= */
   .main{
-    padding-top:80px;
-    padding-left:12px;
-    padding-right:12px;
+    padding:0;
+    padding-bottom:20px;
     display:flex;
     flex-direction:column;
     align-items:center;
     justify-content:flex-start;
-    gap:10px;
+    gap:0;
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
   }
 
   /* =========================
-     LOGO (CENTRALIZADA SEM EMPURRAR BOTÃO)
+     LOGO VIDEO CENTRALIZADO NO MEIO DA TELA
   ========================= */
   #logo-video{
-    width:82vw;
-    max-width:300px;
+    width:85vw;
+    max-width:320px;
     border-radius:18px;
     transform:none;
-    margin-top:10px;
+    margin-top:50px;
+    flex-shrink:0;
   }
 
   /* =========================
-     SLOGAN (NUNCA SOBREPÕE BOTÃO)
+     SLOGAN
   ========================= */
   .slogan{
     font-size:12px;
@@ -617,12 +622,29 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     BOTÃO OUVIR (FIXO NO FLUXO NORMAL)
+     AREA INFERIOR - BOTAO + EQUALIZER + WEATHER
+  ========================= */
+  .mobile-controls{
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding-bottom:20px;
+    gap:12px;
+    background:linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
+    z-index:100;
+  }
+
+  /* =========================
+     BOTÃO OUVIR
   ========================= */
   #btnRadio{
     font-size:14px;
     padding:10px 22px;
-    margin-top:10px;
+    margin-top:15px;
     transform:none;
     position:relative;
     z-index:5;
@@ -634,11 +656,28 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   .equalizer{
     width:120px;
     height:30px;
-    margin-top:8px;
+    margin-top:0;
   }
 
   .bar{
     width:6px;
+  }
+
+  /* =========================
+     CONTROLS WRAPPER - FIXADO NA PARTE INFERIOR
+  ========================= */
+  .controls-wrapper{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:12px;
+    position:fixed;
+    bottom:0;
+    left:0;
+    right:0;
+    padding-bottom:25px;
+    background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
+    z-index:100;
   }
 
   /* =========================
@@ -768,24 +807,23 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
     display: none !important;
   }
 
-  /* Mobile: mostra widget no canto inferior esquerdo */
+  /* Mobile: mostra widget acima dos controles inferior */
   #weather-widget-mobile{
-    display: block !important;
+    display: flex !important;
+    position: fixed;
+    bottom: 220px;
+    left: auto;
+    right: 15px;
+    top: auto;
+    margin: 0;
+    z-index:101;
   }
+}
 
-  /* =========================
-     QUADRO VIBE FM NEWS (MAIS ABAIXO NO MOBILE)
-  ========================= */
-  .quadro-breve{
-    position:fixed;
-    top: 75px;
-    right: 10px;
-    left: 10px;
-    transform: none;
-    width:calc(100vw - 20px);
-    max-width:320px;
-    margin: 0 auto;
-    z-index:998;
+/* Ocultar duplicated quadro-breve on desktop too */
+@media (min-width:769px){
+  .quadro-breve:last-of-type{
+    display:none;
   }
 }
 </style>
@@ -1008,6 +1046,7 @@ loadWeather();
 setInterval(loadWeather, 300000); // Atualiza a cada 5 min
 </script>
 
+<div class="controls-wrapper">
 <button id="btnRadio" onclick="tocarRadio()">▶ OUVIR AGORA</button>
 
 <audio id="audio" crossorigin="anonymous" preload="none"></audio>
@@ -1021,6 +1060,7 @@ setInterval(loadWeather, 300000); // Atualiza a cada 5 min
 <div class="bar"></div>
 <div class="bar"></div>
 <div class="bar"></div>
+</div>
 </div>
 
 </div>

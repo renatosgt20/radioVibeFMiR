@@ -598,10 +598,10 @@ function getPastaInicialPorHorario() {
     return "fundaovibe";
   }
   
-  // 19h até 02h
-  // 19h-24h => hitsvibe
+  // 18h até 02h
+  // 18h-24h => hitsvibe
   // 00h-02h => hitsvibe
-  if (h >= 19 || h < 2) {
+  if (h >= 18 || h < 2) {
     return "hitsvibe";
   }
 

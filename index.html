@@ -273,7 +273,26 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   font-size:11px;
   margin-bottom:5px;
 }
-/* QUADRO */
+/* QUADRO NEWS - ACIMA DO VIDEO */
+
+#quadro-news{
+  position: fixed;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  padding: 14px 16px;
+  border-radius: 20px;
+  background: rgba(5,10,25,.82);
+  border: 1px solid rgba(0,255,200,.20);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 20px rgba(0,255,200,.08),
+    0 0 50px rgba(0,0,0,.50);
+  text-align: center;
+  overflow: hidden;
+  z-index: 999;
+}
 
 .quadro-breve{
   position: fixed;
@@ -776,18 +795,19 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
      QUADRO VIBE FM NEWS (ACIMA DO VIDEO/LOGO CENTRALIZADO)
   ========================= */
   #quadro-news{
-    position: absolute;
-    top: 170px; /* 👈 AQUI você controla a altura */
+    position: fixed;
+    top: 8px;
     left: 50%;
     transform: translateX(-50%);
-    width: 92vw;
-    max-width: 320px;
+    width: 85vw;
+    max-width: 280px;
+    padding: 10px 12px;
     z-index: 999;
   }
 
-}
   #quadro-news .titulo-quadro{
-    font-size: 12px;
+    font-size: 11px;
+    margin-bottom: 6px;
   }
 
   #quadro-news .marquee-text{

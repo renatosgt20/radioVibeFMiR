@@ -571,134 +571,138 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   z-index:10;
 }
 
-/* NO CELULAR */
+/* ============================================= */
+    /* VERSÃO MOBILE - IGUAL AO PC SÓ QUE REDUZIDO E ORGANIZADO */
+    /* ============================================= */
+    @media (max-width: 768px) {
+      body {
+        overflow-x: hidden;
+      }
+      .container {
+        padding: 15px 12px 80px 12px;
+      }
+      /* Logo menor */
+      #logo-video {
+        width: 78vw;
+        max-width: 280px;
+        border-radius: 24px;
+        transform: translateY(-5px);
+      }
+      .slogan {
+        font-size: 11px;
+        padding: 4px 14px;
+        margin-top: 8px;
+        text-align: center;
+      }
+      /* Botão ouvir */
+      #btnRadio {
+        font-size: 15px;
+        padding: 9px 22px;
+        margin-top: 14px;
+        gap: 8px;
+      }
+      /* Equalizer reduzido */
+      .equalizer {
+        width: 130px;
+        height: 32px;
+        gap: 4px;
+        margin-top: 12px;
+      }
+      .bar {
+        width: 6px;
+      }
+      /* Painel online reposicionado para nao colidir */
+      .painel-online {
+        top: 12px;
+        right: 12px;
+        padding: 5px 12px;
+        font-size: 9px;
+        width: auto;
+        gap: 6px;
+      }
+      /* Botões da esquerda menores e bem posicionados */
+      .top-buttons {
+        left: 8px;
+        top: 10px;
+        transform: scale(0.8);
+        transform-origin: left top;
+        gap: 8px;
+        padding: 4px 10px;
+      }
+      .btn {
+        font-size: 9px;
+        padding: 5px 12px;
+      }
+      /* Quadro central - completamente centralizado e bonito */
+      .quadro-breve {
+        width: 92vw;
+        max-width: 340px;
+        margin-top: 20px;
+        padding: 12px 14px;
+        border-radius: 24px;
+      }
+      .titulo-quadro {
+        font-size: 12px;
+      }
+      .marquee-text {
+        font-size: 10px;
+        white-space: normal;
+        word-break: break-word;
+      }
+      /* Botão chat */
+      #chat-btn {
+        width: 50px;
+        height: 50px;
+        bottom: 12px;
+        right: 12px;
+      }
+      #chat-btn svg {
+        width: 28px;
+        height: 28px;
+      }
+      /* Chat box responsivo */
+      #chat-box {
+        right: 10px;
+        bottom: 75px;
+        width: calc(100% - 20px);
+        max-width: 300px;
+        height: 360px;
+      }
+      #mensagens {
+        font-size: 11px;
+      }
+      #input-msg {
+        font-size: 12px;
+        padding: 7px;
+      }
+      .chat-send {
+        width: 55px;
+        font-size: 12px;
+      }
+      /* weather se existir */
+      #weather-widget {
+        left: 12px;
+        bottom: 15px;
+        font-size: 9px;
+        padding: 4px 12px;
+        pointer-events: none;
+        backdrop-filter: blur(6px);
+      }
+      /* ajuste de elementos fixos pra não encobrir conteudo principal */
+      .main {
+        padding-top: 55px;
+      }
+    }
 
-@media (max-width:768px){
-
-  body{
-    overflow-x:hidden;
-  }
-
-  /* CONTEÚDO PRINCIPAL */
-  .main{
-    padding-top:90px;
-    padding-left:10px;
-    padding-right:10px;
-  }
-
-  /* LOGO */
-  #logo-video{
-    width:90vw;
-    max-width:320px;
-    transform:translateY(-10px);
-    border-radius:20px;
-  }
-
-  /* SLOGAN */
-  .slogan{
-    font-size:13px;
-    top:20px !important;
-    padding:0 8px;
-  }
-
-  /* BOTÃO OUVIR */
-  #btnRadio{
-    font-size:14px;
-    padding:10px 22px;
-    margin-top:10px;
-    transform:scale(0.95);
-  }
-
-  /* EQUALIZER */
-  .equalizer{
-    width:140px;
-    height:35px;
-    margin-top:15px;
-  }
-
-  .bar{
-    width:7px;
-  }
-
-  /* PAINEL ONLINE */
-  .painel-online{
-    width:130px;
-    font-size:9px;
-    top:10px;
-    right:6px;
-    padding:8px;
-  }
-
-  /* BOTÕES ESQUERDA */
-  .top-buttons{
-    transform:scale(.8);
-    left:5px;
-    top:10px;
-  }
-
-  .btn{
-    width:110px;
-    font-size:9px;
-    padding:6px;
-  }
-
-  /* QUADRO CENTRAL (IMPORTANTE) */
-  .quadro-breve{
-    top:160px;
-    right:50%;
-    transform:translateX(50%);
-    width:92vw;
-    max-width:300px;
-    padding:12px;
-  }
-
-  .titulo-quadro{
-    font-size:12px;
-  }
-
-  .marquee-text{
-    font-size:9px;
-  }
-
-  /* CHAT BOTÃO */
-  #chat-btn{
-    width:52px;
-    height:52px;
-    right:10px;
-    bottom:10px;
-  }
-
-  /* CHAT BOX */
-  #chat-box{
-    right:10px;
-    bottom:280px;
-    width:92vw;
-    max-width:280px;
-    height:300px;
-    z-index:9999;
-  }
-
-  #mensagens{
-    font-size:12px;
-  }
-
-  #input-msg{
-    font-size:12px;
-    padding:8px;
-  }
-
-  .chat-send{
-    width:55px;
-  }
-
-  /* WEATHER (se existir) */
-  #weather-widget{
-    top:70px !important;
-    right:10px !important;
-    width:90vw !important;
-    max-width:260px !important;
-  }
-}
+    /* small devices */
+    @media (max-width: 480px) {
+      .quadro-breve {
+        padding: 10px 12px;
+      }
+      .top-buttons {
+        transform: scale(0.75);
+      }
+    }
 </style>
 </head>
 <body>
@@ -1103,12 +1107,12 @@ Entrar
 
 <div style="margin-top:10px;">
 👨‍💻 ADM online:
-<span id="admCount">1</span>
+<span id="admCount"> 1 </span>
 </div>
 
 <div style="margin-top:5px;">
 👥 Ouvintes:
-<span id="ouvintesCount">***</span>
+<span id="ouvintesCount"> *** </span>
 </div>
 
 </div>

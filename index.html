@@ -874,6 +874,63 @@ setInterval(loadWeather, 300000); // Atualiza a cada 5 min
 <!-- CHAT -->
 <div id="chat-btn" onclick="toggleChat()">💬</div>
 
+<!-- BOLHA DE PENSAMENTO -->
+<div id="thought-bubble" style="
+  position: fixed;
+  right: 15px;
+  bottom: 78px;
+  background: rgba(0, 0, 0, 0.88);
+  border: 1px solid rgba(0, 255, 204, 0.4);
+  border-radius: 20px 20px 20px 5px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #00ffcc;
+  font-weight: bold;
+  opacity: 0;
+  transform: translateY(10px) scale(0.8);
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  z-index: 998;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.15), 0 4px 20px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(10px);
+">
+<span style="position: absolute;
+  bottom: -8px;
+  right: 20px;
+  width: 14px;
+  height: 14px;
+  background: rgba(0, 0, 0, 0.88);
+  border-radius: 50%;
+  border: 1px solid rgba(0, 255, 204, 0.3);
+"></span>
+<span style="position: absolute;
+  bottom: -16px;
+  right: 10px;
+  width: 8px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.88);
+  border-radius: 50%;
+  border: 1px solid rgba(0, 255, 204, 0.2);
+"></span>
+💭 Deixe sua mensagem...
+</div>
+
+<script>
+// Mostrar bolha no hover do botão chat
+const chatBtn = document.getElementById('chat-btn');
+const thoughtBubble = document.getElementById('thought-bubble');
+
+chatBtn.addEventListener('mouseenter', () => {
+  thoughtBubble.style.opacity = '1';
+  thoughtBubble.style.transform = 'translateY(0) scale(1)';
+});
+
+chatBtn.addEventListener('mouseleave', () => {
+  thoughtBubble.style.opacity = '0';
+  thoughtBubble.style.transform = 'translateY(10px) scale(0.8)';
+});
+</script>
+
 <div id="chat-box">
 <div style="padding:10px;border-bottom:1px solid rgba(255,255,255,.1);position:relative;">
 <span style="

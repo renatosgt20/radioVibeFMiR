@@ -679,10 +679,37 @@ function proximaMusica() {
   indexMusicaNaFase++;
 
   tocarMusica(musica);
+  atualizarBtnAgora();
 }
 
 // ==============================
 // BOTÃO PLAY
+// ==============================
+// MAPEAMENTO PASTA -> NOME DO PROGRAMA
+// ==============================
+const PROGRAMAS = {
+  fundaovibe: "🔥 Fundão da Vibe",
+  hitsnoite:   "⭐ Hits Vibe",
+  lofi:        "☕ Lo-Fi Vibe",
+  chilldrive:  "🎧 Chill Vibe",
+  grove:       "🌀 Grove Vibe",
+  night:       "🌙 Night Vibe",
+  forest:      "🌲 Forest Vibe"
+};
+
+function atualizarBtnAgora() {
+  const btn = document.getElementById("btnAgora");
+  const nomeSpan = document.getElementById("nomePrograma");
+  if (!btn || !nomeSpan) return;
+
+  if (tocando && pastaAtual) {
+    btn.style.display = "block";
+    nomeSpan.textContent = PROGRAMAS[pastaAtual] || pastaAtual;
+  } else {
+    btn.style.display = "none";
+  }
+}
+
 // ==============================
 
 async function tocarRadio() {
@@ -705,6 +732,7 @@ async function tocarRadio() {
     tocando = false;
     setEqualizerState(false);
     if (btn) btn.innerHTML = "▶ OUVIR AGORA";
+    atualizarBtnAgora();
     return;
   }
 
@@ -718,6 +746,7 @@ async function tocarRadio() {
   if (btn) btn.innerHTML = "⏸ PARAR";
 
   proximaMusica(); // define src e chama play na tocarMusica()
+  atualizarBtnAgora();
 }
 
 // ==============================

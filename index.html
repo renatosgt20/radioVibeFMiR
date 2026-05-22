@@ -749,6 +749,67 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 
 </div>
 
+<!-- BOTÃO "VOCÊ ESTÁ OUVINDO AGORA" -->
+<button id="btnAgora" style="
+  display: none;
+  position: fixed;
+  top: 290px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  padding: 14px 20px;
+  border: 2px solid #00ffcc;
+  border-radius: 16px;
+  background: rgba(0, 20, 15, 0.92);
+  color: #00ffcc;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: default;
+  z-index: 999;
+  box-shadow:
+    0 0 20px rgba(0, 255, 204, 0.35),
+    0 0 40px rgba(0, 255, 204, 0.15),
+    inset 0 0 20px rgba(0, 255, 204, 0.05);
+  backdrop-filter: blur(12px);
+  text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+  animation: pulseNeon 2s ease-in-out infinite;
+">
+  <span id="txtAgora">🔊 Você está ouvindo Agora</span>
+  <br>
+  <span id="nomePrograma" style="font-size: 15px; margin-top: 6px; display: inline-block;"></span>
+</button>
+
+<style>
+@keyframes pulseNeon {
+  0%, 100% {
+    box-shadow:
+      0 0 20px rgba(0, 255, 204, 0.35),
+      0 0 40px rgba(0, 255, 204, 0.15),
+      inset 0 0 20px rgba(0, 255, 204, 0.05);
+  }
+  50% {
+    box-shadow:
+      0 0 30px rgba(0, 255, 204, 0.5),
+      0 0 60px rgba(0, 255, 204, 0.25),
+      inset 0 0 30px rgba(0, 255, 204, 0.1);
+  }
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  #btnAgora {
+    top: 340px;
+    width: 92vw;
+    max-width: 300px;
+    font-size: 12px;
+    padding: 12px 16px;
+  }
+  #nomePrograma {
+    font-size: 13px !important;
+  }
+}
+</style>
+
   <video autoplay muted loop playsinline id="bg-video">
   <source src="background.mp4" type="video/mp4">
 </video>

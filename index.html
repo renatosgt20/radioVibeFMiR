@@ -584,39 +584,48 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
      CONTAINER GERAL
   ========================= */
   .main{
-    padding-top:60px;
-    padding-left:10px;
-    padding-right:10px;
-    text-align:center;
+    padding-top:80px;
+    padding-left:12px;
+    padding-right:12px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:flex-start;
+    gap:10px;
   }
 
   /* =========================
-     LOGO
+     LOGO (CENTRALIZADA SEM EMPURRAR BOTÃO)
   ========================= */
   #logo-video{
-    width:85vw;
+    width:82vw;
     max-width:300px;
     border-radius:18px;
-    transform:translateY(0px);
+    transform:none;
+    margin-top:10px;
   }
 
   /* =========================
-     SLOGAN
+     SLOGAN (NUNCA SOBREPÕE BOTÃO)
   ========================= */
   .slogan{
     font-size:12px;
-    margin-top:8px;
+    margin-top:6px;
     padding:0 10px;
+    position:relative;
+    top:0 !important;
   }
 
   /* =========================
-     BOTÃO OUVIR
+     BOTÃO OUVIR (FIXO NO FLUXO NORMAL)
   ========================= */
   #btnRadio{
     font-size:14px;
-    padding:10px 20px;
-    margin-top:12px;
-    transform:scale(0.95);
+    padding:10px 22px;
+    margin-top:10px;
+    transform:none;
+    position:relative;
+    z-index:5;
   }
 
   /* =========================
@@ -625,7 +634,7 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   .equalizer{
     width:120px;
     height:30px;
-    margin-top:10px;
+    margin-top:8px;
   }
 
   .bar{
@@ -633,45 +642,50 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     PAINEL ONLINE
+     PAINEL ONLINE (WEATHER FIXADO NO TOPO SEM CONFLITO)
   ========================= */
   .painel-online{
-    top:10px;
-    right:10px;
+    top:8px;
+    right:8px;
     width:auto;
     max-width:140px;
     font-size:9px;
     padding:6px 10px;
+    z-index:1000;
   }
 
   /* =========================
-     BOTÕES ESQUERDA
+     BOTÕES ESQUERDA (MENOR MAS ESTÁVEL)
   ========================= */
   .top-buttons{
     left:6px;
-    top:10px;
-    transform:scale(0.72);
+    top:8px;
+    transform:scale(0.75);
     transform-origin:top left;
-    gap:6px;
   }
 
   .btn{
     font-size:9px;
     padding:6px 10px;
-    width:120px;
+    width:115px;
   }
 
   /* =========================
-     QUADRO CENTRAL
+     QUADRO CENTRAL (NÃO EMPURRA MAIS NADA)
   ========================= */
   .quadro-breve{
-    width:90vw;
-    max-width:300px;
-    top:150px;
-    right:50%;
-    transform:translateX(50%);
-    padding:10px 12px;
-    border-radius:18px;
+    position:relative;
+    top:auto;
+    right:auto;
+    transform:none;
+
+    width:92vw;
+    max-width:320px;
+
+    margin-top:15px;
+
+    padding:12px;
+    border-radius:16px;
   }
 
   .titulo-quadro{
@@ -693,14 +707,17 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     CHAT BOX (CORRETO AGORA)
+     CHAT BOX (NÃO SOBREPOR NADA)
   ========================= */
   #chat-box{
+    position:fixed;
     right:10px;
     bottom:70px;
-    width:92vw;
+
+    width:90vw;
     max-width:280px;
     height:300px;
+
     z-index:9999;
   }
 
@@ -718,14 +735,20 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     WEATHER (SE TIVER)
+     WEATHER / PREVISÃO DO TEMPO (CORRIGIDO)
   ========================= */
   #weather-widget{
-    left:10px;
-    bottom:10px;
+    position:fixed;
+    top:55px;
+    right:10px;
+
+    width:calc(100vw - 20px);
+    max-width:260px;
+
     font-size:9px;
-    padding:4px 10px;
-    max-width:200px;
+    padding:6px 10px;
+
+    z-index:999;
   }
 }
 </style>

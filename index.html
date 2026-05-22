@@ -11,7 +11,7 @@
 
 <meta property="og:title" content="VIBE FM">
 <meta property="og:description" content="Rádio online 🚀">
-<meta property="og:url" content="https://statuesque-jelly-dcc24f.netlify.app/">
+<meta property="og:url" content="https://radiovibezonefm.vibefmbr.workers.dev/">
 <meta property="og:type" content="website">
 
 <style>
@@ -518,7 +518,7 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 #chat-box{
   position:fixed;
   right:15px;
-  bottom:80px;
+  bottom:500px;
   width:260px;
   height:320px;
   background:rgba(0,0,0,.88);
@@ -571,161 +571,133 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   z-index:10;
 }
 
-/* MOBILE */
-@media(max-width:768px){
+/* NO CELULAR */
+
+@media (max-width:768px){
 
   body{
     overflow-x:hidden;
   }
 
-  /* BOTÕES ESQUERDA */
-  .top-buttons{
-    left:6px;
-    top:12px;
-
-    transform:scale(.88);
-
-    transform-origin:top left;
-
-    gap:5px;
-  }
-
-  .btn{
-    width:125px;
-
-    font-size:10px;
-
-    padding:7px;
-  }
-
-  /* PAINEL ADM */
-  .painel-online{
-    width:145px;
-
-    font-size:10px;
-
-    right:6px;
-    top:12px;
-
-    padding:10px;
-  }
-
-  /* QUADRO */
-  .quadro-breve{
-    top:190px;
-
-    right:50%;
-    transform:translateX(50%);
-
-    width:92vw;
-
-    max-width:340px;
-
-    padding:14px;
-
-    border-radius:18px;
-  }
-
-  .titulo-quadro{
-    font-size:13px;
-  }
-
-  .marquee-text{
-    font-size:10px;
-  }
-
-  /* CONTEUDO */
+  /* CONTEÚDO PRINCIPAL */
   .main{
-    padding-top:120px;
+    padding-top:90px;
+    padding-left:10px;
+    padding-right:10px;
   }
 
   /* LOGO */
   #logo-video{
-    width:95vw;
-
-    max-width:360px;
-
-    transform:translateY(-20px);
-
-    border-radius:25px;
-  }
-
-  /* FM */
-  #fm-badge{
-    top:145px;
-
-    left:calc(50% + 90px);
-
-    font-size:17px;
+    width:90vw;
+    max-width:320px;
+    transform:translateY(-10px);
+    border-radius:20px;
   }
 
   /* SLOGAN */
   .slogan{
-    font-size:15px;
-
-    top:30px !important;
-
-    text-align:center;
-
-    padding:0 10px;
+    font-size:13px;
+    top:20px !important;
+    padding:0 8px;
   }
 
   /* BOTÃO OUVIR */
   #btnRadio{
-    font-size:15px;
-
-    padding:12px 26px;
-
-    margin-top:-35px;
-
-    transform:scale(.95);
+    font-size:14px;
+    padding:10px 22px;
+    margin-top:10px;
+    transform:scale(0.95);
   }
 
   /* EQUALIZER */
   .equalizer{
-    width:170px;
-
-    height:42px;
-
-    margin-top:18px;
+    width:140px;
+    height:35px;
+    margin-top:15px;
   }
 
   .bar{
-    width:9px;
+    width:7px;
   }
 
-  /* PLANETA */
-  .earth{
-    width:240px;
-    height:240px;
-
-    bottom:-70px;
+  /* PAINEL ONLINE */
+  .painel-online{
+    width:130px;
+    font-size:9px;
+    top:10px;
+    right:6px;
+    padding:8px;
   }
 
-  .overlay{
-    width:330px;
-
-    left:-45px;
+  /* BOTÕES ESQUERDA */
+  .top-buttons{
+    transform:scale(.8);
+    left:5px;
+    top:10px;
   }
 
-  /* CHAT */
+  .btn{
+    width:110px;
+    font-size:9px;
+    padding:6px;
+  }
+
+  /* QUADRO CENTRAL (IMPORTANTE) */
+  .quadro-breve{
+    top:160px;
+    right:50%;
+    transform:translateX(50%);
+    width:92vw;
+    max-width:300px;
+    padding:12px;
+  }
+
+  .titulo-quadro{
+    font-size:12px;
+  }
+
+  .marquee-text{
+    font-size:9px;
+  }
+
+  /* CHAT BOTÃO */
   #chat-btn{
-    width:58px;
-    height:58px;
-
-    right:12px;
-    bottom:12px;
+    width:52px;
+    height:52px;
+    right:10px;
+    bottom:10px;
   }
 
-  /* WEATHER WIDGET MOBILE */
+  /* CHAT BOX */
+  #chat-box{
+    right:10px;
+    bottom:280px;
+    width:92vw;
+    max-width:280px;
+    height:300px;
+    z-index:9999;
+  }
+
+  #mensagens{
+    font-size:12px;
+  }
+
+  #input-msg{
+    font-size:12px;
+    padding:8px;
+  }
+
+  .chat-send{
+    width:55px;
+  }
+
+  /* WEATHER (se existir) */
   #weather-widget{
-    top:75px !important;
+    top:70px !important;
     right:10px !important;
-    width: calc(100vw - 20px) !important;
-    max-width: 280px !important;
-    justify-content: center;
+    width:90vw !important;
+    max-width:260px !important;
   }
-
 }
 </style>
 </head>

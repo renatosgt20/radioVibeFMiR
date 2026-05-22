@@ -388,8 +388,6 @@ const PASTAS = {
    "https://res.cloudinary.com/dmodpbtae/video/upload/v1779287768/musica1557_c17ll6.mp3",
    "https://res.cloudinary.com/dmodpbtae/video/upload/v1779287764/v1556_etddmz.mp3",
    "https://res.cloudinary.com/dmodpbtae/video/upload/v1779287756/musica1544_zc3bgl.mp3",
-   "https://res.cloudinary.com/dmodpbtae/video/upload/v1779287726/musica1521_t5vrpu.mp3",
-   "https://res.cloudinary.com/dmodpbtae/video/upload/v1779287725/musica1522_aia4w5.mp3",
    "https://res.cloudinary.com/dmodpbtae/video/upload/v1779287712/musica1507_sf1oir.mp3",
     ]
   },

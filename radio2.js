@@ -120,7 +120,7 @@ const PASTAS = {
     ]
   },
 
-  hitsnoite: {
+  hitsvibe: {
     arquivos: [
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932734/musica10_canhmr.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932771/musica70_slnbr4.mp3",
@@ -580,7 +580,7 @@ function getPastaInicialPorHorario() {
 
   // 09h até 12h
   if (h >= 9 && h < 12) {
-    return "hitsnoite";
+    return "hitsvibe";
   }
 
   // 12h até 14h
@@ -590,24 +590,24 @@ function getPastaInicialPorHorario() {
 
   // 14h até 17h
   if (h >= 14 && h < 17) {
-    return "hitsnoite";
+    return "hitsvibe";
   }
 
-  // 17h até 19h
-  if (h >= 17 && h < 19) {
+  // 17h até 18h
+  if (h >= 17 && h < 18) {
     return "fundaovibe";
   }
   
   // 19h até 02h
-  // 19h-24h => hitsnoite
-  // 00h-02h => hitsnoite
+  // 19h-24h => hitsvibe
+  // 00h-02h => hitsvibe
   if (h >= 19 || h < 2) {
-    return "hitsnoite";
+    return "hitsvibe";
   }
 
-  // se não entrou em nenhum bloco acima, é 02h-04h => lofi
+  // se não entrou em nenhum bloco acima, é 02h-04h => hitvibe
   // (demais regras já cobrem o resto do dia)
-  return "lofi";
+  return "hitsvibe";
 }
 
 // ==============================

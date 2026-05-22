@@ -572,30 +572,29 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 }
 
 /* ============================================= */
-    /* CELULAR  VERSÃO MOBILE - IGUAL AO PC SÓ QUE REDUZIDO E ORGANIZADO */
+    /* CELULAR  VERSÃO MOBILE - ORGANIZADO */
     /* ============================================= */
     @media (max-width:768px){
 
   body{
-    overflow-x:hidden;
+    overflow:hidden;
   }
 
   /* =========================
-     CONTAINER GERAL - TODO CONTEUDO NO CENTRO/BAIXO
+     CONTAINER GERAL
   ========================= */
   .main{
-    padding:0;
-    padding-bottom:20px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:flex-start;
-    gap:0;
     position:fixed;
     top:0;
     left:0;
     right:0;
     bottom:0;
+    z-index:3;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:0;
   }
 
   /* =========================
@@ -606,7 +605,7 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
     max-width:320px;
     border-radius:18px;
     transform:none;
-    margin-top:50px;
+    margin-top:-20px;
     flex-shrink:0;
   }
 
@@ -615,48 +614,39 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   ========================= */
   .slogan{
     font-size:12px;
-    margin-top:6px;
+    margin-top:8px;
     padding:0 10px;
     position:relative;
     top:0 !important;
   }
 
   /* =========================
-     AREA INFERIOR - BOTAO + EQUALIZER + WEATHER
-  ========================= */
-  .mobile-controls{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding-bottom:20px;
-    gap:12px;
-    background:linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
-    z-index:100;
-  }
-
-  /* =========================
-     BOTÃO OUVIR
+     BOTÃO OUVIR - PARTE INFERIOR DA TELA
   ========================= */
   #btnRadio{
     font-size:14px;
     padding:10px 22px;
-    margin-top:15px;
+    margin-top:20px;
     transform:none;
-    position:relative;
-    z-index:5;
+    position:fixed;
+    bottom:70px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:101;
   }
 
   /* =========================
-     EQUALIZER
+     EQUALIZER - LOGO ABAIXO DO BOTÃO
   ========================= */
   .equalizer{
     width:120px;
     height:30px;
     margin-top:0;
+    position:fixed;
+    bottom:35px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:101;
   }
 
   .bar{
@@ -664,24 +654,34 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     CONTROLS WRAPPER - FIXADO NA PARTE INFERIOR
+     CONTROLS WRAPPER - OCULTO NO MOBILE (USAMOS POSITION FIXED)
   ========================= */
   .controls-wrapper{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:12px;
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    padding-bottom:25px;
-    background:linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 60%, transparent 100%);
-    z-index:100;
+    display:none;
   }
 
   /* =========================
-     PAINEL ONLINE (WEATHER FIXADO NO TOPO SEM CONFLITO)
+     WEATHER MOBILE - ACIMA DOS CONTROLES (PARTE INFERIOR DIREITA)
+  ========================= */
+  #weather-widget-mobile{
+    display:flex !important;
+    position:fixed;
+    bottom:115px;
+    right:15px;
+    left:auto;
+    top:auto;
+    margin:0;
+    z-index:101;
+    padding:8px 12px;
+    font-size:11px;
+  }
+
+  #weather-widget{
+    display:none !important;
+  }
+
+  /* =========================
+     PAINEL ONLINE
   ========================= */
   .painel-online{
     top:8px;
@@ -690,17 +690,18 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
     max-width:140px;
     font-size:9px;
     padding:6px 10px;
-    z-index:1000;
+    z-index:102;
   }
 
   /* =========================
-     BOTÕES ESQUERDA (MENOR MAS ESTÁVEL)
+     BOTÕES ESQUERDA
   ========================= */
   .top-buttons{
     left:6px;
     top:8px;
     transform:scale(0.75);
     transform-origin:top left;
+    z-index:102;
   }
 
   .btn{
@@ -710,20 +711,19 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     QUADRO CENTRAL (NÃO EMPURRA MAIS NADA)
+     QUADRO NOTÍCIAS
   ========================= */
   .quadro-breve{
-    position:relative;
-    top:auto;
-    right:auto;
+    position:fixed;
+    top:70px;
+    left:10px;
+    right:10px;
     transform:none;
-
-    width:92vw;
+    width:auto;
     max-width:320px;
-
-    margin-top:15px;
-
-    padding:12px;
+    margin:0 auto;
+    z-index:101;
+    padding:10px;
     border-radius:16px;
   }
 
@@ -736,6 +736,22 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
+     FM BADGE - OCULTO NO MOBILE
+  ========================= */
+  #fm-badge{
+    display:none;
+  }
+
+  /* =========================
+     BTN AGORA - OCULTO NO MOBILE
+  ========================= */
+  #btnAgora{
+    display:none !important;
+  }
+
+}
+
+  /* =========================
      CHAT BOTÃO
   ========================= */
   #chat-btn{
@@ -743,21 +759,20 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
     height:48px;
     bottom:12px;
     right:12px;
+    z-index:102;
   }
 
   /* =========================
-     CHAT BOX (NÃO SOBREPOR NADA)
+     CHAT BOX
   ========================= */
   #chat-box{
     position:fixed;
     right:10px;
     bottom:70px;
-
     width:90vw;
     max-width:280px;
     height:300px;
-
-    z-index:9999;
+    z-index:103;
   }
 
   #mensagens{
@@ -774,57 +789,12 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     WEATHER / PREVISÃO DO TEMPO (SOMENTE MOBILE - CANTO INFERIOR ESQUERDO)
+     QUADRO MSG ROTATIVO (OCULTO NO MOBILE PRINCIPAL)
   ========================= */
-
-  /* Desktop: esconde widget mobile */
-  #weather-widget-mobile{
-    display: none !important;
-  }
-
-  /* Desktop: mostra widget normal no topo direito */
-  #weather-widget{
-    display: inline-flex !important;
-  }
-
-  /* =========================
-     QUADRO VIBE FM NEWS (MAIS ABAIXO NO MOBILE)
-  ========================= */
-  .quadro-breve{
-    position:fixed;
-    top: 75px;
-    right: 10px;
-    left: 10px;
-    transform: none;
-    width:calc(100vw - 20px);
-    max-width:320px;
-    margin: 0 auto;
-    z-index:998;
-  }
-
-  /* Mobile: esconde widget normal do topo */
-  #weather-widget{
-    display: none !important;
-  }
-
-  /* Mobile: mostra widget acima dos controles inferior */
-  #weather-widget-mobile{
-    display: flex !important;
-    position: fixed;
-    bottom: 220px;
-    left: auto;
-    right: 15px;
-    top: auto;
-    margin: 0;
-    z-index:101;
-  }
-}
-
-/* Ocultar duplicated quadro-breve on desktop too */
-@media (min-width:769px){
-  .quadro-breve:last-of-type{
+  .quadro-breve span{
     display:none;
   }
+
 }
 </style>
 </head>
@@ -1061,8 +1031,6 @@ setInterval(loadWeather, 300000); // Atualiza a cada 5 min
 <div class="bar"></div>
 <div class="bar"></div>
 </div>
-</div>
-
 </div>
 
 <!-- CHAT -->

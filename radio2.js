@@ -18,7 +18,8 @@ let audioLiberado = false;
 // STREAM CENTRAL (Worker)
 // ==============================
 
-const STREAM_STATE_URL = "https://radio-sync.vibefmbr.workers.dev/now";
+const STREAM_STATE_URL =
+"https://radio-sync.vibefmbr.workers.dev/now";
 
 async function syncFromServer({ forcePlay = false } = {}) {
 

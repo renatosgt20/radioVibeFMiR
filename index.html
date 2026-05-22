@@ -735,20 +735,12 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     WEATHER / PREVISÃO DO TEMPO (LOGO ABAIXO DO VIBE FM NEWS)
+     WEATHER / PREVISÃO DO TEMPO (SOMENTE MOBILE - CANTO INFERIOR ESQUERDO)
   ========================= */
-  #weather-widget{
-    position:fixed;
-    top: 170px;
-    right:10px;
 
-    width:calc(100vw - 20px);
-    max-width:260px;
-
-    font-size:9px;
-    padding:6px 10px;
-
-    z-index:999;
+  /* Esconde widget mobile por padrão */
+  #weather-widget-mobile{
+    display: none;
   }
 
   /* =========================
@@ -894,6 +886,31 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   <span id="weather-desc">Carregando...</span>
   <span style="color: rgba(255,255,255,0.5); font-size: 11px;">•</span>
   <span id="weather-city" style="font-size: 12px; opacity: 0.8;">---</span>
+</div>
+
+<!-- WEATHER MOBILE - APARECE SOMENTE NO CELULAR (CANTO INFERIOR ESQUERDO) -->
+<div id="weather-widget-mobile" style="
+  display: none;
+  position: fixed;
+  bottom: 15px;
+  left: 15px;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(0, 255, 204, 0.3);
+  border-radius: 14px;
+  backdrop-filter: blur(10px);
+  z-index: 999;
+  font-size: 12px;
+  color: #00ffcc;
+  box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
+">
+  <div class="weather-row">
+    <span id="weather-icon-mobile">🌡️</span>
+    <span id="weather-temp-mobile">--°C</span>
+    <span id="weather-desc-mobile">...</span>
+    <span style="color: rgba(255,255,255,0.4); font-size: 10px;">|</span>
+    <span id="weather-city-mobile" class="weather-city">---</span>
+  </div>
 </div>
 
 <script>

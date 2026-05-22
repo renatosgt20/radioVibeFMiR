@@ -589,24 +589,26 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
     display:flex;
     flex-direction:column;
     align-items:center;
-    justify-content:flex-start;
+    justify-content:center;
     gap:0;
     position:fixed;
     top:0;
     left:0;
     right:0;
     bottom:0;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
   }
 
   /* =========================
      LOGO VIDEO CENTRALIZADO NO MEIO DA TELA
   ========================= */
   #logo-video{
-    width:85vw;
-    max-width:320px;
+    width:80vw;
+    max-width:300px;
     border-radius:18px;
     transform:none;
-    margin-top:50px;
+    margin-top: -40px;
     flex-shrink:0;
   }
 
@@ -614,8 +616,8 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
      SLOGAN
   ========================= */
   .slogan{
-    font-size:12px;
-    margin-top:6px;
+    font-size:14px;
+    margin-top:15px;
     padding:0 10px;
     position:relative;
     top:0 !important;
@@ -693,9 +695,9 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     QUADRO CENTRAL (NÃO EMPURRA MAIS NADA)
+     QUADRO MENSAGENS (ABAIXO DO VIDEO)
   ========================= */
-  .quadro-breve{
+  .quadro-breve:not(#quadro-news){
     position:relative;
     top:auto;
     right:auto;
@@ -771,17 +773,31 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     QUADRO VIBE FM NEWS (MAIS ABAIXO NO MOBILE)
+     QUADRO VIBE FM NEWS (NO TOPO DA TELA)
   ========================= */
-  .quadro-breve{
+  #quadro-news{
     position:fixed;
-    top: 75px;
+    top: 65px;
     right: 10px;
     left: 10px;
     transform: none;
     width:calc(100vw - 20px);
     max-width:320px;
     margin: 0 auto;
+    z-index:999;
+  }
+
+  /* segundo quadro-breve (mensagens) - abaixo do video */
+  .quadro-breve:not(#quadro-news){
+    position:relative;
+    top:auto;
+    right:auto;
+    transform:none;
+    width:92vw;
+    max-width:320px;
+    margin-top:15px;
+    padding:12px;
+    border-radius:16px;
     z-index:998;
   }
 
@@ -802,29 +818,38 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* =========================
-     QUADRO VIBE FM NEWS (MAIS ABAIXO NO MOBILE)
+     QUADRO VIBE FM NEWS (NO TOPO DA TELA)
   ========================= */
-  .quadro-breve{
+  #quadro-news{
     position:fixed;
-    top: 75px;
+    top: 65px;
     right: 10px;
     left: 10px;
     transform: none;
     width:calc(100vw - 20px);
     max-width:320px;
     margin: 0 auto;
-    z-index:998;
+    z-index:999;
   }
 
-  /* Ocultar segundo quadro-breve duplicado no mobile */
-  .quadro-breve:last-of-type{
-    display:none;
+  /* segundo quadro-breve (mensagens) - abaixo do video */
+  .quadro-breve:not(#quadro-news){
+    position:relative;
+    top:auto;
+    right:auto;
+    transform:none;
+    width:92vw;
+    max-width:320px;
+    margin-top:15px;
+    padding:12px;
+    border-radius:16px;
+    z-index:998;
   }
 }
 
-/* Ocultar duplicated quadro-breve on desktop too */
+/* Ocultar quadro de mensagens no desktop */
 @media (min-width:769px){
-  .quadro-breve:last-of-type{
+  .quadro-breve:not(#quadro-news){
     display:none;
   }
 }
@@ -832,10 +857,10 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 </head>
 <body>
 
-<div class="quadro-breve">
+<div class="quadro-breve" id="quadro-news">
 
   <div class="titulo-quadro">
-    ⚡ VIBE FM NEWS ⚡ 
+    ⚡ VIBE FM NEWS ⚡
   </div>
 
   <div class="marquee">

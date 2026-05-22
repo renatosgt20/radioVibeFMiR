@@ -684,7 +684,7 @@ async function proximaMusica() {
 // ==============================
 const PROGRAMAS = {
   fundaovibe: "🔥 Fundão da Vibe",
-  hitsnoite:   "⭐ Hits Vibe",
+  hitsvibe:   "⭐ Hits Vibe",
   lofi:        "☕ Lo-Fi Vibe",
   chilldrive:  "🎧 Chill Vibe",
   grove:       "🌀 PSY Vibe",

@@ -776,14 +776,16 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
      QUADRO VIBE FM NEWS (ACIMA DO VIDEO/LOGO CENTRALIZADO)
   ========================= */
   #quadro-news{
-    position:fixed;
-    top: 30px;
-    right: 15px;
-    width: 200px;
-    padding: 12px 10px;
-    z-index:999;
+    position: absolute;
+    top: 120px; /* 👈 AQUI você controla a altura */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 92vw;
+    max-width: 320px;
+    z-index: 999;
   }
 
+}
   #quadro-news .titulo-quadro{
     font-size: 12px;
   }
@@ -821,7 +823,7 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
     top: auto;
     margin: 0;
   }
-}
+
 
 /* Ocultar quadro de mensagens no desktop */
 @media (min-width:769px){

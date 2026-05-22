@@ -273,31 +273,12 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   font-size:11px;
   margin-bottom:5px;
 }
-/* QUADRO NEWS - ACIMA DO VIDEO */
-
-#quadro-news{
-  position: fixed;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 280px;
-  padding: 14px 16px;
-  border-radius: 20px;
-  background: rgba(5,10,25,.82);
-  border: 1px solid rgba(0,255,200,.20);
-  backdrop-filter: blur(14px);
-  box-shadow:
-    0 0 20px rgba(0,255,200,.08),
-    0 0 50px rgba(0,0,0,.50);
-  text-align: center;
-  overflow: hidden;
-  z-index: 999;
-}
+/* QUADRO */
 
 .quadro-breve{
   position: fixed;
 
-  top: 30px;
+  top: 140px;
   right: 15px;
 
   width: 250px;
@@ -537,7 +518,7 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 #chat-box{
   position:fixed;
   right:15px;
-  bottom:500px;
+  bottom:80px;
   width:260px;
   height:320px;
   background:rgba(0,0,0,.88);
@@ -590,275 +571,170 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   z-index:10;
 }
 
-/* ============================================= */
-    /* CELULAR  VERSÃO MOBILE - IGUAL AO PC SÓ QUE REDUZIDO E ORGANIZADO */
-    /* ============================================= */
-    @media (max-width:768px){
+/* MOBILE */
+@media(max-width:768px){
 
   body{
     overflow-x:hidden;
   }
 
-  /* =========================
-     CONTAINER GERAL - TODO CONTEUDO NO CENTRO/BAIXO
-  ========================= */
-  .main{
-    padding:0;
-    padding-bottom:20px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    gap:0;
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    bottom:0;
-    overflow-y:auto;
-    -webkit-overflow-scrolling:touch;
-  }
-
-  /* =========================
-     LOGO VIDEO CENTRALIZADO NO MEIO DA TELA
-  ========================= */
-  #logo-video{
-    width:80vw;
-    max-width:300px;
-    border-radius:18px;
-    transform:none;
-    margin-top: -40px;
-    flex-shrink:0;
-  }
-
-  /* =========================
-     SLOGAN
-  ========================= */
-  .slogan{
-    font-size:14px;
-    margin-top:15px;
-    padding:0 10px;
-    position:relative;
-    top:0 !important;
-  }
-
-  /* =========================
-     AREA INFERIOR - BOTAO + EQUALIZER + WEATHER
-  ========================= */
-  .mobile-controls{
-    position:fixed;
-    bottom:0;
-    left:0;
-    right:0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding-bottom:20px;
-    gap:12px;
-    background:linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.6) 70%, transparent 100%);
-    z-index:100;
-  }
-
-  /* =========================
-     BOTÃO OUVIR
-  ========================= */
-  #btnRadio{
-    font-size:14px;
-    padding:10px 22px;
-    margin-top:15px;
-    transform:none;
-    position:relative;
-    z-index:5;
-  }
-
-  /* =========================
-     EQUALIZER
-  ========================= */
-  .equalizer{
-    width:120px;
-    height:30px;
-    margin-top:0;
-  }
-
-  .bar{
-    width:6px;
-  }
-
-  /* =========================
-     PAINEL ONLINE (WEATHER FIXADO NO TOPO SEM CONFLITO)
-  ========================= */
-  .painel-online{
-    top:8px;
-    right:8px;
-    width:auto;
-    max-width:140px;
-    font-size:9px;
-    padding:6px 10px;
-    z-index:1000;
-  }
-
-  /* =========================
-     BOTÕES ESQUERDA (MENOR MAS ESTÁVEL)
-  ========================= */
+  /* BOTÕES ESQUERDA */
   .top-buttons{
     left:6px;
-    top:8px;
-    transform:scale(0.75);
+    top:12px;
+
+    transform:scale(.88);
+
     transform-origin:top left;
+
+    gap:5px;
   }
 
   .btn{
-    font-size:9px;
-    padding:6px 10px;
-    width:115px;
+    width:125px;
+
+    font-size:10px;
+
+    padding:7px;
   }
 
-  /* =========================
-     QUADRO MENSAGENS (ABAIXO DO VIDEO)
-  ========================= */
-  .quadro-breve:not(#quadro-news){
-    position:relative;
-    top:auto;
-    right:auto;
-    transform:none;
+  /* PAINEL ADM */
+  .painel-online{
+    width:145px;
+
+    font-size:10px;
+
+    right:6px;
+    top:12px;
+
+    padding:10px;
+  }
+
+  /* QUADRO */
+  .quadro-breve{
+    top:190px;
+
+    right:50%;
+    transform:translateX(50%);
 
     width:92vw;
-    max-width:320px;
 
-    margin-top:15px;
+    max-width:340px;
 
-    padding:12px;
-    border-radius:16px;
+    padding:14px;
+
+    border-radius:18px;
   }
 
   .titulo-quadro{
-    font-size:11px;
+    font-size:13px;
   }
 
   .marquee-text{
-    font-size:9px;
+    font-size:10px;
   }
 
-  /* =========================
-     CHAT BOTÃO
-  ========================= */
+  /* CONTEUDO */
+  .main{
+    padding-top:120px;
+  }
+
+  /* LOGO */
+  #logo-video{
+    width:95vw;
+
+    max-width:360px;
+
+    transform:translateY(-20px);
+
+    border-radius:25px;
+  }
+
+  /* FM */
+  #fm-badge{
+    top:145px;
+
+    left:calc(50% + 90px);
+
+    font-size:17px;
+  }
+
+  /* SLOGAN */
+  .slogan{
+    font-size:15px;
+
+    top:30px !important;
+
+    text-align:center;
+
+    padding:0 10px;
+  }
+
+  /* BOTÃO OUVIR */
+  #btnRadio{
+    font-size:15px;
+
+    padding:12px 26px;
+
+    margin-top:-35px;
+
+    transform:scale(.95);
+  }
+
+  /* EQUALIZER */
+  .equalizer{
+    width:170px;
+
+    height:42px;
+
+    margin-top:18px;
+  }
+
+  .bar{
+    width:9px;
+  }
+
+  /* PLANETA */
+  .earth{
+    width:240px;
+    height:240px;
+
+    bottom:-70px;
+  }
+
+  .overlay{
+    width:330px;
+
+    left:-45px;
+  }
+
+  /* CHAT */
   #chat-btn{
-    width:48px;
-    height:48px;
-    bottom:12px;
+    width:58px;
+    height:58px;
+
     right:12px;
+    bottom:12px;
   }
 
-  /* =========================
-     CHAT BOX (NÃO SOBREPOR NADA)
-  ========================= */
-  #chat-box{
-    position:fixed;
-    right:10px;
-    bottom:70px;
-
-    width:90vw;
-    max-width:280px;
-    height:300px;
-
-    z-index:9999;
-  }
-
-  #mensagens{
-    font-size:11px;
-  }
-
-  #input-msg{
-    font-size:12px;
-    padding:8px;
-  }
-
-  .chat-send{
-    width:55px;
-  }
-
-  /* =========================
-     WEATHER / PREVISÃO DO TEMPO (SOMENTE MOBILE - CANTO INFERIOR ESQUERDO)
-  ========================= */
-
-  /* Desktop: esconde widget mobile */
-  #weather-widget-mobile{
-    display: none !important;
-  }
-
-  /* Desktop: mostra widget normal no topo direito */
+  /* WEATHER WIDGET MOBILE */
   #weather-widget{
-    display: inline-flex !important;
+    top:75px !important;
+    right:10px !important;
+    width: calc(100vw - 20px) !important;
+    max-width: 280px !important;
+    justify-content: center;
   }
 
-  /* =========================
-     QUADRO VIBE FM NEWS (ACIMA DO VIDEO/LOGO CENTRALIZADO)
-  ========================= */
-  #quadro-news{
-    position: fixed;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 85vw;
-    max-width: 280px;
-    padding: 10px 12px;
-    z-index: 999;
-  }
-
-  #quadro-news .titulo-quadro{
-    font-size: 11px;
-    margin-bottom: 6px;
-  }
-
-  #quadro-news .marquee-text{
-    font-size: 9px;
-  }
-
-  /* segundo quadro-breve (mensagens) - abaixo do video */
-  .quadro-breve:not(#quadro-news){
-    position:relative;
-    top:auto;
-    right:auto;
-    transform:none;
-    width:92vw;
-    max-width:320px;
-    margin-top:15px;
-    padding:12px;
-    border-radius:16px;
-    z-index:998;
-  }
-
-  /* Mobile: esconde widget normal do topo */
-  #weather-widget{
-    display: none !important;
-  }
-
-  /* Mobile: mostra widget no canto inferior direito */
-  #weather-widget-mobile{
-    display: flex !important;
-    position: fixed;
-    bottom: 180px;
-    left: auto;
-    right: 15px;
-    top: auto;
-    margin: 0;
-  }
-
-
-/* Ocultar quadro de mensagens no desktop */
-@media (min-width:769px){
-  .quadro-breve:not(#quadro-news){
-    display:none;
-  }
 }
 </style>
 </head>
 <body>
 
-<div class="quadro-breve" id="quadro-news">
+<div class="quadro-breve">
 
   <div class="titulo-quadro">
-    ⚡ VIBE FM NEWS ⚡
+    ⚡ VIBE FM NEWS
   </div>
 
   <div class="marquee">
@@ -981,31 +857,6 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   <span id="weather-city" style="font-size: 12px; opacity: 0.8;">---</span>
 </div>
 
-<!-- WEATHER MOBILE - APARECE SOMENTE NO CELULAR (CANTO INFERIOR ESQUERDO) -->
-<div id="weather-widget-mobile" style="
-  display: none;
-  position: fixed;
-  bottom: 15px;
-  left: 15px;
-  padding: 10px 14px;
-  background: rgba(0, 0, 0, 0.75);
-  border: 1px solid rgba(0, 255, 204, 0.3);
-  border-radius: 14px;
-  backdrop-filter: blur(10px);
-  z-index: 999;
-  font-size: 12px;
-  color: #00ffcc;
-  box-shadow: 0 0 15px rgba(0, 255, 204, 0.2);
-">
-  <div class="weather-row">
-    <span id="weather-icon-mobile">🌡️</span>
-    <span id="weather-temp-mobile">--°C</span>
-    <span id="weather-desc-mobile">...</span>
-    <span style="color: rgba(255,255,255,0.4); font-size: 10px;">|</span>
-    <span id="weather-city-mobile" class="weather-city">---</span>
-  </div>
-</div>
-
 <script>
 async function loadWeather() {
   try {
@@ -1057,11 +908,6 @@ async function loadWeather() {
     document.getElementById('weather-temp').textContent = temp + '°C';
     document.getElementById('weather-desc').textContent = descs[code] || 'Clima';
     document.getElementById('weather-city').textContent = cityName;
-    // Atualiza também o widget mobile
-    document.getElementById('weather-icon-mobile').textContent = icons[code] || '🌡️';
-    document.getElementById('weather-temp-mobile').textContent = temp + '°C';
-    document.getElementById('weather-desc-mobile').textContent = descs[code] || 'Clima';
-    document.getElementById('weather-city-mobile').textContent = cityName;
   } catch (e) {
     document.getElementById('weather-desc').textContent = 'Clima indisponível';
   }
@@ -1192,7 +1038,7 @@ box-shadow:0 2px 10px rgba(0,255,204,.4);
 <button class="btn programacao" onclick="toggleProgramacao()">📻 Programação Vibe FM</button>
 
 <div id="prog-opcoes" class="programacao-opcoes">
-<div class="programacao-btn">🔥 Fundão da Vibe: Seg-Dom 06:00-09:00/17:00-18</div>
+<div class="programacao-btn">🔥 Fundão da Vibe: Seg-Dom 06:00-09:00/17:00-19</div>
 <div class="programacao-btn">🎵 In Vibe: Seg-Dom 09:00-12:00</div>
 <div class="programacao-btn">☕ Lo-Fi Vibe: Seg-Dom 12:00-14:00</div>
 <div class="programacao-btn">⭐ Hits Vibe: Seg-Sex 14:00-02:00</div>
@@ -1285,12 +1131,12 @@ Entrar
 
 <div style="margin-top:10px;">
 👨‍💻 ADM online:
-<span id="admCount"> 1 </span>
+<span id="admCount">—</span>
 </div>
 
 <div style="margin-top:5px;">
 👥 Ouvintes:
-<span id="ouvintesCount"> *** </span>
+<span id="ouvintesCount">—</span>
 </div>
 
 </div>

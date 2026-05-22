@@ -392,7 +392,7 @@ const PASTAS = {
     ]
   },
 
-  chilldrive: {
+    chilldrive: {
     arquivos: [
       "https://res.cloudinary.com/dmodpbtae/video/upload/v1778345961/musica11_ozii3j.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778345952/musica6_ppsesg.mp3",
@@ -687,9 +687,9 @@ const PROGRAMAS = {
   hitsnoite:   "⭐ Hits Vibe",
   lofi:        "☕ Lo-Fi Vibe",
   chilldrive:  "🎧 Chill Vibe",
-  grove:       "🌀 Grove Vibe",
-  night:       "🌙 Night Vibe",
-  forest:      "🌲 Forest Vibe"
+  grove:       "🌀 PSY Vibe",
+  night:       "🌙 PSY Vibe",
+  forest:      "🌲 PSY Vibe"
 };
 
 function atualizarBtnAgora() {

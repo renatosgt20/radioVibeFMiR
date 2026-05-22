@@ -2,11 +2,8 @@
 // ==============================
 
 // Usar apenas o <audio id="audio"> do HTML (evita conflito de 2 players)
-let playerEl;
-
-window.addEventListener("DOMContentLoaded", () => {
-  playerEl = document.getElementById("audio");
-});
+// Obter diretamente para garantir que esteja disponível
+let playerEl = document.getElementById("audio");
 
 let tocando = false;
 let pastaAtual = "";
@@ -766,6 +763,5 @@ function setupAudioEvents() {
   });
 }
 
-window.addEventListener("DOMContentLoaded", () => {
-  setupAudioEvents();
-});
+// DOM já está pronto quando o script é executado (colocado antes de </body>)
+setupAudioEvents();

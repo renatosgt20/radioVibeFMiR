@@ -717,6 +717,15 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
     bottom:12px;
   }
 
+  /* WEATHER WIDGET MOBILE */
+  #weather-widget{
+    top:75px !important;
+    right:10px !important;
+    width: calc(100vw - 20px) !important;
+    max-width: 280px !important;
+    justify-content: center;
+  }
+
 }
 </style>
 </head>
@@ -763,9 +772,10 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 <p class="slogan">🌌 Web Rádio  ⚡ - PA-Brasil 🚀</p>
 
 <div id="weather-widget" style="
-  position: relative;
+  position: fixed;
+  top: 12px;
+  right: 200px;
   z-index: 10;
-  margin-top: 15px;
   padding: 12px 20px;
   background: rgba(0, 255, 204, 0.08);
   border: 1px solid rgba(0, 255, 204, 0.25);

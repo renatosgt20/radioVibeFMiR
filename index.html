@@ -762,6 +762,88 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 
 <p class="slogan">🌌 Web Rádio  ⚡ - PA-Brasil 🚀</p>
 
+<div id="weather-widget" style="
+  position: relative;
+  z-index: 10;
+  margin-top: 15px;
+  padding: 12px 20px;
+  background: rgba(0, 255, 204, 0.08);
+  border: 1px solid rgba(0, 255, 204, 0.25);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #00ffcc;
+">
+  <span id="weather-icon">🌡️</span>
+  <span id="weather-temp">--°C</span>
+  <span id="weather-desc">Carregando...</span>
+  <span style="color: rgba(255,255,255,0.5); font-size: 11px;">•</span>
+  <span id="weather-city" style="font-size: 12px; opacity: 0.8;">---</span>
+</div>
+
+<script>
+async function loadWeather() {
+  try {
+    // Geolocalização por IP (fallback para Belém do Pará)
+    let lat = -1.4558;
+    let lon = -48.5039;
+    let cityName = 'Belém, PA';
+
+    try {
+      const geoRes = await fetch('https://ipapi.co/json/');
+      if (geoRes.ok) {
+        const geoData = await geoRes.json();
+        if (geoData.latitude && geoData.longitude) {
+          lat = geoData.latitude;
+          lon = geoData.longitude;
+          cityName = geoData.city || geoData.region || 'Sua cidade';
+        }
+      }
+    } catch (e) {}
+
+    // Busca clima com Open-Meteo (gratuito, sem API key)
+    const weatherRes = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`
+    );
+    const weatherData = await weatherRes.json();
+
+    const temp = Math.round(weatherData.current.temperature_2m);
+    const code = weatherData.current.weather_code;
+
+    // Códigos WMO para ícones
+    const icons = {
+      0: '☀️', 1: '🌤️', 2: '⛅', 3: '☁️',
+      45: '🌫️', 48: '🌫️',
+      51: '🌧️', 53: '🌧️', 55: '🌧️',
+      61: '🌧️', 63: '🌧️', 65: '🌧️',
+      80: '🌦️', 81: '🌦️', 82: '🌦️',
+      95: '⛈️', 96: '⛈️', 99: '⛈️'
+    };
+    const descs = {
+      0: 'Céu limpo', 1: 'Pouco nublado', 2: 'Parcialmente nublado', 3: 'Nublado',
+      45: 'Neblina', 48: 'Geada Neblina',
+      51: 'Garoa leve', 53: 'Garoa', 55: 'Garoa forte',
+      61: 'Chuva leve', 63: 'Chuva', 65: 'Chuva forte',
+      80: 'Pancadas leves', 81: 'Pancadas', 82: 'Pancadas fortes',
+      95: 'Tempestade', 96: 'Tempestade granizo', 99: 'Tempestade severa'
+    };
+
+    document.getElementById('weather-icon').textContent = icons[code] || '🌡️';
+    document.getElementById('weather-temp').textContent = temp + '°C';
+    document.getElementById('weather-desc').textContent = descs[code] || 'Clima';
+    document.getElementById('weather-city').textContent = cityName;
+  } catch (e) {
+    document.getElementById('weather-desc').textContent = 'Clima indisponível';
+  }
+}
+
+loadWeather();
+setInterval(loadWeather, 300000); // Atualiza a cada 5 min
+</script>
+
 <button id="btnRadio" onclick="tocarRadio()">▶ OUVIR AGORA</button>
 
 <audio id="audio" crossorigin="anonymous" preload="none"></audio>

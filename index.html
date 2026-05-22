@@ -712,14 +712,28 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   }
 
   /* WEATHER WIDGET MOBILE */
+#weather-widget{
+  backdrop-filter: blur(10px);
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(0,255,204,0.15);
+  box-shadow: 0 0 20px rgba(0,255,204,0.15);
+}
+/* MOBILE */
+@media (max-width:768px){
+
   #weather-widget{
-    top:75px !important;
-    right:10px !important;
+    bottom: 15px !important;
+    top: auto !important;
+
+    right: 10px !important;
+
     width: calc(100vw - 20px) !important;
     max-width: 280px !important;
+
     justify-content: center;
   }
 
+}
 }
 </style>
 </head>
@@ -830,7 +844,7 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 
 <div id="weather-widget" style="
   position: fixed;
-  top: 12px;
+  bottom: 12px;
   right: 200px;
   z-index: 10;
   padding: 12px 20px;

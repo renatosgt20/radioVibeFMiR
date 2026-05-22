@@ -1,10 +1,15 @@
 export default {
   async fetch(request) {
-    // SEU HTML ORIGINAL COMPLETO - COLE AQUI DENTRO
-    const html = `COLE SEU HTML ORIGINAL AQUI`;
-    
-    return new Response(html, {
-      headers: { 'Content-Type': 'text/html' }
+    return new Response(`<!DOCTYPE html>
+<html>
+<head>
+  <title>Vibe Radio</title>
+</head>
+<body>
+  <h1>Minha Rádio</h1>
+</body>
+</html>`, {
+      headers: { "content-type": "text/html;charset=UTF-8" }
     });
   }
-};
+}

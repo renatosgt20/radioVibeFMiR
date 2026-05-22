@@ -572,7 +572,7 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 }
 
 /* ============================================= */
-    /* VERSÃO MOBILE - IGUAL AO PC SÓ QUE REDUZIDO E ORGANIZADO */
+    /* CELULAR  VERSÃO MOBILE - IGUAL AO PC SÓ QUE REDUZIDO E ORGANIZADO */
     /* ============================================= */
     @media (max-width:768px){
 
@@ -739,7 +739,7 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   ========================= */
   #weather-widget{
     position:fixed;
-    top:55px;
+    top: 235px;
     right:10px;
 
     width:calc(100vw - 20px);
@@ -749,6 +749,21 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
     padding:6px 10px;
 
     z-index:999;
+  }
+
+  /* =========================
+     QUADRO VIBE FM NEWS (MAIS ABAIXO NO MOBILE)
+  ========================= */
+  .quadro-breve{
+    position:fixed;
+    top: 75px;
+    right: 10px;
+    left: 10px;
+    transform: none;
+    width:calc(100vw - 20px);
+    max-width:320px;
+    margin: 0 auto;
+    z-index:998;
   }
 }
 </style>

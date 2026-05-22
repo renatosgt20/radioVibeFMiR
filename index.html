@@ -738,9 +738,39 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
      WEATHER / PREVISÃO DO TEMPO (SOMENTE MOBILE - CANTO INFERIOR ESQUERDO)
   ========================= */
 
-  /* Esconde widget mobile por padrão */
+  /* Desktop: esconde widget mobile */
   #weather-widget-mobile{
-    display: none;
+    display: none !important;
+  }
+
+  /* Desktop: mostra widget normal no topo direito */
+  #weather-widget{
+    display: inline-flex !important;
+  }
+
+  /* =========================
+     QUADRO VIBE FM NEWS (MAIS ABAIXO NO MOBILE)
+  ========================= */
+  .quadro-breve{
+    position:fixed;
+    top: 75px;
+    right: 10px;
+    left: 10px;
+    transform: none;
+    width:calc(100vw - 20px);
+    max-width:320px;
+    margin: 0 auto;
+    z-index:998;
+  }
+
+  /* Mobile: esconde widget normal do topo */
+  #weather-widget{
+    display: none !important;
+  }
+
+  /* Mobile: mostra widget no canto inferior esquerdo */
+  #weather-widget-mobile{
+    display: block !important;
   }
 
   /* =========================
@@ -964,6 +994,11 @@ async function loadWeather() {
     document.getElementById('weather-temp').textContent = temp + '°C';
     document.getElementById('weather-desc').textContent = descs[code] || 'Clima';
     document.getElementById('weather-city').textContent = cityName;
+    // Atualiza também o widget mobile
+    document.getElementById('weather-icon-mobile').textContent = icons[code] || '🌡️';
+    document.getElementById('weather-temp-mobile').textContent = temp + '°C';
+    document.getElementById('weather-desc-mobile').textContent = descs[code] || 'Clima';
+    document.getElementById('weather-city-mobile').textContent = cityName;
   } catch (e) {
     document.getElementById('weather-desc').textContent = 'Clima indisponível';
   }

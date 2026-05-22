@@ -14,40 +14,111 @@ let filaAtual = [];
 let idxAtual = 0;
 let audioLiberado = false;
 
-// ==============================
+/// ==============================
 // STREAM CENTRAL (Worker)
 // ==============================
 
 const STREAM_STATE_URL = "https://radio-sync.vibefmbr.workers.dev/now";
 
 async function syncFromServer({ forcePlay = false } = {}) {
+
   if (!playerEl) return;
 
-  const res = await fetch(STREAM_STATE_URL, { cache: "no-store" });
-  const data = await res.json();
-  if (!data || !data.track) return;
-
-  // troca track se mudou
-  if (playerEl.dataset.track !== data.track) {
-    playerEl.dataset.track = data.track;
-    playerEl.src = data.track;
-  }
-
-  // tenta manter mesma posição
-  const offsetSec = Math.max(0, (Date.now() - data.startedAt) / 1000);
-
-  if (forcePlay) {
-    try { await playerEl.play(); } catch (e) {}
-  }
-
-  // currentTime pode falhar em alguns browsers; mesmo assim tentamos
   try {
-    if (!Number.isNaN(playerEl.duration) && playerEl.duration > 0) {
-      playerEl.currentTime = offsetSec % playerEl.duration;
-    } else {
-      playerEl.currentTime = offsetSec;
+
+    const res = await fetch(STREAM_STATE_URL, {
+      cache: "no-store"
+    });
+
+    const data = await res.json();
+
+    if (!data || !data.track) return;
+
+    const isNewTrack =
+      playerEl.dataset.track !== data.track;
+
+    if (isNewTrack) {
+
+      playerEl.dataset.track = data.track;
+
+      playerEl.src = data.track;
+
+      // força carregar
+      playerEl.load();
+
+      console.log("🎵 Nova música:", data.track);
+
     }
-  } catch (e) {}
+
+    const offsetSec =
+      Math.max(0, (Date.now() - data.startedAt) / 1000);
+
+    // espera metadata
+    if (
+      playerEl.readyState >= 1 &&
+      playerEl.duration &&
+      !isNaN(playerEl.duration)
+    ) {
+
+      playerEl.currentTime =
+        offsetSec % playerEl.duration;
+
+    } else {
+
+      await new Promise((resolve) => {
+
+        const timeout = setTimeout(() => {
+          resolve();
+        }, 5000);
+
+        playerEl.onloadedmetadata = () => {
+
+          clearTimeout(timeout);
+
+          try {
+
+            if (
+              playerEl.duration &&
+              !isNaN(playerEl.duration)
+            ) {
+
+              playerEl.currentTime =
+                offsetSec % playerEl.duration;
+
+            }
+
+          } catch(e) {}
+
+          resolve();
+
+        };
+
+      });
+
+    }
+
+    playerEl.muted = false;
+
+    try {
+
+      await playerEl.play();
+
+      tocando = true;
+
+      console.log("▶ PLAY OK");
+
+    } catch(playErr) {
+
+      console.log("⚠️ play falhou:", playErr);
+
+    }
+
+  } catch(err) {
+
+    console.log("Erro sync:", err);
+
+  }
+
 }
 
 let streamStarted = false;

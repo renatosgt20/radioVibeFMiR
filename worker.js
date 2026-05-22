@@ -1,18 +1,24 @@
 export default {
+
   async fetch(request) {
 
-    const url = new URL(request.url);
+    const data = {
+      track: "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3",
+      startedAt: 1779408575397
+    };
 
-    // rota da rádio
-    if (url.pathname === "/now") {
+    return new Response(
+      JSON.stringify(data),
+      {
+        headers: {
+          "content-type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, OPTIONS",
+          "Access-Control-Allow-Headers": "*"
+        }
+      }
+    );
 
-      return Response.json({
-        track: "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3",
-
-        startedAt: Date.now() - 60000
-      });
-    }
-
-    return new Response("Worker online");
   }
+
 }

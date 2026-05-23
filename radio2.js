@@ -818,3 +818,4 @@ if (playerEl) {
 
 
 
+// OBS: dai pra cima tudo certo salvo ate aqui pangare

@@ -1,0 +1,74 @@
+/* QUADRO DOS ANÚNCIOS */
+
+.ads-sidebar{
+
+  display:none;
+
+}
+
+/* TITULO NEON */
+
+.ads-title{
+  text-align: center;
+
+  color: #00ffe1;
+
+  font-size: 14px;
+
+  margin-bottom: 14px;
+
+  letter-spacing: 1px;
+
+  text-shadow:
+    0 0 5px #00ffe1,
+    0 0 15px #00ffe1;
+
+  font-weight: bold;
+}
+
+/* IMAGENS */
+
+.ads-sidebar img{
+  width: 100%;
+
+  border-radius: 14px;
+
+  margin-bottom: 14px;
+
+  border: 2px solid rgba(0,255,200,0.4);
+
+  box-shadow:
+    0 0 10px rgba(0,255,200,0.4);
+
+
+  transition: 0.3s;
+}
+
+/* HOVER */
+
+.ads-sidebar img:hover{
+  transform: scale(1.04);
+
+  box-shadow:
+    0 0 15px #00ffe1,
+    0 0 30px rgba(0,255,225,0.8);
+}
+
+/* MOBILE */
+
+@media(max-width:768px){
+
+  .ads-sidebar{
+    position: relative;
+
+    width: 90%;
+
+    margin: 20px auto;
+
+    left: 0;
+    top: 0;
+  }
+
+}
+
+

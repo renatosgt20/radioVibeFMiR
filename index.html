@@ -1,11 +1,11 @@
- ```html
-<!DOCTYPE html>
+<!DOCTYPE html
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <link rel="icon" type="image/png" href="https://cdn-icons-png.flaticon.com/512/727/727245.png">
+<link rel="stylesheet" href="ads-sidebar.css">
 
 <title>Vibe FM</title>
 
@@ -182,10 +182,13 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   display:flex;
   align-items:flex-end;
   justify-content:center;
-  gap:4px;
-  margin-top:25px;
-  height:50px;
-  width:220px;
+  gap:clamp(3px, 0.8vw, 6px);
+  height:clamp(42px, 10vw, 70px);
+  width:min(82vw, 360px);
+  margin:0 auto;
+  padding:0;
+  flex:0 0 auto;
+  max-width:100vw;
 }
 
 .bar{
@@ -735,9 +738,256 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 
 }
 }
+
+/* RADIO PLAYER (OUVIR AGORA) */
+.radio-player{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+
+  width:100%;
+
+  position:relative;
+  z-index:2;
+
+  margin-top:-160px; /* sobe um pouco o bloco */
+  padding:0;
+  gap:0;
+
+  /* trava o bloco para não empurrar a página */
+  max-width:100vw;
+}
+
+
+/* EQUALIZADOR (compacto e sem overflow) */
+.equalizer{
+  display:flex;
+  flex:0 0 auto;
+  flex-direction:row;
+  align-items:flex-end;
+  justify-content:center;
+  gap:clamp(2.5px, 0.8vw, 5.5px);
+
+  /* mantém premium, mas menor */
+  height:64px;
+  max-height:64px;
+
+  width:min(80vw, 340px);
+  max-width:100vw;
+
+  margin:0 auto;
+  padding:0;
+
+  overflow:hidden;
+  transform:translateZ(0);
+}
+
+
+.equalizer span{
+  display:block;
+
+  /* barras pequenas e proporcionais */
+  width:clamp(4px, 1.1vw, 8px);
+  border-radius:999px;
+
+  /* altura base controlada via animation (scaleY) */
+  height:100%;
+  transform-origin:bottom;
+
+  background:linear-gradient(to top, #ff00aa, #bb00ff, #00e5ff);
+  box-shadow:
+    0 0 6px rgba(255,0,255,0.7),
+    0 0 12px rgba(0,229,255,0.45);
+
+  animation: neonEqualizer 1.05s infinite ease-in-out;
+}
+
+/* variação de amplitude sem alterar layout/altura total */
+.equalizer span:nth-child(1){ --amp:0.35; animation-delay:0.00s; }
+.equalizer span:nth-child(2){ --amp:0.55; animation-delay:0.08s; }
+.equalizer span:nth-child(3){ --amp:0.80; animation-delay:0.16s; }
+.equalizer span:nth-child(4){ --amp:0.60; animation-delay:0.04s; }
+.equalizer span:nth-child(5){ --amp:0.45; animation-delay:0.22s; }
+.equalizer span:nth-child(6){ --amp:0.95; animation-delay:0.12s; }
+.equalizer span:nth-child(7){ --amp:0.70; animation-delay:0.06s; }
+.equalizer span:nth-child(8){ --amp:0.50; animation-delay:0.10s; }
+.equalizer span:nth-child(9){ --amp:0.80; animation-delay:0.18s; }
+.equalizer span:nth-child(10){ --amp:0.62; animation-delay:0.14s; }
+
+@keyframes neonEqualizer{
+  0%   { transform:scaleY(0.35); opacity:0.95; }
+  50%  { transform:scaleY(calc(0.35 + (var(--amp) * 0.65))); opacity:1; }
+  100% { transform:scaleY(0.35); opacity:0.95; }
+}
+
+/* STATUS */
+.live-dot{
+  display:inline-block;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#00ffd5;
+  box-shadow:
+    0 0 8px #00ffd5,
+    0 0 18px rgba(0,255,213,0.55);
+  position:relative;
+  top:-1px;
+  animation: liveDotPulse 1.3s ease-in-out infinite;
+}
+
+@keyframes liveDotPulse{
+  0%,100%{ transform:scale(0.95); filter:brightness(1); }
+  50%{ transform:scale(1.15); filter:brightness(1.35); }
+}
+
+.radio-status{
+  color:#00ffd5;
+  font-size:22px;
+  margin:6px 0 0; /* reduz push excessivo */
+  text-shadow:
+    0 0 10px rgba(0,255,213,0.45),
+    0 0 22px rgba(0,255,213,0.22);
+  max-width:100vw;
+}
+
+.radio-status span{
+  color:#eaffff;
+  margin:0 10px;
+}
+
+
+/* BOTÃO (compacto e elegante) */
+.play-btn{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(5px, 0.9vw, 8px);
+
+  width:min(60vw, 300px);
+
+
+  max-width:100vw;
+
+  padding:7px 8px;
+  border:none;
+  border-radius:999px;
+
+
+  background: rgba(20,0,30,0.65);
+  border:2px solid rgba(255,0,128,0.9);
+  cursor:pointer;
+
+  box-shadow:
+    0 0 9px rgba(255,0,128,0.68),
+    0 0 20px rgba(0,229,255,0.14);
+
+  transition:0.25s ease;
+  overflow:hidden;
+
+  /* ainda mais perto do equalizador */
+  margin:3px auto 0;
+
+  flex:0 0 auto;
+}
+
+.play-btn:hover{
+  transform:scale(1.01);
+  box-shadow:
+    0 0 12px rgba(255,0,255,0.62),
+    0 0 30px rgba(255,0,128,0.48);
+}
+
+/* CÍRCULO PLAY */
+.play-circle{
+  width:44px;
+  height:44px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  color:white;
+  border:3px solid rgba(255,77,166,0.95);
+  background: rgba(255,0,128,0.12);
+  box-shadow:
+    0 0 9px rgba(255,0,128,0.75),
+    inset 0 0 9px rgba(255,0,128,0.65);
+}
+
+/* TEXTO */
+.play-text h2{
+  font-size: clamp(13px, 2vw, 17px);
+  line-height:1.05;
+}
+
+.play-text p{
+  font-size:10.5px;
+  margin-top:1px;
+  opacity:0.95;
+}
+
+
+/* MOBILE */
+@media(max-width:768px){
+  .radio-player{ max-width:100vw; }
+
+  .equalizer{
+    width:170px;
+    height:42px;
+    max-height:42px;
+    gap:5px;
+  }
+
+  .equalizer span{
+    width:clamp(4px, 2vw, 7px);
+  }
+
+  .radio-status{
+    font-size:18px;
+    margin-top:4px;
+  }
+
+  .play-btn{
+    width:92%;
+    padding:8px 10px;
+    margin-top:4px;
+    gap:8px;
+  }
+
+  .play-circle{
+    width:40px;
+    height:40px;
+    font-size:18px;
+    border-width:2px;
+  }
+
+  .play-text h2{
+    font-size:14px;
+  }
+
+  .play-text p{
+    font-size:10px;
+  }
+}
+
+
+
+
 </style>
 </head>
 <body>
+
+<div class="ads-sidebar" style="z-index:9999;">
+  <a href="https://google.com" target="_blank">
+    <img src="https://picsum.photos/140/300" alt="Anúncio">
+  </a>
+
+  <a href="https://google.com" target="_blank">
+    <img src="https://picsum.photos/140/300" alt="Anúncio">
+  </a>
+
+</div>
 
 <div class="quadro-breve">
 
@@ -925,20 +1175,46 @@ loadWeather();
 setInterval(loadWeather, 300000); // Atualiza a cada 5 min
 </script>
 
-<button id="btnRadio" onclick="tocarRadio()">▶ OUVIR AGORA</button>
+<div class="radio-player">
+
+  <!-- Equalizador -->
+  <div class="equalizer">
+
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+
+  </div>
+
+  <!-- Status -->
+  <div class="radio-status">
+    <span class="live-dot"></span> Oline
+  </div>
+
+  <!-- Botão -->
+  <button class="play-btn" onclick="tocarRadio()">
+
+    <div class="play-circle">
+      ▶
+    </div>
+
+    <div class="play-text">
+      <h2>OUVIR AGORA</h2>
+      <p>SINTA A VIBE!</p>
+    </div>
+
+  </button>
+
+</div>
 
 <audio id="audio" crossorigin="anonymous" preload="none"></audio>
-
-<div class="equalizer">
-<div class="bar"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-<div class="bar"></div>
-</div>
 
 </div>
 
@@ -1040,7 +1316,9 @@ box-shadow:0 2px 10px rgba(0,255,204,.4);
 
 <a href="https://wa.me/5591982283924" target="_blank" class="btn">📱 Contato</a>
 
-<button class="btn">🤝 Seja Parceiro</button>
+<a href="https://spring-shadow-525e.renatosgt1992.workers.dev/" target="_blank" class="btn">
+  🤝 Seja Parceiro
+</a>
 
 <div style="position:relative">
 <button class="btn programacao" onclick="toggleProgramacao()">📻 Programação Vibe FM</button>
@@ -1547,3 +1825,4 @@ toggleAdmLogin();
 
 </body>
 </html>
+// OBS: dai pra cima tudo certo salvo ate aqui pangare

@@ -705,44 +705,44 @@ function atualizarBtnAgora() {
   }
 }
 
+function setMainButtonText(texto) {
+  // NÃO mexe em layout/CSS. Apenas texto do botão principal.
+  // No seu HTML o botão é: <button class="play-btn" ...>
+  // Não existe id="btnRadio".
+  const h2 = document.querySelector(".play-btn .play-text h2");
+  if (h2) {
+    h2.textContent = texto;
+  }
+}
+
+
+
+
 // ==============================
 
 async function tocarRadio() {
+  // O texto do botão deve ser atualizado SOMENTE pelos eventos do <audio>
+  // (play, pause e ended). Aqui não mexemos em texto.
 
-  const btn = document.getElementById("btnRadio");
-  const bars = document.querySelectorAll(".bar");
+  if (!playerEl) return;
 
-  function setEqualizerState(running) {
-    const box = document.getElementById('equalizerBox');
-    if (box) box.classList.toggle('is-playing', running);
-
-    bars.forEach(b => {
-      b.style.animationPlayState = running ? "running" : "paused";
-    });
-  }
-
-  // Alterna PAUSE/PLAY
-  if (tocando) {
+  // Toggle apenas pelo estado real do <audio>
+  if (!playerEl.paused && !playerEl.ended) {
     playerEl.pause();
-    tocando = false;
-    setEqualizerState(false);
-    if (btn) btn.innerHTML = "▶ OUVIR AGORA";
-    atualizarBtnAgora();
     return;
   }
 
-  // Começa
-  setEqualizerState(true);
+  if (!pastaAtual || pastaAtual !== getPastaInicialPorHorario()) {
+    pastaAtual = getPastaInicialPorHorario();
+    indexMusicaNaFase = 0;
+  }
 
-  pastaAtual = getPastaInicialPorHorario();
-  indexMusicaNaFase = 0;
-
-  // troca botão para PAUSE
-  if (btn) btn.innerHTML = "⏸ PARAR";
-
-  await proximaMusica(); // define src e chama play na tocarMusica()
-  atualizarBtnAgora();
+  await proximaMusica();
 }
+
+
+
+
 
 // ==============================
 // EVENTOS DO ÁUDIO
@@ -751,15 +751,70 @@ async function tocarRadio() {
 function setupAudioEvents() {
   if (!playerEl) return;
 
-  playerEl.addEventListener("ended", () => {
-    if (tocando) proximaMusica();
+  function resetMainButton() {
+    tocando = false;
+    setEqualizerState(false);
+    setMainButtonText("OUVIR AGORA");
+    atualizarBtnAgora();
+  }
+
+  // Mantém referência ao setEqualizerState do tocarRadio() via closure
+  // (fallback caso ainda não exista)
+  function setEqualizerState(running) {
+    const bars = document.querySelectorAll(".bar");
+
+    // O equalizador no seu HTML usa apenas animationPlayState nas `.bar`.
+    // Não existe `#equalizerBox`, então não devemos depender dele.
+    bars.forEach(b => {
+      b.style.animationPlayState = running ? "running" : "paused";
+    });
+  }
+
+
+  // Atualização 100% baseada nos eventos do <audio>.
+  playerEl.addEventListener("play", () => {
+    setMainButtonText("PARAR");
+    atualizarBtnAgora();
   });
+
+  playerEl.addEventListener("pause", () => {
+    setMainButtonText("OUVIR AGORA");
+    atualizarBtnAgora();
+  });
+
+  playerEl.addEventListener("ended", () => {
+    setMainButtonText("OUVIR AGORA");
+    atualizarBtnAgora();
+
+    // ao terminar naturalmente, tenta próxima música
+    proximaMusica();
+  });
+
+
 
   playerEl.addEventListener("error", () => {
     console.log("⚠️ Erro na música, pulando para próxima...");
-    setTimeout(() => proximaMusica(), 1000);
+
+    // volta o botão (e pausa estados) se falhar/interromper
+    resetMainButton();
+
+    setTimeout(() => {
+      // se o usuário não retomou manualmente, segue
+      if (!tocando) proximaMusica();
+    }, 1000);
   });
+
+
 }
 
 // DOM já está pronto quando o script é executado (colocado antes de </body>)
 setupAudioEvents();
+
+// (Intencionalmente sem sincronização manual inicial do texto.
+// Texto do botão é controlado EXCLUSIVAMENTE pelos eventos: play/pause/ended.)
+if (playerEl) {
+  atualizarBtnAgora();
+}
+
+
+

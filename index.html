@@ -1207,7 +1207,8 @@ setInterval(loadWeather, 300000); // Atualiza a cada 5 min
   </div>
 
   <!-- Botão -->
-  <button class="play-btn" onclick="tocarRadio()">
+  <button class="play-btn" type="button" onclick="event.preventDefault(); tocarRadio();">
+
 
     <div class="play-circle">
       ▶
@@ -1227,7 +1228,7 @@ setInterval(loadWeather, 300000); // Atualiza a cada 5 min
 </div>
 
 <!-- CHAT -->
-<div id="chat-btn" onclick="toggleChat()">💬</div>
+<div id="chat-btn" onclick="event.preventDefault(); toggleChat()">💬</div>
 
 <!-- BOLHA DE PENSAMENTO -->
 <div id="thought-bubble" style="

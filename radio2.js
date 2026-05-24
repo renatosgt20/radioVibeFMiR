@@ -640,7 +640,11 @@ async function tocarMusica(src) {
   }
   if (!playerEl) return;
 
-  playerEl.src = src;
+  // Não recriar/reinicializar player aqui.
+  // Só troca o src quando for uma nova música.
+  if (playerEl.src !== src) {
+    playerEl.src = src;
+  }
 
   try {
     await playerEl.play();
@@ -652,11 +656,17 @@ async function tocarMusica(src) {
   }
 }
 
+
 // ==============================
 // PRÓXIMA MÚSICA
 // ==============================
 
 async function proximaMusica() {
+  // Se estiver pausado, não avance/não recrie nada.
+  if (playerEl && playerEl.paused) return;
+
+
+
 
   // fase atual pelo horário
   const pastaHorario = getPastaInicialPorHorario();
@@ -721,24 +731,44 @@ function setMainButtonText(texto) {
 // ==============================
 
 async function tocarRadio() {
-  // O texto do botão deve ser atualizado SOMENTE pelos eventos do <audio>
-  // (play, pause e ended). Aqui não mexemos em texto.
-
   if (!playerEl) return;
 
-  // Toggle apenas pelo estado real do <audio>
+  // Se estiver tocando, apenas PAUSE (sem trocar src)
   if (!playerEl.paused && !playerEl.ended) {
     playerEl.pause();
     return;
   }
 
-  if (!pastaAtual || pastaAtual !== getPastaInicialPorHorario()) {
+  // Caso inicial: se não há src/sem tocar ainda, inicia a primeira música
+  // (antes, play() não tinha src válido e não disparava play/ended)
+  const temSrc = !!playerEl.getAttribute('src') || !!playerEl.src;
+  if (!temSrc && !tocando) {
+    // define pastaAtual/idx e toca a primeira faixa
     pastaAtual = getPastaInicialPorHorario();
     indexMusicaNaFase = 0;
+
+    // Atualiza imediatamente o nome do programa no painel (antes do play disparar o event)
+    // para evitar "aparecer só no segundo clique".
+    atualizarBtnAgora();
+
+    const arquivos = getArquivosDaPasta(pastaAtual);
+    const musica = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase);
+    indexMusicaNaFase++;
+    await tocarMusica(musica);
+    // garantir sincronização do nome/estado após troca de src
+    atualizarBtnAgora();
+    return;
   }
 
-  await proximaMusica();
+
+  // Se já tem src (pause/ended), apenas retoma
+  try {
+    await playerEl.play();
+  } catch (e) {
+    console.log("Erro ao retomar:", e);
+  }
 }
+
 
 
 

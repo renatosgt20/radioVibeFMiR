@@ -1135,19 +1135,51 @@ async function loadWeather() {
     let lon = -48.5039;
     let cityName = 'Belém, PA';
 
-    try {
-      const geoRes = await fetch('https://ipapi.co/json/');
-      if (geoRes.ok) {
-        const geoData = await geoRes.json();
-        if (geoData.latitude && geoData.longitude) {
-          lat = geoData.latitude;
-          lon = geoData.longitude;
-          cityName = geoData.city || geoData.region || 'Sua cidade';
-        }
-      }
-    } catch (e) {}
+    // --------- GEO: ipapi.co (evitar CORS/403 em origin null/file://) ---------
+    // Se estiver abrindo como arquivo (file://) ou origin “null”, NÃO chamar ipapi.co
+    // para não gerar erro vermelho no console.
+    const isFileOrigin = String(window.location && window.location.protocol) === 'file:';
+    const origin = window.location ? window.location.origin : '';
+    const isNullOrigin = origin === 'null';
 
-    // Busca clima com Open-Meteo (gratuito, sem API key)
+    if (!isFileOrigin && !isNullOrigin) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
+
+        const geoRes = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (geoRes && geoRes.ok) {
+          let geoData = null;
+          try {
+            geoData = await geoRes.json();
+          } catch (_) {
+            geoData = null;
+          }
+
+          if (
+            geoData &&
+            typeof geoData.latitude !== 'undefined' &&
+            typeof geoData.longitude !== 'undefined'
+          ) {
+            const latNum = Number(geoData.latitude);
+            const lonNum = Number(geoData.longitude);
+            if (Number.isFinite(latNum) && Number.isFinite(lonNum)) {
+              lat = latNum;
+              lon = lonNum;
+              cityName = geoData.city || geoData.region || 'Sua cidade';
+            }
+          }
+        }
+        // Se !geoRes.ok, mantém fallback
+      } catch (e) {
+        // Falha de rede/timeout/CORS/JSON inválido -> manter fallback padrão (silencioso)
+      }
+    }
+
+
+    // --------- WEATHER: Open-Meteo (caminho principal) ---------
     const weatherRes = await fetch(
       `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weather_code&timezone=auto`
     );
@@ -1179,7 +1211,11 @@ async function loadWeather() {
     document.getElementById('weather-desc').textContent = descs[code] || 'Clima';
     document.getElementById('weather-city').textContent = cityName;
   } catch (e) {
+    // Mantém o widget sem quebrar carregamento
+    document.getElementById('weather-icon').textContent = '🌡️';
+    document.getElementById('weather-temp').textContent = '--°C';
     document.getElementById('weather-desc').textContent = 'Clima indisponível';
+    document.getElementById('weather-city').textContent = 'Belém, PA';
   }
 }
 

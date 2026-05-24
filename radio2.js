@@ -11,6 +11,11 @@ let filaAtual = [];
 let idxAtual = 0;
 let audioLiberado = false;
 
+// anti-repetição imediata (evita ended escolher a mesma faixa)
+let ultimaMusicaSrc = null;
+let proximoPending = false;
+
+
 // ==============================
 // PASTAS
 // ==============================
@@ -662,32 +667,55 @@ async function tocarMusica(src) {
 // ==============================
 
 async function proximaMusica() {
-  // Não bloquear pelo estado `paused`.
-  // Em alguns navegadores o evento `ended` pode ocorrer com `paused=true`.
-  // Para rádio contínua, a próxima faixa PRECISA tocar automaticamente.
+  // Evita loops/duplicidade se `ended` disparar mais de uma vez.
+  if (proximoPending) return;
+  proximoPending = true;
 
+  try {
+    // fase atual pelo horário
+    const pastaHorario = getPastaInicialPorHorario();
+    if (pastaHorario !== pastaAtual) {
+      pastaAtual = pastaHorario;
+      indexMusicaNaFase = 0;
+      console.log("📅 Mudando programação para:", pastaAtual);
+      ultimaMusicaSrc = null; // ao mudar de fase, não força anti-repetição do src anterior
+    }
 
+    const arquivos = getArquivosDaPasta(pastaAtual);
+    if (!arquivos.length) return;
 
+    // escolhe nova faixa tentando não repetir a atual imediatamente
+    let tentativa = 0;
+    let musica = null;
 
+    // tentativas limitadas: muda indexMusicaNaFase e gera outra posição no shuffle determinístico
+    while (tentativa < 10) {
+      const candidato = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase);
+      indexMusicaNaFase++;
 
-  // fase atual pelo horário
-  const pastaHorario = getPastaInicialPorHorario();
-  if (pastaHorario !== pastaAtual) {
-    pastaAtual = pastaHorario;
-    indexMusicaNaFase = 0;
-    console.log("📅 Mudando programação para:", pastaAtual);
+      // pula candidato se for o mesmo src (evita repetição imediata)
+      if (candidato && candidato !== ultimaMusicaSrc) {
+        musica = candidato;
+        break;
+      }
+      tentativa++;
+    }
+
+    // se não achou diferente (playlist com repetição real/única), toca o último candidato válido
+    if (!musica) {
+      musica = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase % arquivos.length);
+    }
+
+    if (!musica) return;
+
+    ultimaMusicaSrc = musica;
+    await tocarMusica(musica);
+    atualizarBtnAgora();
+  } finally {
+    proximoPending = false;
   }
-
-  const arquivos = getArquivosDaPasta(pastaAtual);
-  if (!arquivos.length) return;
-
-  // escolha determinística para todos (sem embaralhar por dispositivo)
-  const musica = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase);
-  indexMusicaNaFase++;
-
-  await tocarMusica(musica);
-  atualizarBtnAgora();
 }
+
 
 // ==============================
 // BOTÃO PLAY
@@ -794,6 +822,11 @@ function setupAudioEvents() {
   function resetMainButton() {
     tocando = false;
     setEqualizerState(false);
+
+    // Importante: resetar UI aqui PODE causar o botão voltar/pausar sensação de rádio.
+    // Para o modo rádio contínua, mantemos apenas estados de equalizador/texto.
+    // A sequência de músicas é controlada pelo evento `ended`.
+
     setMainButtonText("OUVIR AGORA");
     atualizarBtnAgora();
     setListeningOverlayVisible(false);
@@ -831,8 +864,10 @@ function setupAudioEvents() {
 
     // ao terminar naturalmente, tenta próxima música
     // setTimeout garante novo ciclo do event loop e evita travar em estados transitórios.
+    // A proteção anti-double-ended está em proximaMusica().
     setTimeout(() => proximaMusica(), 0);
   });
+
 
 
 

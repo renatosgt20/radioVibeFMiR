@@ -751,11 +751,20 @@ async function tocarRadio() {
 function setupAudioEvents() {
   if (!playerEl) return;
 
+  function setListeningOverlayVisible(visible) {
+    // Elemento do HTML: <button id="btnAgora"> ... <span id="txtAgora">Você está ouvindo Agora</span>
+    const btnAgora = document.getElementById("btnAgora");
+    if (!btnAgora) return;
+
+    btnAgora.style.display = visible ? "block" : "none";
+  }
+
   function resetMainButton() {
     tocando = false;
     setEqualizerState(false);
     setMainButtonText("OUVIR AGORA");
     atualizarBtnAgora();
+    setListeningOverlayVisible(false);
   }
 
   // Mantém referência ao setEqualizerState do tocarRadio() via closure
@@ -775,11 +784,13 @@ function setupAudioEvents() {
   playerEl.addEventListener("play", () => {
     setMainButtonText("PARAR");
     atualizarBtnAgora();
+    setListeningOverlayVisible(true);
   });
 
   playerEl.addEventListener("pause", () => {
     setMainButtonText("OUVIR AGORA");
     atualizarBtnAgora();
+    setListeningOverlayVisible(false);
   });
 
   playerEl.addEventListener("ended", () => {

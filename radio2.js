@@ -662,8 +662,10 @@ async function tocarMusica(src) {
 // ==============================
 
 async function proximaMusica() {
-  // Se estiver pausado, não avance/não recrie nada.
-  if (playerEl && playerEl.paused) return;
+  // Não bloquear pelo estado `paused`.
+  // Em alguns navegadores o evento `ended` pode ocorrer com `paused=true`.
+  // Para rádio contínua, a próxima faixa PRECISA tocar automaticamente.
+
 
 
 
@@ -828,7 +830,8 @@ function setupAudioEvents() {
     atualizarBtnAgora();
 
     // ao terminar naturalmente, tenta próxima música
-    proximaMusica();
+    // setTimeout garante novo ciclo do event loop e evita travar em estados transitórios.
+    setTimeout(() => proximaMusica(), 0);
   });
 
 

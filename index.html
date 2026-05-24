@@ -1130,54 +1130,45 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 <script>
 async function loadWeather() {
   try {
-    // Geolocalização por IP (fallback para Belém do Pará)
+    // Geolocalização sem IP lookup (definitivo): usa fallback fixo Belém/PA.
+    // IMPORTANTE: não deve existir nenhuma tentativa de fetch para ipapi.co.
     let lat = -1.4558;
     let lon = -48.5039;
     let cityName = 'Belém, PA';
 
-    // --------- GEO: ipapi.co (evitar CORS/403 em origin null/file://) ---------
-    // Se estiver abrindo como arquivo (file://) ou origin “null”, NÃO chamar ipapi.co
-    // para não gerar erro vermelho no console.
-    const isFileOrigin = String(window.location && window.location.protocol) === 'file:';
-    const origin = window.location ? window.location.origin : '';
-    const isNullOrigin = origin === 'null';
-
-    if (!isFileOrigin && !isNullOrigin) {
+    // (Opcional) Tenta usar apenas navigator.geolocation quando disponível.
+    // Se falhar, mantém Belém/PA silenciosamente.
+    if (navigator && typeof navigator.geolocation !== 'undefined') {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const timeoutId = setTimeout(() => controller.abort(), 4500);
 
-        const geoRes = await fetch('https://ipapi.co/json/', { signal: controller.signal });
+        const pos = await new Promise((resolve, reject) => {
+          if (controller.signal.aborted) return reject(new Error('geolocation-timeout'));
+
+          navigator.geolocation.getCurrentPosition(
+            (p) => resolve(p),
+            (err) => reject(err),
+            { enableHighAccuracy: false, timeout: 4000, maximumAge: 5 * 60 * 1000 }
+          );
+        }).catch(() => null);
+
         clearTimeout(timeoutId);
 
-        if (geoRes && geoRes.ok) {
-          let geoData = null;
-          try {
-            geoData = await geoRes.json();
-          } catch (_) {
-            geoData = null;
-          }
-
-          if (
-            geoData &&
-            typeof geoData.latitude !== 'undefined' &&
-            typeof geoData.longitude !== 'undefined'
-          ) {
-            const latNum = Number(geoData.latitude);
-            const lonNum = Number(geoData.longitude);
-            if (Number.isFinite(latNum) && Number.isFinite(lonNum)) {
-              lat = latNum;
-              lon = lonNum;
-              cityName = geoData.city || geoData.region || 'Sua cidade';
-            }
+        if (pos && pos.coords) {
+          const latNum = Number(pos.coords.latitude);
+          const lonNum = Number(pos.coords.longitude);
+          if (Number.isFinite(latNum) && Number.isFinite(lonNum)) {
+            lat = latNum;
+            lon = lonNum;
+            // Mantém cidade fixa para evitar dependência de reverse-geocoding.
+            cityName = 'Belém, PA';
           }
         }
-        // Se !geoRes.ok, mantém fallback
       } catch (e) {
-        // Falha de rede/timeout/CORS/JSON inválido -> manter fallback padrão (silencioso)
+        // Mantém fallback sem poluir console.
       }
     }
-
 
     // --------- WEATHER: Open-Meteo (caminho principal) ---------
     const weatherRes = await fetch(

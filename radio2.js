@@ -585,7 +585,7 @@ function getPastaInicialPorHorario() {
 
   // 12h até 14h
   if (h >= 12 && h < 14) {
-    return "lofi";
+    return "hitsvibe";
   }
 
   // 14h até 17h
@@ -683,13 +683,13 @@ async function proximaMusica() {
 // MAPEAMENTO PASTA -> NOME DO PROGRAMA
 // ==============================
 const PROGRAMAS = {
-  fundaovibe: "🔥 Fundão da Vibe",
-  hitsvibe:   "⭐ Hits Vibe",
-  lofi:        "☕ Lo-Fi Vibe",
-  chilldrive:  "🎧 Chill Vibe",
-  grove:       "🌀 PSY Vibe",
-  night:       "🌙 PSY Vibe",
-  forest:      "🌲 PSY Vibe"
+  fundaovibe: "🔥 Fundão da Vibe 🔥",
+  hitsvibe:   "⭐ Hits Vibe ⭐",
+  lofi:        "🎧 Lo-Fi Vibe 🎧",
+  chilldrive:  "☕ Chill Vibe ☕",
+  grove:       "🌀 PSY Vibe 🌀 ",
+  night:       "🌙 PSY Vibe 🌙",
+  forest:      "🌲 PSY Vibe 🌲 "
 };
 
 function atualizarBtnAgora() {

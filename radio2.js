@@ -15,6 +15,17 @@ let audioLiberado = false;
 let ultimaMusicaSrc = null;
 let proximoPending = false;
 
+// ==============================
+// LOCKS/FLAGS anti-concorrência (evita AbortError, play/pause simultâneos e loops)
+// ==============================
+let playPending = false;        // existe um playerEl.play() pendente (await em andamento)
+let pauseRequested = false;    // pedido de pause enquanto playPending estiver true
+let lastPlayToken = 0;         // identifica a última tentativa de play (evita corrida)
+let clickDebounceTimer = 0;    // debounce do clique no botão
+let playClickLocked = false;   // bloqueio de clique duplo
+let audioErrorPending = false; // evita múltiplos handlers de error disparando proximaMusica em loop
+let connectionRecoveryTimer = null;
+
 
 // ==============================
 // PASTAS
@@ -645,19 +656,27 @@ async function tocarMusica(src) {
   }
   if (!playerEl) return;
 
-  // Não recriar/reinicializar player aqui.
-  // Só troca o src quando for uma nova música.
+  // Troca o src somente se necessário
   if (playerEl.src !== src) {
     playerEl.src = src;
   }
 
   try {
+    // Evita múltiplos play() sobrepostos via locks globais.
+    if (!playPending) {
+      playPending = true;
+    }
+
     await playerEl.play();
     tocando = true;
     console.log("🎵 Tocando:", pastaAtual);
   } catch (e) {
     console.log("Erro ao tocar:", e);
     tocando = false;
+
+    // se falhou por concorrência/pause, liberamos rapidamente o flag de playPending.
+    // (o lock principal é controlado por tocarRadio())
+    // Não setamos playPending=false aqui para não quebrar token/lock do clique.
   }
 }
 
@@ -669,6 +688,8 @@ async function tocarMusica(src) {
 async function proximaMusica() {
   // Evita loops/duplicidade se `ended` disparar mais de uma vez.
   if (proximoPending) return;
+  // Não avança playlist enquanto play/pause estão no meio do caminho.
+  if (playPending) return;
   proximoPending = true;
 
   try {
@@ -763,39 +784,96 @@ function setMainButtonText(texto) {
 async function tocarRadio() {
   if (!playerEl) return;
 
-  // Se estiver tocando, apenas PAUSE (sem trocar src)
+  // debounce + bloqueio de clique duplo (evita múltiplos play() simultâneos)
+  const nowTs = Date.now();
+  if (nowTs - clickDebounceTimer < 250) return;
+  clickDebounceTimer = nowTs;
+  if (playClickLocked) return;
+
+  // Se um play() já está pendente, não dispare outro.
+  // Em vez disso, transforma clique em "pedido" de pause.
+  if (playPending) {
+    pauseRequested = true;
+    return;
+  }
+
+  // Caso: se estiver tocando, pausa (mas só se NÃO houver play pendente)
   if (!playerEl.paused && !playerEl.ended) {
-    playerEl.pause();
+    pauseRequested = false;
+    try {
+      // Antes de pausar, garanta que não há play recém-disparado em loop
+      if (!playPending) {
+        playerEl.pause();
+      }
+    } catch (e) {
+      console.log("Erro ao pausar:", e);
+    }
     return;
   }
 
   // Caso inicial: se não há src/sem tocar ainda, inicia a primeira música
-  // (antes, play() não tinha src válido e não disparava play/ended)
   const temSrc = !!playerEl.getAttribute('src') || !!playerEl.src;
   if (!temSrc && !tocando) {
     // define pastaAtual/idx e toca a primeira faixa
     pastaAtual = getPastaInicialPorHorario();
     indexMusicaNaFase = 0;
 
-    // Atualiza imediatamente o nome do programa no painel (antes do play disparar o event)
-    // para evitar "aparecer só no segundo clique".
     atualizarBtnAgora();
 
     const arquivos = getArquivosDaPasta(pastaAtual);
     const musica = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase);
     indexMusicaNaFase++;
-    await tocarMusica(musica);
-    // garantir sincronização do nome/estado após troca de src
-    atualizarBtnAgora();
+
+    // lock para evitar double play durante setup do src
+    playClickLocked = true;
+    const token = ++lastPlayToken;
+    playPending = true;
+
+    try {
+      await tocarMusica(musica);
+
+      // Se o usuário pediu pause durante o play, aplica agora
+      if (pauseRequested && lastPlayToken === token) {
+        pauseRequested = false;
+        playerEl.pause();
+      }
+    } catch (e) {
+      console.log("Erro ao tocar música inicial:", e);
+    } finally {
+      // somente o token atual libera o lock (evita corrida)
+      if (lastPlayToken === token) {
+        playPending = false;
+        playClickLocked = false;
+      }
+      atualizarBtnAgora();
+    }
     return;
   }
 
+  // Retomar (pause/ended) com proteção anti-concorrência
+  playClickLocked = true;
+  const token = ++lastPlayToken;
+  playPending = true;
+  pauseRequested = false;
 
-  // Se já tem src (pause/ended), apenas retoma
   try {
-    await playerEl.play();
+    // verificação pedida: se paused, tenta play; se não, não força
+    if (playerEl.paused) {
+      await playerEl.play();
+    }
+
+    if (pauseRequested && lastPlayToken === token) {
+      pauseRequested = false;
+      playerEl.pause();
+    }
   } catch (e) {
     console.log("Erro ao retomar:", e);
+  } finally {
+    if (lastPlayToken === token) {
+      playPending = false;
+      playClickLocked = false;
+    }
+    atualizarBtnAgora();
   }
 }
 
@@ -872,15 +950,47 @@ function setupAudioEvents() {
 
 
   playerEl.addEventListener("error", () => {
-    console.log("⚠️ Erro na música, pulando para próxima...");
+    // error pode disparar em cascata durante troca/alt/tab, então protegemos contra loops.
+    if (audioErrorPending) return;
+    audioErrorPending = true;
 
-    // volta o botão (e pausa estados) se falhar/interromper
-    resetMainButton();
+    try {
+      console.log("⚠️ Erro na música (reconexão falhou/stream quebrado). Tentando recuperar...");
 
-    setTimeout(() => {
-      // se o usuário não retomou manualmente, segue
-      if (!tocando) proximaMusica();
-    }, 1000);
+      // Evita conflitos com play/pause: marca pedido de pause e limpa locks.
+      pauseRequested = true;
+
+      resetMainButton();
+
+      // Pausa segura se já estiver reproduzindo.
+      if (!playerEl.paused) {
+        try { playerEl.pause(); } catch (_) {}
+      }
+
+      // Recuperação: tenta próxima faixa (uma vez) após estabilizar.
+      setTimeout(() => {
+        // Libera o guard antes de tentar avançar.
+        audioErrorPending = false;
+
+        // Se ainda não está tocando (usuário não retomou), segue.
+        if (!tocando) {
+          // Evita concorrência com proximaMusica/ended
+          if (!proximoPending && !playPending) {
+            proximaMusica();
+          }
+        }
+
+        // Se o usuário estiver tocando, apenas deixa eventos de play/pause ajustarem UI.
+      }, 900);
+
+      // caso o navegador nunca dispare play/pause pós-error, liberamos guard também
+      connectionRecoveryTimer = setTimeout(() => {
+        audioErrorPending = false;
+      }, 6000);
+    } catch (e) {
+      audioErrorPending = false;
+      console.log("Erro no handler de error:", e);
+    }
   });
 
 

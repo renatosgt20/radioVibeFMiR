@@ -1919,11 +1919,6 @@ if(!meuUid){
 
 onChildAdded(mensagensRef,(snapshot)=>{
 
-const sound = document.getElementById("msgSound");
-if(sound){
-  sound.currentTime = 0;
-  sound.play().catch(()=>{});
-} 
   
 const data = snapshot.val();
 
@@ -2040,7 +2035,6 @@ toggleAdmLogin();
 </script>
 
 <script src="radio2.js?v=1"></script>
-<audio id="msgSound" src="https://www.myinstants.com/media/sounds/notification.mp3" preload="auto"></audio>
 </body>
 </html>
 // OBS: dai pra cima tudo certo salvo ate aqui pangare

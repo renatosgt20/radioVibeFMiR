@@ -1482,6 +1482,8 @@ document.addEventListener('DOMContentLoaded', function() {
   const chatBtn = document.getElementById('chat-btn');
   const thoughtBubble = document.getElementById('thought-bubble');
 
+  if (!chatBtn || !thoughtBubble) return;
+
   chatBtn.addEventListener('mouseenter', function() {
     thoughtBubble.style.opacity = '1';
     thoughtBubble.style.visibility = 'visible';

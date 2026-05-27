@@ -1498,6 +1498,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <div id="chat-box">
 
+
   <div class="chat-header">
     <div class="chat-title-box">💬 Chat direto</div>
     <div class="chat-online">
@@ -1727,54 +1728,43 @@ function toggleChat(){
   box.classList.toggle("open");
 }
 
+let __chatSendLock = false;
+let __chatLastSentText = "";
+let __chatLastSentTs = 0;
+
 async function enviarMsg(){
 
   const input =
   document.getElementById("input-msg");
 
-  if(!input.value.trim()) return;
+  if(!input || !input.value) return;
 
-  const texto = input.value;
+  const texto = input.value.trim();
+  if(!texto) return;
 
+  // Proteção contra duplo envio em mobile (touch/click/submit).
+  if(__chatSendLock) return;
+
+  const now = Date.now();
+  if(texto === __chatLastSentText && (now - __chatLastSentTs) < 1200) return;
+
+  __chatSendLock = true;
+  __chatLastSentText = texto;
+  __chatLastSentTs = now;
+
+  // NÃO renderiza localmente: o onChildAdded já renderiza (evita duplicação).
   input.value = "";
 
-  const mensagensDiv =
-  document.getElementById("mensagens");
-
-  const div = document.createElement("div");
-
-  div.style.marginBottom = "8px";
-
-  div.innerHTML = `
-  <div style="
-  background:#00ffcc;
-  color:black;
-  padding:8px 12px;
-  border-radius:12px;
-  display:inline-block;
-  max-width:80%;
-  margin-left:auto;
-  ">
-  ${texto}
-  </div>
-  `;
-
-  mensagensDiv.appendChild(div);
-
-  mensagensDiv.scrollTop =
-  mensagensDiv.scrollHeight;
-
   try{
-
     await trySendToFirestore(texto);
-
   }catch(e){
-
     console.error(e);
-
+  }finally{
+    __chatSendLock = false;
   }
 
 }
+
 
 function toggleProgramacao(){
 
@@ -1928,7 +1918,7 @@ if(!data) return;
 if(!meuUid) return;
 if(data.uid !== meuUid && !(data.admin === true && data.uid === meuUid)) return;
 
-const mensagensDiv = document.getElementById("mensagens");
+const mensagensDiv = document.querySelector('#chat-box #mensagens') || document.getElementById("mensagens");
 
 // Evita duplicar mensagens
 const jaExibe = [...mensagensDiv.children].some(el =>

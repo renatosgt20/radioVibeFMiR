@@ -289,6 +289,10 @@ height:65%;
 
 <div class="send-box">
 
+<div style="display:flex;gap:10px;align-items:center;">
+  <button style="background:#ff4444;color:white;" onclick="excluirTudo()">🗑️ Excluir Tudo</button>
+</div>
+
 <input id="replyInput" placeholder="Responder ouvinte...">
 
 <button onclick="sendReply()">
@@ -296,6 +300,7 @@ height:65%;
 </button>
 
 </div>
+
 
 </div>
 
@@ -586,6 +591,23 @@ if(!confirm("Excluir esta mensagem?")) return;
 remove(ref(db,"mensagens/" + key));
 
 };
+
+window.excluirTudo = async function(){
+  if(!confirm("Excluir TODAS as mensagens do chat?")) return;
+
+  try{
+    // Remove em massa do Realtime Database (sincroniza automaticamente todos os clientes).
+    await remove(ref(db, "mensagens"));
+
+    // Limpa cache local (caso exista)
+    try{ localStorage.removeItem("vibe_chat_rendered"); }catch(_){ }
+
+  }catch(e){
+    console.error(e);
+    alert("Falha ao excluir mensagens.");
+  }
+};
+
 
 </script>
 

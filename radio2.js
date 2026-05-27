@@ -692,6 +692,7 @@ async function proximaMusica() {
   if (playPending) return;
   proximoPending = true;
 
+
   try {
     // fase atual pelo horário
     const pastaHorario = getPastaInicialPorHorario();
@@ -758,13 +759,18 @@ function atualizarBtnAgora() {
   const nomeSpan = document.getElementById("nomePrograma");
   if (!btn || !nomeSpan) return;
 
-  if (tocando && pastaAtual) {
+  // sincroniza pelo estado real do audio (evita "tocando" preso)
+  const isPlaying = !!playerEl && !playerEl.paused && !playerEl.ended;
+  tocando = isPlaying;
+
+  if (isPlaying && pastaAtual) {
     btn.style.display = "block";
     nomeSpan.textContent = PROGRAMAS[pastaAtual] || pastaAtual;
   } else {
     btn.style.display = "none";
   }
 }
+
 
 function setMainButtonText(texto) {
   // NÃO mexe em layout/CSS. Apenas texto do botão principal.
@@ -788,6 +794,15 @@ async function tocarRadio() {
   const nowTs = Date.now();
   if (nowTs - clickDebounceTimer < 250) return;
   clickDebounceTimer = nowTs;
+
+  // Fonte da verdade antes de agir: evita botão preso após ended/error/pause.
+  if (playerEl.ended || playerEl.paused) {
+    pauseRequested = false;
+    playPending = false;
+    playClickLocked = false;
+    tocando = false;
+  }
+
   if (playClickLocked) return;
 
   // Se um play() já está pendente, não dispare outro.
@@ -796,6 +811,7 @@ async function tocarRadio() {
     pauseRequested = true;
     return;
   }
+
 
   // Caso: se estiver tocando, pausa (mas só se NÃO houver play pendente)
   if (!playerEl.paused && !playerEl.ended) {
@@ -858,14 +874,20 @@ async function tocarRadio() {
 
   try {
     // verificação pedida: se paused, tenta play; se não, não força
-    if (playerEl.paused) {
+    // sincroniza o estado real antes de chamar play
+    syncUIFromAudioState();
+
+    // Se estava pausado/ended, só tenta play.
+    if (playerEl.paused || playerEl.ended) {
       await playerEl.play();
     }
 
+    // Se durante o await o usuário pediu pause, aplica.
     if (pauseRequested && lastPlayToken === token) {
       pauseRequested = false;
-      playerEl.pause();
+      try { playerEl.pause(); } catch (_) {}
     }
+
   } catch (e) {
     console.log("Erro ao retomar:", e);
   } finally {
@@ -886,8 +908,13 @@ async function tocarRadio() {
 // EVENTOS DO ÁUDIO
 // ==============================
 
+let audioEventsInitialized = false;
+
 function setupAudioEvents() {
   if (!playerEl) return;
+  if (audioEventsInitialized) return;
+  audioEventsInitialized = true;
+
 
   function setListeningOverlayVisible(visible) {
     // Elemento do HTML: <button id="btnAgora"> ... <span id="txtAgora">Você está ouvindo Agora</span>
@@ -897,18 +924,40 @@ function setupAudioEvents() {
     btnAgora.style.display = visible ? "block" : "none";
   }
 
+  // Fonte da verdade: sincroniza UI com o estado real do <audio>
+  function syncUIFromAudioState() {
+    const isPlaying = !!playerEl && !playerEl.paused && !playerEl.ended;
+    tocando = isPlaying;
+
+    // Equalizador
+    setEqualizerState(isPlaying);
+
+    // Botão principal + overlay do "Ouvir Agora"
+    if (isPlaying) {
+      setMainButtonText("PARAR");
+      atualizarBtnAgora();
+      setListeningOverlayVisible(true);
+    } else {
+      setMainButtonText("OUVIR AGORA");
+      atualizarBtnAgora();
+      setListeningOverlayVisible(false);
+    }
+  }
+
   function resetMainButton() {
+    // Reset rápido para o estado "não tocando"; a UI final vem do sync
+    pauseRequested = false;
+    playPending = false;
+    playClickLocked = false;
+
     tocando = false;
     setEqualizerState(false);
-
-    // Importante: resetar UI aqui PODE causar o botão voltar/pausar sensação de rádio.
-    // Para o modo rádio contínua, mantemos apenas estados de equalizador/texto.
-    // A sequência de músicas é controlada pelo evento `ended`.
 
     setMainButtonText("OUVIR AGORA");
     atualizarBtnAgora();
     setListeningOverlayVisible(false);
   }
+
 
   // Mantém referência ao setEqualizerState do tocarRadio() via closure
   // (fallback caso ainda não exista)
@@ -924,29 +973,37 @@ function setupAudioEvents() {
 
 
   // Atualização 100% baseada nos eventos do <audio>.
+  // (Adicionar apenas uma vez; protege travamentos e não duplica listeners)
   playerEl.addEventListener("play", () => {
-    setMainButtonText("PARAR");
-    atualizarBtnAgora();
-    setListeningOverlayVisible(true);
+    // ao iniciar, limpa flags que podem ter ficado presas
+    pauseRequested = false;
+    playPending = false;
+    playClickLocked = false;
+    audioErrorPending = false;
+    syncUIFromAudioState();
   });
 
   playerEl.addEventListener("pause", () => {
-    setMainButtonText("OUVIR AGORA");
-    atualizarBtnAgora();
-    setListeningOverlayVisible(false);
+    pauseRequested = false;
+    playPending = false;
+    playClickLocked = false;
+    syncUIFromAudioState();
   });
 
   playerEl.addEventListener("ended", () => {
-    setMainButtonText("OUVIR AGORA");
-    atualizarBtnAgora();
+    // Reset antes de avançar: evita travar botão por lock pendente.
+    playPending = false;
+    pauseRequested = false;
+    playClickLocked = false;
+    proximoPending = false;
+    audioErrorPending = false;
 
-    // ao terminar naturalmente, tenta próxima música
-    // setTimeout garante novo ciclo do event loop e evita travar em estados transitórios.
-    // A proteção anti-double-ended está em proximaMusica().
+    tocando = false;
+    syncUIFromAudioState();
+
+    // Ao terminar naturalmente, tenta próxima música.
     setTimeout(() => proximaMusica(), 0);
   });
-
-
 
 
   playerEl.addEventListener("error", () => {
@@ -957,33 +1014,31 @@ function setupAudioEvents() {
     try {
       console.log("⚠️ Erro na música (reconexão falhou/stream quebrado). Tentando recuperar...");
 
-      // Evita conflitos com play/pause: marca pedido de pause e limpa locks.
+      // Resetar player e UI com segurança
       pauseRequested = true;
+      playPending = false;
+      playClickLocked = false;
 
-      resetMainButton();
+      try { playerEl.pause(); } catch (_) {}
+      // Reset de tempo para evitar estados presos
+      try { playerEl.currentTime = 0; } catch (_) {}
 
-      // Pausa segura se já estiver reproduzindo.
-      if (!playerEl.paused) {
-        try { playerEl.pause(); } catch (_) {}
-      }
+      tocando = false;
+      syncUIFromAudioState();
 
-      // Recuperação: tenta próxima faixa (uma vez) após estabilizar.
+      // Recuperação: tenta próxima faixa (uma vez) após estabilizar
       setTimeout(() => {
-        // Libera o guard antes de tentar avançar.
         audioErrorPending = false;
 
-        // Se ainda não está tocando (usuário não retomou), segue.
+        // Se o usuário ainda não retomou, segue para próxima
         if (!tocando) {
-          // Evita concorrência com proximaMusica/ended
           if (!proximoPending && !playPending) {
             proximaMusica();
           }
         }
-
-        // Se o usuário estiver tocando, apenas deixa eventos de play/pause ajustarem UI.
       }, 900);
 
-      // caso o navegador nunca dispare play/pause pós-error, liberamos guard também
+      // caso o navegador nunca dispare pause/play após error, liberamos guard também
       connectionRecoveryTimer = setTimeout(() => {
         audioErrorPending = false;
       }, 6000);
@@ -992,6 +1047,7 @@ function setupAudioEvents() {
       console.log("Erro no handler de error:", e);
     }
   });
+
 
 
 }

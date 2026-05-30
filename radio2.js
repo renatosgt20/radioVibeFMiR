@@ -142,6 +142,7 @@ const PASTAS = {
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932771/musica70_slnbr4.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932739/musica24_rehlhm.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778886665/musica1113_zbztuf.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148945/musica2023_p2uvkq.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1779287765/musica1552_y0hf3x.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932776/musica74_j7vyix.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1779287763/musica1551_lbv33u.mp3",
@@ -230,76 +231,76 @@ const PASTAS = {
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932736/musica22_t5gyl3.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1779566031/musica20458_noamvi.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932733/musica18_pf16df.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148982/musica2012_bhrxtq.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932775/musica78_xrjftu.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148981/musica2010_luk9ct.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932759/musica54_n416ug.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148979/musica2006_d5bd13.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932752/musica45_jhesn6.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148978/musica2011_zyzbos.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932734/musica19_vcr1cq.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148975/musica2007_o1kdgd.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932764/musica60_gghhhr.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148975/musica2004_jo8qfb.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932766/musica66_i8kbrc.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148973/musica2009_hmn0gb.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932760/musica53_wfpgbs.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148973/musica2005_rje9nu.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932765/musica63_m6bpa1.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148968/musica2002_wusyh6.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168688/musica11_gz4g0p.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148966/musica2036_nasc4d.mp3", 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168680/musica9_zgayef.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148966/musica2003_uj0lay.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168673/musica8_uylvfb.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148965/musica2001_q6nirr.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168664/musica7_h1rieq.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148962/musica2035_rcancj.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168657/musica6_bfnvp7.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148960/musica2032_lshe6z.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168650/musica5_rgcmma.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148960/musica2034_d47qat.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168642/musica4_uvflqa.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148960/musica2028_lndtl6.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168635/musica3_rpn0gh.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148959/musica2033_rr2g67.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168628/musica2_e0n25c.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148958/musica2031_pewpog.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168591/musica56_zzrssq.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148956/musica2024_wajkyu.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168570/musica51_dkivbm.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148955/musica2029_yzmrgs.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168564/musica50_heyvpr.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148952/musica2027_iieaqz.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168549/musica48_x8txde.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148950/musica2025_csbsrp.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168541/musica47_lyj9ds.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148949/musica2019_d12kya.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168534/musica46_x4ipvh.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168527/musica45_bjushz.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168521/musica44_ov9tdy.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168505/musica41_zeodpr.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148955/musica2030_j3pf3x.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168498/musica40_nv8onu.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148954/musica2026_lgna4v.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168470/musica34_uj4qqk.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148945/musica2021_zxf2lp.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168464/musica32_rz63zi.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148945/musica2013_rt1ofm.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168455/musica31_ouir1j.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148944/musica2016_ew7jc1.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168449/musica30_elszpz.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148945/musica2018_tgbctr.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168441/musica29_wuryjg.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148944/musica2020_ohffv9.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168434/musica28_lw1izl.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148941/musica2015_iet4l7.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168426/musica27_hmaehr.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148941/musica2017_s9jjbj.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168419/musica26_jjdxv4.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148939/musica2014_x909np.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168413/musica25_fnlpgw.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148938/musica2022_pgxzta.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168405/musica24_pdvjxa.mp3",
 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168398/musica23_th1upb.mp3",

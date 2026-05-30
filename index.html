@@ -1859,6 +1859,11 @@ getApps().length
 const auth = getAuth(app);
 
 const db = getDatabase(app);
+const visitanteId =
+"visitante_" +
+Date.now() +
+"_" +
+Math.random().toString(36).substring(2,8);
 
 window.trySendToFirestore =
 async function(text){

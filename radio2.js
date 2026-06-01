@@ -139,7 +139,6 @@ const PASTAS = {
   hitsvibe: {
     arquivos: [
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932734/musica10_canhmr.mp3",
-    "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932771/musica70_slnbr4.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932739/musica24_rehlhm.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778886665/musica1113_zbztuf.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148945/musica2023_p2uvkq.mp3",
@@ -183,6 +182,7 @@ const PASTAS = {
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1779287730/musica1525_ilqhhh.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932755/musica48_mirjpq.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1779287730/musica1527_a90jyl.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780317458/musica3001_zk7ov4.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932728/musica4_sosrv0.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1779287730/musica1524_c6mcy1.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1777932726/musica12_lduxli.mp3",
@@ -302,21 +302,21 @@ const PASTAS = {
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168413/musica25_fnlpgw.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1780148938/musica2022_pgxzta.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168405/musica24_pdvjxa.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780317465/musica3006_fnkzoz.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168398/musica23_th1upb.mp3",
 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168385/musica20_mndfpo.mp3",
 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168376/musica18_qk2wrd.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780317462/musica3004_f5z8ba.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168368/musica17_bwp8xv.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780317461/musica3007_oxqovx.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168355/musica15_ptpjuv.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780317461/musica3005_j4j63j.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168347/musica14_sbgmhm.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780317457/musica3003_lvsecv.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778168334/musica12_zjpiom.mp3",
-
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1780317456/musica3002_t8apgj.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778176977/musica87_cwjl8p.mp3",
 
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778176958/musica82_slbeoz.mp3",
@@ -650,6 +650,16 @@ function avancarParaNovaFaseSePreciso() {
 // TOCAR MÚSICA
 // ==============================
 
+function withCacheBust(src) {
+  try {
+    const ts = Date.now();
+    // preserva querystring existente
+    return src + (src.includes('?') ? '&' : '?') + 'cb=' + ts;
+  } catch {
+    return src;
+  }
+}
+
 async function tocarMusica(src) {
   if (!src) {
     console.warn("Nenhuma música encontrada");
@@ -657,10 +667,16 @@ async function tocarMusica(src) {
   }
   if (!playerEl) return;
 
+  // Cloudinary + HTTP/2 pode falhar quando reaproveita conexão/cache.
+  // Para forçar novo request do MP3 quando trocamos faixa (ou ao retomar após erro),
+  // usamos cache-bust.
+  const finalSrc = withCacheBust(src);
+
   // Troca o src somente se necessário
-  if (playerEl.src !== src) {
-    playerEl.src = src;
+  if (playerEl.src !== finalSrc) {
+    playerEl.src = finalSrc;
   }
+
 
   try {
     // Evita múltiplos play() sobrepostos via locks globais.
@@ -874,9 +890,14 @@ async function tocarRadio() {
   pauseRequested = false;
 
   try {
-    // verificação pedida: se paused, tenta play; se não, não força
     // sincroniza o estado real antes de chamar play
-    syncUIFromAudioState();
+    // (syncUIFromAudioState é definido dentro do setupAudioEvents; aqui usamos proteção)
+    try {
+      if (typeof window.syncUIFromAudioState === 'function') {
+        window.syncUIFromAudioState();
+      }
+    } catch (_) {}
+
 
     // Se estava pausado/ended, só tenta play.
     if (playerEl.paused || playerEl.ended) {
@@ -927,8 +948,12 @@ function setupAudioEvents() {
 
   // Fonte da verdade: sincroniza UI com o estado real do <audio>
   function syncUIFromAudioState() {
+    // exporta para o tocarRadio() usar sem ReferenceError
+    window.syncUIFromAudioState = syncUIFromAudioState;
+
     const isPlaying = !!playerEl && !playerEl.paused && !playerEl.ended;
     tocando = isPlaying;
+
 
     // Equalizador
     setEqualizerState(isPlaying);

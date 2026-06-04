@@ -428,7 +428,7 @@ const PASTAS = {
 
   grove: {
     arquivos: [
-      "https://res.cloudinary.com/dmodpbtae/video/upload/v1778329906/musica24_unepzg.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778329906/musica24_unepzg.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778329901/musica9_shx3zx.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778329888/musica36_zmhxza.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778329878/musica30_dsxonw.mp3",
@@ -438,7 +438,7 @@ const PASTAS = {
 
   night: {
     arquivos: [
-      "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331304/musica19_b896ns.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331304/musica19_b896ns.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331301/musica21_g5aruq.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331274/musica5_bgsobh.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778331273/musica8_pqoazn.mp3",
@@ -463,7 +463,7 @@ const PASTAS = {
 
   forest: {
     arquivos: [
-      "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333154/musica5_uine2m.mp3",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333154/musica5_uine2m.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333148/musica16_m9p18d.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333109/musica17_c8h8yn.mp3",
     "https://res.cloudinary.com/dmodpbtae/video/upload/v1778333050/musica14_gpbgcg.mp3",
@@ -593,13 +593,13 @@ function getPastaInicialPorHorario() {
     return "chilldrive";
   }
 
-  // 06h até 09h
-  if (h >= 6 && h < 9) {
+  // 06h até 08h
+  if (h >= 6 && h < 8) {
     return "fundaovibe";
   }
 
-  // 09h até 12h
-  if (h >= 9 && h < 12) {
+  // 08h até 12h
+  if (h >= 8 && h < 12) {
     return "hitsvibe";
   }
 

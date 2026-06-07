@@ -277,6 +277,9 @@ height:65%;
 
 <div class="top">
 💬 Painel de Ouvintes
+<div style="margin-top:10px;font-size:14px;color:#00ffaa;">
+👥 Ouvintes no site agora: <span id="ouvintesCountNow">0</span>
+</div>
 </div>
 
 <div class="chat-container">
@@ -361,10 +364,18 @@ const db = getDatabase(app);
 
 let currentUid = null;
 
+// PRESENÇA: ouvintes ativos no player do site
+const presenceRef = ref(db, 'radioPresence');
+let __presenceUnsub = null;
+
+
 
 /* LOGIN */
 
 window.login = function(){
+
+  // limpa counter anteriores se o login for reaberto
+
 
 const email = document.getElementById("email").value;
 const senha = document.getElementById("password").value;
@@ -387,7 +398,11 @@ document.getElementById("loginBox").style.display="none";
 
 document.getElementById("panel").style.display="flex";
 	
-	loadUsers();
+
+  loadUsers();
+loadPresenceCounter();
+		subscribePresence();
+		updatePresenceNow();
 })
 .catch((err)=>{
 	alert(err.message);
@@ -608,6 +623,64 @@ window.excluirTudo = async function(){
   }
 };
 
+
+window.subscribePresence = subscribePresence;
+
+// --- Presença (contagem de ouvintes ativos) ---
+function loadPresenceCounter(){
+  try{
+    const el = document.getElementById('ouvintesCountNow');
+    if(el) el.textContent = '0';
+  }catch(_){ }
+}
+
+function updatePresenceNow(){
+  try{
+    const el = document.getElementById('ouvintesCountNow');
+    if(!el) return;
+    const THIRTY_SECONDS = 30000;
+    const now = Date.now();
+    let count = 0;
+
+    // faz leitura pontual (sem listener) apenas para bootstrap
+    // (o subscribePresence faz o realtime depois)
+    const presence = db;
+  }catch(_){ }
+}
+
+function subscribePresence(){
+  try{
+    if(__presenceUnsub){
+      try{ __presenceUnsub(); }catch(_){ }
+      __presenceUnsub = null;
+    }
+
+    const THIRTY_SECONDS = 30000;
+
+    __presenceUnsub = onValue(presenceRef, (snap) => {
+      const data = snap.val();
+      const now = Date.now();
+      let count = 0;
+
+      if(data && typeof data === 'object'){
+        for(const uid of Object.keys(data)){
+          const p = data[uid];
+          if(!p) continue;
+          const lastSeen = Number(p.lastSeen || 0);
+          const isPlaying = p.isPlaying === true;
+          if(isPlaying && (now - lastSeen) <= THIRTY_SECONDS){
+            count++;
+          }
+        }
+      }
+
+      const el = document.getElementById('ouvintesCountNow');
+      if(el) el.textContent = String(count);
+    });
+  }catch(e){
+    console.error('subscribePresence failed', e);
+  }
+}
 
 </script>
 

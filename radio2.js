@@ -1092,4 +1092,148 @@ if (playerEl) {
 
 
 
+// ==============================
+// PRESENÇA RADIO (ouvintes no site/player)
+// ==============================
+// Conta apenas sessões que estão tocando no <audio> agora.
+// Usado em admin.html para exibir: “👥 Ouvintes no site agora: X”
+//
+// Estrutura no RTDB:
+//   radioPresence/{uid}: { lastSeen, isPlaying }
+//
+
+let __presenceUid = null;
+let __presenceTimer = null;
+let __presenceLastSent = 0;
+let __presenceIsRegistered = false;
+
+function getPresenceUid(){
+  try{
+    const uidKey = 'vibe_presence_uid';
+    let uid = localStorage.getItem(uidKey);
+    if(!uid){
+      uid = (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + '-' + Math.random();
+      localStorage.setItem(uidKey, uid);
+    }
+    return uid;
+  }catch(_){
+    // fallback sem localStorage
+    return 'anon-' + Math.random().toString(16).slice(2) + '-' + Date.now();
+  }
+}
+
+function isAudioActuallyPlaying(){
+  try{
+    if(!playerEl) return false;
+    // paused/ended são confiáveis; currentTime>0 ajuda a evitar “play pendente”
+    return !playerEl.paused && !playerEl.ended;
+  }catch(_){
+    return false;
+  }
+}
+
+async function initPresence(){
+  // Firebase já existe no index.html (chat) via scripts em type=module.
+  // Nesta base, o index.html define `db`, `ref`, `set`, etc no escopo do módulo.
+  // Como radio2.js não é module, não tem acesso direto. Então nós tratamos presença via helpers injetados no window.
+  try{
+    if(!window.db) {
+      // Sem db no window, não tem como escrever presença.
+      return;
+    }
+
+    // Helpers esperados no window (injetados no index.html)
+    if(!window.__presenceWrite || !window.__presenceRemove) {
+      return;
+    }
+
+    const uid = getPresenceUid();
+    __presenceUid = uid;
+
+    // Cria runner de heartbeat
+    const HEARTBEAT_MS = 10000; // 10s
+
+    __presenceIsRegistered = true;
+
+    // Inicializa estado coerente
+    window.__presenceWrite(uid, {
+      lastSeen: Date.now(),
+      isPlaying: false
+    });
+
+    const loop = () => {
+      if(!__presenceIsRegistered) return;
+      const playing = isAudioActuallyPlaying();
+      const now = Date.now();
+
+      // evita spam em casos extremos (ex: play/pause rápido)
+      if(now - __presenceLastSent < 4000) {
+        return;
+      }
+      __presenceLastSent = now;
+
+      window.__presenceWrite(uid, {
+        lastSeen: now,
+        isPlaying: playing
+      });
+    };
+
+    // Atualiza imediatamente e depois periodicamente
+    loop();
+    __presenceTimer = setInterval(loop, HEARTBEAT_MS);
+
+    // quando página perde visibilidade, marca off rapidamente (melhora precisão)
+    document.addEventListener('visibilitychange', () => {
+      if(!__presenceIsRegistered) return;
+      if(document.hidden) {
+        window.__presenceWrite(uid, { lastSeen: Date.now(), isPlaying: false });
+      }
+    });
+
+    // limpeza ao fechar
+    window.addEventListener('beforeunload', () => {
+      try{
+        __presenceIsRegistered = false;
+        if(__presenceTimer) clearInterval(__presenceTimer);
+        window.__presenceRemove(uid);
+      }catch(_){ }
+    });
+
+    // Também quando o áudio para/pausa
+    try{
+      playerEl.addEventListener('pause', () => {
+        window.__presenceWrite(uid, { lastSeen: Date.now(), isPlaying: false });
+      });
+      playerEl.addEventListener('play', () => {
+        window.__presenceWrite(uid, { lastSeen: Date.now(), isPlaying: true });
+      });
+    }catch(_){ }
+
+  }catch(_){ }
+}
+
+// Invoca assim que eventos do áudio estiverem inicializados (playerEl existe)
+initPresence();
+
+// Atualiza heartbeat quando tocar/pausar pode ter ocorrido antes do timer iniciar
+try{
+  if(playerEl){
+    playerEl.addEventListener('play', ()=>{
+      if(window.__presenceWrite && __presenceUid) {
+        window.__presenceWrite(__presenceUid, { lastSeen: Date.now(), isPlaying: true });
+      }
+    });
+    playerEl.addEventListener('pause', ()=>{
+      if(window.__presenceWrite && __presenceUid) {
+        window.__presenceWrite(__presenceUid, { lastSeen: Date.now(), isPlaying: false });
+      }
+    });
+    playerEl.addEventListener('ended', ()=>{
+      if(window.__presenceWrite && __presenceUid) {
+        window.__presenceWrite(__presenceUid, { lastSeen: Date.now(), isPlaying: false });
+      }
+    });
+  }
+}catch(_){ }
+
 // OBS: dai pra cima tudo certo salvo ate aqui pangare

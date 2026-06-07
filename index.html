@@ -1654,6 +1654,12 @@ Entrar
 <span id="ouvintesCount"> *** </span>
 </div>
 
+<!-- PRESENÇA (atualizado em realtime) -->
+<script>
+  // Usado apenas para mostrar na UI do site (opcional). O admin usa admin.html.
+  // A lógica real de presença é feita em radio2.js.
+</script>
+
 </div>
 
 <script>
@@ -1851,6 +1857,9 @@ appId:
 
 };
 
+// Compartilha instâncias no window para o radio2.js usar presença em realtime.
+// (radio2.js não importa módulos; depende desses helpers.)
+
 const app =
 getApps().length
 ? getApps()[0]
@@ -1859,6 +1868,20 @@ getApps().length
 const auth = getAuth(app);
 
 const db = getDatabase(app);
+
+// Exponho helpers para o radio2.js registrar presença em realtime.
+// Mantém a implementação simples (radio2.js depende apenas de helpers no window).
+window.db = db;
+window.firebaseRef = (path) => ref(db, path);
+window.__presenceRef = (path) => ref(db, path);
+window.__presenceWrite = (uid, obj) => set(ref(db, 'radioPresence/' + encodeURIComponent(uid)), obj);
+window.__presenceRemove = (uid) => {
+  try{
+    return remove(ref(db, 'radioPresence/' + encodeURIComponent(uid)));
+  }catch(_){
+    return Promise.resolve();
+  }
+};
 
 window.trySendToFirestore =
 async function(text){

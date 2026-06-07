@@ -1084,26 +1084,39 @@ function setupAudioEvents() {
 // DOM já está pronto quando o script é executado (colocado antes de </body>)
 setupAudioEvents();
 
-// Inicializa presença somente quando os helpers do index.js existirem.
-// Isso evita cenário mobile onde o player dispara antes do módulo Firebase definir __presenceWrite.
-(async function(){
-  try{
-    for(let i=0;i<40;i++){
-      if(window.__presenceWrite && window.__presenceRemove) break;
-      await new Promise(r=>setTimeout(r,150));
-    }
-    if(window.__presenceWrite && window.__presenceRemove){
-      initPresence();
-    }
-  }catch(_){ }
-})();
-
-
 // (Intencionalmente sem sincronização manual inicial do texto.
 // Texto do botão é controlado EXCLUSIVAMENTE pelos eventos: play/pause/ended.)
 if (playerEl) {
   atualizarBtnAgora();
 }
+
+// Inicializa presença somente quando os helpers do index.html já estiverem prontos.
+// Mantém o comportamento original (presença por playing/pause/ended), evitando corrida no mobile.
+(function initPresenceWhenReady(){
+  try{
+    const start = () => {
+      try{
+        if(window.__presenceWrite && window.__presenceRemove && typeof initPresence === 'function'){
+          initPresence();
+          return true;
+        }
+      }catch(_){ }
+      return false;
+    };
+
+    // tenta repetidamente por um curto período
+    let tries = 0;
+    const timer = setInterval(() => {
+      tries++;
+      const ok = start();
+      if(ok || tries >= 60){
+        clearInterval(timer);
+      }
+    }, 150);
+  }catch(_){ }
+})();
+
+
 
 
 

@@ -72,11 +72,11 @@ transform:scale(1.02);
 /* PAINEL */
 
 #panel{
-display:none;
-width:100%;
-height:100vh;
-display:flex;
+  display:none;
+  width:100%;
+  height:100vh;
 }
+
 
 /* RADIO */
 
@@ -320,9 +320,11 @@ from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
 getAuth,
-signInWithEmailAndPassword
+signInWithEmailAndPassword,
+onAuthStateChanged
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
 
 import {
 getDatabase,
@@ -368,11 +370,39 @@ let currentUid = null;
 const presenceRef = ref(db, 'radioPresence');
 let __presenceUnsub = null;
 
+// ADMIN ACCESS CONTROL (server-side is required too, but here we hide UI)
+const loginBoxEl = document.getElementById('loginBox');
+const panelEl = document.getElementById('panel');
+
+function showLogin(){
+  if(loginBoxEl) loginBoxEl.style.display = 'block';
+  if(panelEl) panelEl.style.display = 'none';
+}
+function showPanel(){
+  if(loginBoxEl) loginBoxEl.style.display = 'none';
+  if(panelEl) panelEl.style.display = 'flex';
+}
+
+// default: hidden panel
+showLogin();
+
+onAuthStateChanged(auth, (user) => {
+  if(!user){
+    showLogin();
+    return;
+  }
+  // se existir usuário logado, mostra painel
+  showPanel();
+});
+
+// Impede acesso direto sem login: bloqueia o scroll/execução visual do painel
+// (rules de segurança devem validar no backend; isso é só proteção de UI)
 
 
 /* LOGIN */
 
 window.login = function(){
+
 
   // limpa counter anteriores se o login for reaberto
 
@@ -391,22 +421,21 @@ if(!email || !senha) return;
 signInWithEmailAndPassword(auth, email, senha)
 .then(()=>{
 
-// presença do ADM (para index.html)
-set(ref(db, "onlineAdmins/main"), true);
+  // presença do ADM (para index.html)
+  set(ref(db, "onlineAdmins/main"), true);
 
-document.getElementById("loginBox").style.display="none";
-
-document.getElementById("panel").style.display="flex";
-	
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("panel").style.display="flex";
 
   loadUsers();
-loadPresenceCounter();
-		subscribePresence();
-		updatePresenceNow();
+  loadPresenceCounter();
+  subscribePresence();
+  updatePresenceNow();
 })
 .catch((err)=>{
-	alert(err.message);
+  alert(err.message);
 });
+
 
 };
 

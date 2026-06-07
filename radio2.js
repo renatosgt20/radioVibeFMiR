@@ -1084,11 +1084,27 @@ function setupAudioEvents() {
 // DOM já está pronto quando o script é executado (colocado antes de </body>)
 setupAudioEvents();
 
+// Inicializa presença somente quando os helpers do index.js existirem.
+// Isso evita cenário mobile onde o player dispara antes do módulo Firebase definir __presenceWrite.
+(async function(){
+  try{
+    for(let i=0;i<40;i++){
+      if(window.__presenceWrite && window.__presenceRemove) break;
+      await new Promise(r=>setTimeout(r,150));
+    }
+    if(window.__presenceWrite && window.__presenceRemove){
+      initPresence();
+    }
+  }catch(_){ }
+})();
+
+
 // (Intencionalmente sem sincronização manual inicial do texto.
 // Texto do botão é controlado EXCLUSIVAMENTE pelos eventos: play/pause/ended.)
 if (playerEl) {
   atualizarBtnAgora();
 }
+
 
 
 
@@ -1139,14 +1155,16 @@ async function initPresence(){
     if(!window.__presenceWrite || !window.__presenceRemove) {
       return;
     }
-// FORA da função:
-initPresence();
+
     const uid = getPresenceUid();
     __presenceUid = uid;
 
     const HEARTBEAT_MS = 10000; // 10s
 
     const startHeartbeat = () => {
+      // Conta apenas quando o áudio estiver realmente tocando.
+      if(!isAudioActuallyPlaying()) return;
+
       if(__presenceIsRegistered) return;
       __presenceIsRegistered = true;
       __presenceLastSent = 0;
@@ -1168,6 +1186,11 @@ initPresence();
           lastSeen: now,
           isPlaying: playing
         });
+
+        // se parou de tocar, desliga rapidamente
+        if(!playing){
+          stopHeartbeat();
+        }
       };
 
       loop();
@@ -1185,8 +1208,8 @@ initPresence();
     };
 
     // Eventos reais do <audio>
+    // (Não usar apenas 'click' e nem 'play' como fonte; usar 'playing')
     try{
-      playerEl.addEventListener('play', startHeartbeat);
       playerEl.addEventListener('playing', startHeartbeat);
       playerEl.addEventListener('pause', stopHeartbeat);
       playerEl.addEventListener('ended', stopHeartbeat);
@@ -1201,30 +1224,11 @@ initPresence();
 
 
 
+
   }catch(_){ }
 
-// Invoca assim que eventos do áudio estiverem inicializados (playerEl existe)
-
-
-// Atualiza heartbeat quando tocar/pausar pode ter ocorrido antes do timer iniciar
-try{
-  if(playerEl){
-    playerEl.addEventListener('play', ()=>{
-      if(window.__presenceWrite && __presenceUid) {
-        window.__presenceWrite(__presenceUid, { lastSeen: Date.now(), isPlaying: true });
-      }
-    });
-    playerEl.addEventListener('pause', ()=>{
-      if(window.__presenceWrite && __presenceUid) {
-        window.__presenceWrite(__presenceUid, { lastSeen: Date.now(), isPlaying: false });
-      }
-    });
-    playerEl.addEventListener('ended', ()=>{
-      if(window.__presenceWrite && __presenceUid) {
-        window.__presenceWrite(__presenceUid, { lastSeen: Date.now(), isPlaying: false });
-      }
-    });
-  }
-}catch(_){ }
+// OBS: handlers abaixo NÃO devem existir para atualizar presença em clique/play.
+// A presença deve ser controlada SOMENTE por eventos reais de áudio: 'playing/pause/ended'.
 }
 // OBS: dai pra cima tudo certo salvo ate aqui pangare
+

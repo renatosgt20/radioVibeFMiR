@@ -1133,87 +1133,78 @@ function isAudioActuallyPlaying(){
 }
 
 async function initPresence(){
-  // Firebase já existe no index.html (chat) via scripts em type=module.
-  // Nesta base, o index.html define `db`, `ref`, `set`, etc no escopo do módulo.
-  // Como radio2.js não é module, não tem acesso direto. Então nós tratamos presença via helpers injetados no window.
+  // Inicializa presença SOMENTE quando o áudio estiver realmente tocando.
+  // Isso evita “count” no celular por clique (autoplay/block do browser).
   try{
-    if(!window.db) {
-      // Sem db no window, não tem como escrever presença.
-      return;
-    }
-
-    // Helpers esperados no window (injetados no index.html)
     if(!window.__presenceWrite || !window.__presenceRemove) {
       return;
     }
-
+// FORA da função:
+initPresence();
     const uid = getPresenceUid();
     __presenceUid = uid;
 
-    // Cria runner de heartbeat
     const HEARTBEAT_MS = 10000; // 10s
 
-    __presenceIsRegistered = true;
-
-    // Inicializa estado coerente
-    window.__presenceWrite(uid, {
-      lastSeen: Date.now(),
-      isPlaying: false
-    });
-
-    const loop = () => {
-      if(!__presenceIsRegistered) return;
-      const playing = isAudioActuallyPlaying();
-      const now = Date.now();
-
-      // evita spam em casos extremos (ex: play/pause rápido)
-      if(now - __presenceLastSent < 4000) {
-        return;
-      }
-      __presenceLastSent = now;
+    const startHeartbeat = () => {
+      if(__presenceIsRegistered) return;
+      __presenceIsRegistered = true;
+      __presenceLastSent = 0;
 
       window.__presenceWrite(uid, {
-        lastSeen: now,
-        isPlaying: playing
+        lastSeen: Date.now(),
+        isPlaying: true
       });
+
+      const loop = () => {
+        if(!__presenceIsRegistered) return;
+        const playing = isAudioActuallyPlaying();
+        const now = Date.now();
+
+        if(now - __presenceLastSent < 4000) return;
+        __presenceLastSent = now;
+
+        window.__presenceWrite(uid, {
+          lastSeen: now,
+          isPlaying: playing
+        });
+      };
+
+      loop();
+      __presenceTimer = setInterval(loop, HEARTBEAT_MS);
     };
 
-    // Atualiza imediatamente e depois periodicamente
-    loop();
-    __presenceTimer = setInterval(loop, HEARTBEAT_MS);
-
-    // quando página perde visibilidade, marca off rapidamente (melhora precisão)
-    document.addEventListener('visibilitychange', () => {
+    const stopHeartbeat = () => {
       if(!__presenceIsRegistered) return;
-      if(document.hidden) {
-        window.__presenceWrite(uid, { lastSeen: Date.now(), isPlaying: false });
-      }
-    });
-
-    // limpeza ao fechar
-    window.addEventListener('beforeunload', () => {
+      __presenceIsRegistered = false;
+      try{ if(__presenceTimer) clearInterval(__presenceTimer); }catch(_){ }
+      __presenceTimer = null;
       try{
-        __presenceIsRegistered = false;
-        if(__presenceTimer) clearInterval(__presenceTimer);
-        window.__presenceRemove(uid);
-      }catch(_){ }
-    });
-
-    // Também quando o áudio para/pausa
-    try{
-      playerEl.addEventListener('pause', () => {
         window.__presenceWrite(uid, { lastSeen: Date.now(), isPlaying: false });
-      });
-      playerEl.addEventListener('play', () => {
-        window.__presenceWrite(uid, { lastSeen: Date.now(), isPlaying: true });
-      });
+      }catch(_){ }
+    };
+
+    // Eventos reais do <audio>
+    try{
+      playerEl.addEventListener('play', startHeartbeat);
+      playerEl.addEventListener('playing', startHeartbeat);
+      playerEl.addEventListener('pause', stopHeartbeat);
+      playerEl.addEventListener('ended', stopHeartbeat);
     }catch(_){ }
 
+    window.addEventListener('beforeunload', () => {
+      try{ stopHeartbeat(); }catch(_){ }
+      try{ window.__presenceRemove(uid); }catch(_){ }
+    });
+
+
+
+
+
   }catch(_){ }
-}
 
 // Invoca assim que eventos do áudio estiverem inicializados (playerEl existe)
-initPresence();
+
 
 // Atualiza heartbeat quando tocar/pausar pode ter ocorrido antes do timer iniciar
 try{
@@ -1235,5 +1226,5 @@ try{
     });
   }
 }catch(_){ }
-
+}
 // OBS: dai pra cima tudo certo salvo ate aqui pangare

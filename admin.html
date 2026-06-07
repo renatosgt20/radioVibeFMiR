@@ -655,7 +655,7 @@ function subscribePresence(){
       __presenceUnsub = null;
     }
 
-    const THIRTY_SECONDS = 30000;
+    const LIMIT = 20000; // 🔥 20s (PADRÃO CERTO)
 
     __presenceUnsub = onValue(presenceRef, (snap) => {
       const data = snap.val();
@@ -666,19 +666,23 @@ function subscribePresence(){
         for(const uid of Object.keys(data)){
           const p = data[uid];
           if(!p) continue;
+
           const lastSeen = Number(p.lastSeen || 0);
           const isPlaying = p.isPlaying === true;
-          if(isPlaying && (now - lastSeen) <= THIRTY_SECONDS){
+
+          if(isPlaying && (now - lastSeen) <= LIMIT){
             count++;
           }
         }
       }
 
       const el = document.getElementById('ouvintesCountNow');
-      if(el) el.textContent = String(count);
+      if(el) el.textContent = count;
+
     });
+
   }catch(e){
-    console.error('subscribePresence failed', e);
+    console.error(e);
   }
 }
 

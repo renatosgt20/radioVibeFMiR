@@ -72,11 +72,11 @@ transform:scale(1.02);
 /* PAINEL */
 
 #panel{
-  display:none;
-  width:100%;
-  height:100vh;
+display:none;
+width:100%;
+height:100vh;
+display:flex;
 }
-
 
 /* RADIO */
 
@@ -277,9 +277,6 @@ height:65%;
 
 <div class="top">
 💬 Painel de Ouvintes
-<div style="margin-top:10px;font-size:14px;color:#00ffaa;">
-👥 Ouvintes no site agora: <span id="ouvintesCountNow">0</span>
-</div>
 </div>
 
 <div class="chat-container">
@@ -320,11 +317,9 @@ from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
 getAuth,
-signInWithEmailAndPassword,
-onAuthStateChanged
+signInWithEmailAndPassword
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-
 
 import {
 getDatabase,
@@ -366,54 +361,21 @@ const db = getDatabase(app);
 
 let currentUid = null;
 
-// PRESENÇA: ouvintes ativos no player do site
-const presenceRef = ref(db, 'radioPresence');
-let __presenceUnsub = null;
-
-// ADMIN ACCESS CONTROL (server-side is required too, but here we hide UI)
-const loginBoxEl = document.getElementById('loginBox');
-const panelEl = document.getElementById('panel');
-
-function showLogin(){
-  if(loginBoxEl) loginBoxEl.style.display = 'block';
-  if(panelEl) panelEl.style.display = 'none';
-}
-function showPanel(){
-  if(loginBoxEl) loginBoxEl.style.display = 'none';
-  if(panelEl) panelEl.style.display = 'flex';
-}
-
-// default: hidden panel
-showLogin();
-
-onAuthStateChanged(auth, (user) => {
-  if(!user){
-    showLogin();
-    return;
-  }
-  // se existir usuário logado, mostra painel
-  showPanel();
-});
-
-// Impede acesso direto sem login: bloqueia o scroll/execução visual do painel
-// (rules de segurança devem validar no backend; isso é só proteção de UI)
-
 
 /* LOGIN */
 
 window.login = function(){
 
-
-  // limpa counter anteriores se o login for reaberto
-
-
 const email = document.getElementById("email").value;
 const senha = document.getElementById("password").value;
 
-// se abrir de novo, garante que ao fechar a aba a presença seja desativada
-window.onbeforeunload = () => {
-  set(ref(db, "onlineAdmins/main"), false);
-};
+  // se abrir de novo, desliga a presença quando a aba for realmente fechada
+  // (evita derrubar ao navegar/abrir admin em nova aba no mobile)
+  window.addEventListener('pagehide', () => {
+    try{
+      set(ref(db, "onlineAdmins/main"), false);
+    }catch(_){ }
+  }, { once:true });
 
 
 if(!email || !senha) return;
@@ -421,21 +383,18 @@ if(!email || !senha) return;
 signInWithEmailAndPassword(auth, email, senha)
 .then(()=>{
 
-  // presença do ADM (para index.html)
-  set(ref(db, "onlineAdmins/main"), true);
+// presença do ADM (para index.html)
+set(ref(db, "onlineAdmins/main"), true);
 
-  document.getElementById("loginBox").style.display="none";
-  document.getElementById("panel").style.display="flex";
+document.getElementById("loginBox").style.display="none";
 
-  loadUsers();
-  loadPresenceCounter();
-  subscribePresence();
-  updatePresenceNow();
+document.getElementById("panel").style.display="flex";
+	
+	loadUsers();
 })
 .catch((err)=>{
-  alert(err.message);
+	alert(err.message);
 });
-
 
 };
 
@@ -652,68 +611,6 @@ window.excluirTudo = async function(){
   }
 };
 
-
-window.subscribePresence = subscribePresence;
-
-// --- Presença (contagem de ouvintes ativos) ---
-function loadPresenceCounter(){
-  try{
-    const el = document.getElementById('ouvintesCountNow');
-    if(el) el.textContent = '0';
-  }catch(_){ }
-}
-
-function updatePresenceNow(){
-  try{
-    const el = document.getElementById('ouvintesCountNow');
-    if(!el) return;
-    const THIRTY_SECONDS = 30000;
-    const now = Date.now();
-    let count = 0;
-
-    // faz leitura pontual (sem listener) apenas para bootstrap
-    // (o subscribePresence faz o realtime depois)
-    const presence = db;
-  }catch(_){ }
-}
-
-function subscribePresence(){
-  try{
-    if(__presenceUnsub){
-      try{ __presenceUnsub(); }catch(_){ }
-      __presenceUnsub = null;
-    }
-
-    const LIMIT = 20000; // 🔥 20s (PADRÃO CERTO)
-
-    __presenceUnsub = onValue(presenceRef, (snap) => {
-      const data = snap.val();
-      const now = Date.now();
-      let count = 0;
-
-      if(data && typeof data === 'object'){
-        for(const uid of Object.keys(data)){
-          const p = data[uid];
-          if(!p) continue;
-
-          const lastSeen = Number(p.lastSeen || 0);
-          const isPlaying = p.isPlaying === true;
-
-          if(isPlaying && (now - lastSeen) <= LIMIT){
-            count++;
-          }
-        }
-      }
-
-      const el = document.getElementById('ouvintesCountNow');
-      if(el) el.textContent = count;
-
-    });
-
-  }catch(e){
-    console.error(e);
-  }
-}
 
 </script>
 

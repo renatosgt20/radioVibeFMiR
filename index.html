@@ -1165,8 +1165,8 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 
 <div class="quadro-breve">
 
-  <div class="titulo-quadro"> ⚡ VIBE FM NEWS ⚡
-    
+  <div class="titulo-quadro">
+    ⚡ VIBE FM NEWS ⚡
   </div>
 
   <div class="marquee">
@@ -1569,7 +1569,92 @@ document.addEventListener('DOMContentLoaded', function() {
   <span>🎙️ “Locutores IA oficiais.Em breve ”</span>
   <span>🚫 Sem anúncios/Sem propagandas</span>
 </div>
+<!-- PAINEL -->
+<div class="painel-online">
 
+<div style="display:flex;align-items:center;gap:8px;">
+<span id="admStatusDot"
+style="
+width:10px;
+height:10px;
+border-radius:50%;
+background:#ef4444;
+"></span>
+
+<span>
+ADM:
+<span id="admStatusText">OFF</span>
+</span>
+</div>
+
+<button id="admLoginBtn">
+Login ADM
+</button>
+
+<!-- MINI LOGIN -->
+<div id="admMiniLogin" style="
+display:none;
+margin-top:10px;
+background:#111827;
+padding:10px;
+border-radius:12px;
+">
+
+<input
+id="admEmail"
+type="email"
+placeholder="Email"
+style="
+width:100%;
+padding:8px;
+margin-bottom:8px;
+border:none;
+border-radius:8px;
+background:#0f172a;
+color:white;
+">
+
+<input
+id="admSenha"
+type="password"
+placeholder="Senha"
+style="
+width:100%;
+padding:8px;
+margin-bottom:8px;
+border:none;
+border-radius:8px;
+background:#0f172a;
+color:white;
+">
+
+<button
+onclick="abrirPainelAdm()"
+style="
+width:100%;
+padding:9px;
+border:none;
+border-radius:8px;
+background:#00ffcc;
+font-weight:bold;
+cursor:pointer;
+">
+Entrar
+</button>
+
+</div>
+
+<div style="margin-top:10px;">
+👨‍💻 ADM :
+<span id="admCount"> 1 </span>
+</div>
+
+<div style="margin-top:5px;">
+👥 Ouvintes:
+<span id="ouvintesCount"> *** </span>
+</div>
+
+</div>
 
 <script>
 const canvas = document.getElementById("espaco");
@@ -1766,9 +1851,6 @@ appId:
 
 };
 
-// Compartilha instâncias no window para o radio2.js usar presença em realtime.
-// (radio2.js não importa módulos; depende desses helpers.)
-
 const app =
 getApps().length
 ? getApps()[0]
@@ -1777,20 +1859,6 @@ getApps().length
 const auth = getAuth(app);
 
 const db = getDatabase(app);
-
-// Exponho helpers para o radio2.js registrar presença em realtime.
-// Mantém a implementação simples (radio2.js depende apenas de helpers no window).
-window.db = db;
-window.firebaseRef = (path) => ref(db, path);
-window.__presenceRef = (path) => ref(db, path);
-window.__presenceWrite = (uid, obj) => set(ref(db, 'radioPresence/' + encodeURIComponent(uid)), obj);
-window.__presenceRemove = (uid) => {
-  try{
-    return remove(ref(db, 'radioPresence/' + encodeURIComponent(uid)));
-  }catch(_){
-    return Promise.resolve();
-  }
-};
 
 window.trySendToFirestore =
 async function(text){

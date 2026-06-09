@@ -138,6 +138,9 @@ function showAdminPanel(isAuthed){
 }
 
 function safeSetPresence(isOnline){
+  // Aviso: se a regra de segurança negar escrita em /onlineAdmins/main,
+  // o status do ADM no index.html não conseguirá mudar.
+  // Mantemos try/catch para não quebrar o admin.
   try{ set(ref(db, "onlineAdmins/main"), !!isOnline); }catch(_){ }
 }
 

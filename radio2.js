@@ -1090,6 +1090,27 @@ if (playerEl) {
   atualizarBtnAgora();
 }
 
+import { getDatabase, ref, set, remove, onDisconnect } 
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
+const db = getDatabase();
+
+// cria ID único do usuário
+if (!localStorage.getItem("radio_user_id")) {
+  localStorage.setItem(
+    "radio_user_id",
+    Math.random().toString(36).substring(2)
+  );
+}
+
+const uid = localStorage.getItem("radio_user_id");
+
+// marca como online
+const userRef = ref(db, "onlineUsers/" + uid);
+
+set(userRef, true);
+
+// remove quando sair (ESSENCIAL)
+onDisconnect(userRef).remove();
 
 // OBS: dai pra cima tudo certo salvo ate aqui pangare

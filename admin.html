@@ -75,8 +75,31 @@ transform:scale(1.02);
 display:none;
 width:100%;
 height:100vh;
-display:flex;
 }
+
+#panel .chat-side{
+width:100%;
+height:100%;
+}
+
+#panel .chat-container{
+width:100%;
+height:calc(100vh - 60px);
+}
+
+#panel .users{
+display:none;
+}
+
+#panel .messages{
+width:100%;
+}
+
+#panel .msg{
+max-width:90%;
+}
+
+
 
 /* RADIO */
 
@@ -267,11 +290,7 @@ height:65%;
 
 <div id="panel">
 
-<div class="radio-side">
 
-<iframe src="https://radiovibezonefm.vibefmbr.workers.dev/"></iframe>
-
-</div>
 
 <div class="chat-side">
 
@@ -317,7 +336,8 @@ from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
 getAuth,
-signInWithEmailAndPassword
+signInWithEmailAndPassword,
+onAuthStateChanged
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
@@ -361,13 +381,38 @@ const db = getDatabase(app);
 
 let currentUid = null;
 
+// Protected Route (Protected UI + fluxo real): só libera o painel após autenticação válida
+function showAdminPanel(isAuthed){
+  const loginBox = document.getElementById("loginBox");
+  const panel = document.getElementById("panel");
+  if(!loginBox || !panel) return;
+
+  if(isAuthed){
+    loginBox.style.display = "none";
+    panel.style.display = "flex";
+  }else{
+    panel.style.display = "none";
+    loginBox.style.display = "block";
+  }
+}
+
+let adminInitialized = false;
+
+async function initAdminIfAuthenticated(){
+  // evita carregar listeners/painel mais de uma vez
+  if(adminInitialized) return;
+  adminInitialized = true;
+showAdminPanel(true);
+  document.getElementById("panel").style.display = "flex";
+  loadUsers();
+}
 
 /* LOGIN */
 
 window.login = function(){
 
-const email = document.getElementById("email").value;
-const senha = document.getElementById("password").value;
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("password").value;
 
   // se abrir de novo, desliga a presença quando a aba for realmente fechada
   // (evita derrubar ao navegar/abrir admin em nova aba no mobile)
@@ -377,26 +422,32 @@ const senha = document.getElementById("password").value;
     }catch(_){ }
   }, { once:true });
 
+  if(!email || !senha) return;
 
-if(!email || !senha) return;
+  signInWithEmailAndPassword(auth, email, senha)
+  .then(async ()=>{
+    // presença do ADM (para index.html)
+    set(ref(db, "onlineAdmins/main"), true);
 
-signInWithEmailAndPassword(auth, email, senha)
-.then(()=>{
-
-// presença do ADM (para index.html)
-set(ref(db, "onlineAdmins/main"), true);
-
-document.getElementById("loginBox").style.display="none";
-
-document.getElementById("panel").style.display="flex";
-	
-	loadUsers();
-})
-.catch((err)=>{
-	alert(err.message);
-});
+    await initAdminIfAuthenticated();
+  })
+  .catch((err)=>{
+    alert(err.message);
+  });
 
 };
+
+// Protected Route: valida ao carregar a página
+showAdminPanel(false);
+
+onAuthStateChanged(auth, (user) => {
+if(user){
+    try{ set(ref(db, "onlineAdmins/main"), true); }catch(_){ }
+    initAdminIfAuthenticated();
+  }else{
+    showAdminPanel(false);
+  }
+});
 
 /* USERS */
 

@@ -1,5 +1,9 @@
-- [ ] Ajustar `admin.html`: presença do ADM (remover/alterar `onbeforeunload` que derruba `onlineAdmins/main`) e reforçar consistência de `currentUid` ao abrir conversa.
-- [ ] Ajustar `admin.html`: `sendReply()` e `openChat()` para garantir que `currentUid` está correto e que o chat do ADM escuta o uid certo.
-- [ ] Ajustar `radio2.js` (painel/chat do site): robustecer `vibe_uid`/`vibe_nome` e garantir que mensagem chega com uid correto no RTDB.
-- [ ] Validar no mobile: abrir painel do admin e enviar mensagem -> aparecer no painel.
-- [ ] Validar no desktop/mobile: login do ADM -> bolinha verde ON corretamente.
+# TODO - Radio vibezonefm
+
+- [ ] Atualizar `admin.html` Firebase: remover `vibefm-radio-ad326` e usar config obrigatória `vibezonefm`.
+- [ ] Implementar autenticação real no `admin.html`:
+  - [ ] Função `requireAdmAuth()` para manter `#panel` oculto até login.
+  - [ ] Usar `onAuthStateChanged` para ligar/desligar UI e listeners conforme sessão.
+  - [ ] Bloquear ações/funções globais até login (sendReply/excluirMsg/excluirTudo/...)
+
+

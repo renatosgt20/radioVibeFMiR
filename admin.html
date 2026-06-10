@@ -333,20 +333,14 @@ from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
 
-apiKey: "AIzaSyCB3FZ7_ypaL5MN8AtvPkRCXzAwP0eymaM",
-
-authDomain: "vibefm-radio-ad326.firebaseapp.com",
-
-databaseURL:
-"https://vibefm-radio-ad326-default-rtdb.firebaseio.com",
-
-projectId: "vibefm-radio-ad326",
-
-storageBucket: "vibefm-radio-ad326.appspot.com",
-
-messagingSenderId: "1021295101262",
-
-appId: "1:1021295101262:web:7b9e80e0287e041c494a1f"
+apiKey: "AIzaSyAhPqHUawzslFddbo0lQ9X2VCKHLt0WyIU",
+authDomain: "vibezonefm.firebaseapp.com",
+databaseURL: "https://vibezonefm-default-rtdb.firebaseio.com/",
+projectId: "vibezonefm",
+storageBucket: "vibezonefm.firebasestorage.app",
+messagingSenderId: "962940256886",
+appId: "1:962940256886:web:e1c6e69f31d4f7cb1f5557",
+measurementId: "G-1CCHE01VC4"
 
 };
 
@@ -364,39 +358,108 @@ let currentUid = null;
 
 /* LOGIN */
 
+let adminUnsubMessages = null;
+let usersLoaded = false;
+let currentAuthUnsub = null;
+
+function setPanelVisible(visible){
+  const panel = document.getElementById("panel");
+  const loginBox = document.getElementById("loginBox");
+  if(!panel || !loginBox) return;
+
+  if(visible){
+    panel.style.display = "flex";
+    loginBox.style.display = "none";
+  } else {
+    panel.style.display = "none";
+    loginBox.style.display = "block";
+  }
+}
+
+window.requireAdmAuth = function(){
+  const u = auth?.currentUser;
+  return !!u;
+};
+
 window.login = function(){
+  const email = document.getElementById("email").value;
+  const senha = document.getElementById("password").value;
 
-const email = document.getElementById("email").value;
-const senha = document.getElementById("password").value;
+  if(!email || !senha) return;
 
-  // se abrir de novo, desliga a presença quando a aba for realmente fechada
-  // (evita derrubar ao navegar/abrir admin em nova aba no mobile)
-  window.addEventListener('pagehide', () => {
-    try{
-      set(ref(db, "onlineAdmins/main"), false);
-    }catch(_){ }
-  }, { once:true });
+  signInWithEmailAndPassword(auth, email, senha)
+    .catch((err)=>{
+      alert(err.message);
+    });
+};
 
+function setGlobalAdminGuards(enabled){
+  // Bloqueia funções administrativas até login validado
+  window.__admEnabled = enabled;
 
-if(!email || !senha) return;
+  // handlers “virtuais” (as funções reais checam o guard)
+}
 
-signInWithEmailAndPassword(auth, email, senha)
-.then(()=>{
+function lockAdminActions(){
+  setGlobalAdminGuards(false);
+  // desabilita seleção/ações no DOM
+  try{
+    if(window.__admChatUnsub){ window.__admChatUnsub(); }
+  }catch(_){ }
+}
 
-// presença do ADM (para index.html)
-set(ref(db, "onlineAdmins/main"), true);
+function unlockAdminActions(){
+  setGlobalAdminGuards(true);
+}
 
-document.getElementById("loginBox").style.display="none";
+// Presença do ADM: escrita imediata true/false com base na sessão
+function setAdmPresenceOnline(isOnline){
+  try{
+    set(ref(db, "onlineAdmins/main"), !!isOnline);
+  }catch(_){ }
+}
 
-document.getElementById("panel").style.display="flex";
-	
-	loadUsers();
-})
-.catch((err)=>{
-	alert(err.message);
+function ensureAdminState(){
+  if(!window.requireAdmAuth()){
+    setPanelVisible(false);
+    lockAdminActions();
+    setAdmPresenceOnline(false);
+    return;
+  }
+
+  setPanelVisible(true);
+  unlockAdminActions();
+
+  // liga listeners apenas uma vez, depois do login
+  if(!usersLoaded){
+    loadUsers();
+    usersLoaded = true;
+  }
+
+  setAdmPresenceOnline(true);
+}
+
+currentAuthUnsub = onAuthStateChanged(auth, (user)=>{
+  if(!user){
+    // ao perder autenticação: ADM OFF
+    setAdmPresenceOnline(false);
+    setPanelVisible(false);
+    lockAdminActions();
+    currentUid = null;
+    return;
+  }
+
+  currentUid = user.uid;
+  // ao logar: ADM ON
+  ensureAdminState();
 });
 
-};
+// Se a aba for fechada/navegada, tenta desligar presença imediatamente
+window.addEventListener('pagehide', () => {
+  if(window.requireAdmAuth()){
+    setAdmPresenceOnline(false);
+  }
+},{ once:false });
 
 /* USERS */
 
@@ -480,6 +543,11 @@ window.msgKeysMap = {};
 
 window.openChat = function(uid,nome){
 
+  if(!window.requireAdmAuth || !window.requireAdmAuth()){
+    alert("Faça login como ADM.");
+    return;
+  }
+
 currentUid = uid;
 
 // marca como visualizada: remove badge e para de piscar para esse uid
@@ -550,6 +618,11 @@ msgsDiv.scrollTop = msgsDiv.scrollHeight;
 
 window.sendReply = function(){
 
+  if(!window.requireAdmAuth || !window.requireAdmAuth()){
+    alert("Faça login como ADM.");
+    return;
+  }
+
 const input =
 document.getElementById("replyInput");
 
@@ -571,6 +644,11 @@ input.value="";
 
 window.autoReply = function(uid){
 
+  if(!window.requireAdmAuth || !window.requireAdmAuth()){
+    alert("Faça login como ADM.");
+    return;
+  }
+
 push(ref(db,"mensagens"),{
 
 uid:uid,
@@ -589,13 +667,24 @@ timestamp:Date.now()
 
 window.excluirMsg = function(key){
 
-if(!confirm("Excluir esta mensagem?")) return;
+  if(!window.requireAdmAuth || !window.requireAdmAuth()){
+    alert("Faça login como ADM.");
+    return;
+  }
 
-remove(ref(db,"mensagens/" + key));
+  if(!confirm("Excluir esta mensagem?")) return;
+
+  remove(ref(db,"mensagens/" + key));
 
 };
 
 window.excluirTudo = async function(){
+
+  if(!window.requireAdmAuth || !window.requireAdmAuth()){
+    alert("Faça login como ADM.");
+    return;
+  }
+
   if(!confirm("Excluir TODAS as mensagens do chat?")) return;
 
   try{

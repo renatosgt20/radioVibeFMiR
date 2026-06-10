@@ -316,10 +316,10 @@ import { initializeApp,getApps }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
-getAuth,
-signInWithEmailAndPassword
-}
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 import {
 getDatabase,
@@ -389,7 +389,8 @@ window.login = function(){
 
   signInWithEmailAndPassword(auth, email, senha)
     .catch((err)=>{
-      alert(err.message);
+      console.error(err);
+      alert((err.code || "auth_error") + " - " + (err.message || err));
     });
 };
 

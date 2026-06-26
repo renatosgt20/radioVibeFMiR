@@ -1,6 +1,6 @@
 # Sugestão de Firebase Realtime Database Rules
 
-> Objetivo: remover `permission_denied` e fazer chat + presença funcionarem.
+> Objetivo: chat + presença de admin + contador de ouvintes online (só ADM lê).
 
 ## Regras sugeridas (copiar/colar no Firebase Console)
 
@@ -8,11 +8,15 @@
 {
   "rules": {
     "onlineAdmins": {
-      "rules": {
-        "main": {
-          ".read": true,
-          ".write": "auth != null"
-        }
+      "main": {
+        ".read": true,
+        ".write": "auth != null"
+      }
+    },
+    "onlineListeners": {
+      ".read": "auth != null",
+      "$uid": {
+        ".write": true
       }
     },
     "mensagens": {
@@ -23,10 +27,18 @@
 }
 ```
 
-## Como testar
-1. Atualizar rules no Console.
-2. Abrir mobile (guest) e enviar mensagem.
-3. Abrir admin, logar e verificar:
-   - `onlineAdmins/main` atualiza
-   - mensagem aparece.
+## Como funciona
 
+- **Visitantes** registram presença em `onlineListeners/{uid}` ao tocar a rádio.
+- **ADM logado** lê `onlineListeners` e vê o contador no painel admin.
+- **Público** não vê o número (linha escondida no `index.html` + rules bloqueiam leitura).
+
+## Como testar
+
+1. Atualizar rules no Console (Realtime Database → Rules → Publish).
+2. Abrir o site, clicar em **OUVIR AGORA**.
+3. Abrir `admin.html`, logar e verificar:
+   - Contador **X ouvintes online** no header
+   - `onlineAdmins/main` atualiza para `true`
+   - Mensagens do chat aparecem
+4. Pausar a rádio → contador deve diminuir após alguns segundos.

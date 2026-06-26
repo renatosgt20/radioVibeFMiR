@@ -1682,9 +1682,9 @@ Entrar
 <span id="admCount"> 1 </span>
 </div>
 
-<div style="margin-top:5px;">
+<div id="ouvintesRow" style="display:none;margin-top:5px;">
 👥 Ouvintes:
-<span id="ouvintesCount"> *** </span>
+<span id="ouvintesCount">—</span>
 </div>
 
 </div>
@@ -1852,7 +1852,9 @@ ref,
 push,
 onChildAdded,
 set,
-onValue
+onValue,
+onDisconnect,
+remove
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
@@ -2040,6 +2042,44 @@ document
     toggleAdmLogin();
 
   });
+
+// Enter envia mensagem no chat público
+document.querySelectorAll("#input-msg").forEach((input) => {
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      enviarMsg();
+    }
+  });
+});
+
+// Presença de ouvintes online (só ADM lê via Firebase Rules)
+const listenerId =
+  localStorage.getItem("vibe_uid") ||
+  crypto.randomUUID();
+
+localStorage.setItem("vibe_uid", listenerId);
+
+const listenerPresenceRef = ref(db, `onlineListeners/${listenerId}`);
+
+function setListenerPresence(ouvindo) {
+  if (ouvindo) {
+    set(listenerPresenceRef, {
+      connected: true,
+      since: Date.now()
+    });
+    onDisconnect(listenerPresenceRef).remove();
+  } else {
+    remove(listenerPresenceRef).catch(() => {});
+  }
+}
+
+const audioEl = document.getElementById("audio");
+if (audioEl) {
+  audioEl.addEventListener("play", () => setListenerPresence(true));
+  audioEl.addEventListener("pause", () => setListenerPresence(false));
+  window.addEventListener("pagehide", () => setListenerPresence(false));
+}
 
 </script>
 

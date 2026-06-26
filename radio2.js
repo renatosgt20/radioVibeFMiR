@@ -1277,7 +1277,7 @@ const PROGRAMAS = {
   grove:       "🌀 PSY Vibe 🌀 ",
   night:       "🌙 PSY Vibe 🌙",
   forest:      "🌲 PSY Vibe 🌲 ",
-  rootsvibe:   "🟢🟡🔴 Reggae Roots 🟢🟡🔴",
+  rootsvibe:   "🟢🟡🔴Reggae Roots🟢🟡🔴",
   baladavibe:  "💫🌙inVibe🌙💫"
 
 };

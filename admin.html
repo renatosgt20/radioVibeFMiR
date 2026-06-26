@@ -2,372 +2,601 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VibeFM Admin</title>
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
 }
 
-body{
-background:#050816;
-color:white;
-height:100vh;
-overflow:hidden;
+body {
+  background: radial-gradient(circle at 20% 20%, rgba(0, 255, 204, 0.06), transparent 35%),
+              radial-gradient(circle at 80% 80%, rgba(138, 43, 226, 0.08), transparent 40%),
+              #050816;
+  color: #e2e8f0;
+  height: 100vh;
+  overflow: hidden;
 }
 
 /* LOGIN */
-
-#loginBox{
-position:absolute;
-top:50%;
-left:50%;
-transform:translate(-50%,-50%);
-width:320px;
-background:#111827;
-padding:25px;
-border-radius:16px;
-box-shadow:0 0 30px rgba(0,255,255,.2);
-z-index:10;
+#loginBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 340px;
+  max-width: 92vw;
+  background: rgba(17, 24, 39, 0.95);
+  padding: 32px 28px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 255, 204, 0.2);
+  box-shadow: 0 0 40px rgba(0, 255, 204, 0.12);
+  z-index: 10;
 }
 
-#loginBox h2{
-margin-bottom:15px;
-text-align:center;
+#loginBox h2 {
+  margin-bottom: 6px;
+  text-align: center;
+  font-size: 1.4rem;
+  color: #00ffcc;
 }
 
-input{
-width:100%;
-padding:12px;
-margin:8px 0;
-border:none;
-border-radius:10px;
-background:#1f2937;
-color:white;
+#loginBox p {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin-bottom: 20px;
 }
 
-button{
-width:100%;
-padding:12px;
-border:none;
-border-radius:10px;
-background:#00ffaa;
-color:black;
-font-weight:bold;
-cursor:pointer;
-transition:.3s;
+input {
+  width: 100%;
+  padding: 13px 14px;
+  margin: 8px 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #0f172a;
+  color: white;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-button:hover{
-transform:scale(1.02);
+input:focus {
+  border-color: rgba(0, 255, 204, 0.5);
+  box-shadow: 0 0 0 3px rgba(0, 255, 204, 0.1);
+}
+
+button {
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s, opacity 0.15s;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+#loginBox button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #00ffcc, #00d4aa);
+  color: #041016;
+  font-size: 0.95rem;
 }
 
 /* PAINEL */
-
-#panel{
-display:none;
-width:100%;
-height:100vh;
-display:flex;
+#panel {
+  display: none;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
 }
 
-/* RADIO */
-
-.radio-side{
-width:50%;
-height:100%;
-border-right:1px solid rgba(255,255,255,.1);
+/* HEADER */
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 24px;
+  background: rgba(11, 18, 32, 0.92);
+  border-bottom: 1px solid rgba(0, 255, 204, 0.15);
+  backdrop-filter: blur(12px);
+  flex-shrink: 0;
 }
 
-.radio-side iframe{
-width:100%;
-height:100%;
-border:none;
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-brand-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00ffcc, #8a2be2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  box-shadow: 0 0 20px rgba(0, 255, 204, 0.25);
+}
+
+.admin-brand h1 {
+  font-size: 1.15rem;
+  color: #f8fafc;
+  font-weight: 700;
+}
+
+.admin-brand span {
+  display: block;
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.admin-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.listener-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(0, 255, 204, 0.08);
+  border: 1px solid rgba(0, 255, 204, 0.25);
+  color: #00ffcc;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.listener-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 10px #22c55e;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.3); }
+}
+
+.btn-logout {
+  padding: 8px 16px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #fca5a5;
+  font-size: 0.82rem;
+  border-radius: 10px;
+}
+
+.btn-logout:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
+
+/* CORPO DO PAINEL */
+.admin-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* LISTA DE OUVINTES */
+.users-panel {
+  width: 280px;
+  min-width: 220px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(8, 12, 24, 0.85);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.users-panel-header {
+  padding: 16px 18px 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #64748b;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.users {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+}
+
+.users::-webkit-scrollbar,
+#msgs::-webkit-scrollbar {
+  width: 5px;
+}
+
+.users::-webkit-scrollbar-thumb,
+#msgs::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 204, 0.25);
+  border-radius: 99px;
+}
+
+.user {
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  background: rgba(17, 24, 39, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+  position: relative;
+  font-size: 0.9rem;
+}
+
+.user:hover {
+  background: rgba(31, 41, 55, 0.9);
+  border-color: rgba(0, 255, 204, 0.2);
+}
+
+.user.active {
+  background: rgba(0, 255, 204, 0.08);
+  border-color: rgba(0, 255, 204, 0.4);
+  box-shadow: 0 0 20px rgba(0, 255, 204, 0.1);
+}
+
+.user .new-indicator {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 9px;
+  font-weight: 900;
+  color: #ff2d55;
+}
+
+.user.has-new {
+  border-color: rgba(0, 255, 204, 0.35);
+  box-shadow: 0 0 18px rgba(0, 255, 204, 0.15);
+  animation: admPulse 1.1s ease-in-out infinite;
+}
+
+.user.has-new .new-indicator {
+  display: block;
+}
+
+@keyframes admPulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(0, 255, 204, 0.12); }
+  50% { box-shadow: 0 0 24px rgba(0, 255, 204, 0.28); }
+}
+
+.users-empty {
+  padding: 24px 16px;
+  text-align: center;
+  color: #475569;
+  font-size: 0.85rem;
+  line-height: 1.5;
 }
 
 /* CHAT */
-
-.chat-side{
-width:50%;
-display:flex;
-flex-direction:column;
-background:#0b1220;
+.chat-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: rgba(11, 18, 32, 0.6);
+  min-width: 0;
 }
 
-.top{
-padding:15px;
-border-bottom:1px solid rgba(255,255,255,.1);
-font-size:20px;
-font-weight:bold;
-color:#00ffaa;
+.chat-panel-header {
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
 }
 
-.chat-container{
-display:flex;
-flex:1;
-overflow:hidden;
+.chat-panel-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #f1f5f9;
 }
 
-/* USERS */
-
-.users{
-width:35%;
-border-right:1px solid rgba(255,255,255,.1);
-overflow:auto;
-padding:10px;
+.chat-panel-title span {
+  color: #00ffcc;
 }
 
-.user{
-padding:12px;
-margin-bottom:10px;
-background:#111827;
-border-radius:12px;
-cursor:pointer;
-transition:.2s;
-position:relative;
+.btn-delete-all {
+  padding: 7px 12px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #f87171;
+  font-size: 0.78rem;
+  border-radius: 8px;
+  white-space: nowrap;
 }
 
-.user:hover{
-background:#1f2937;
+.btn-delete-all:hover {
+  background: rgba(239, 68, 68, 0.22);
 }
 
-.user .new-indicator{
-display:none;
-position:absolute;
-top:8px;
-right:10px;
-font-size:10px;
-font-weight:900;
-color:#ff2d55;
-text-shadow:0 0 10px rgba(255,45,85,.55);
+#msgs {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-/* Efeito de nova mensagem (coração no neon do sci-fi) */
-.user.has-new{
-box-shadow:0 0 0 1px rgba(0,255,204,.22), 0 0 20px rgba(0,255,204,.18);
-border:1px solid rgba(0,255,204,.35);
-animation:admPulse 1.1s ease-in-out infinite;
+.chat-placeholder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  gap: 12px;
+  padding: 40px;
+  text-align: center;
 }
 
-.user.has-new .new-indicator{
-display:block;
+.chat-placeholder i {
+  font-size: 2.5rem;
+  opacity: 0.4;
 }
 
-@keyframes admPulse{
-0%{transform:translateY(0); box-shadow:0 0 0 1px rgba(0,255,204,.18), 0 0 16px rgba(0,255,204,.15);}
-50%{transform:translateY(-3px); box-shadow:0 0 0 1px rgba(0,255,204,.40), 0 0 28px rgba(0,255,204,.32);}
-100%{transform:translateY(0); box-shadow:0 0 0 1px rgba(0,255,204,.18), 0 0 16px rgba(0,255,204,.15);}
+.msg {
+  background: linear-gradient(135deg, #0f172a, #1e3a5f);
+  padding: 12px 14px;
+  border-radius: 16px;
+  max-width: 75%;
+  color: #e2e8f0;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  align-self: flex-start;
+  word-break: break-word;
 }
 
-
-/* MESSAGES */
-
-.messages{
-width:65%;
-display:flex;
-flex-direction:column;
+.msg.adm {
+  background: linear-gradient(135deg, #6d28d9, #a855f7);
+  align-self: flex-end;
+  text-align: right;
+  box-shadow: 0 2px 16px rgba(168, 85, 247, 0.25);
 }
 
-#msgs{
-flex:1;
-overflow:auto;
-padding:15px;
+.msg .badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: 6px;
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.msg{
-background:linear-gradient(45deg,#0f172a,#0ea5e9);
-padding:10px;
-border-radius:14px;
-margin-bottom:10px;
-max-width:80%;
-color:white;
-box-shadow:0 0 18px rgba(0,255,204,.12);
+.msg .del-btn {
+  margin-top: 8px;
+  padding: 4px 10px;
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 6px;
+  color: #fca5a5;
+  font-size: 10px;
+  cursor: pointer;
 }
 
-.msg.adm{
-background:linear-gradient(45deg,#7c3aed,#c026d3);
-margin-left:auto;
-text-align:right;
-box-shadow:0 0 22px rgba(192,38,211,.22);
+.send-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(8, 12, 24, 0.9);
+  flex-shrink: 0;
 }
 
-.msg .badge{
-display:inline-block;
-font-size:11px;
-font-weight:800;
-padding:2px 8px;
-border-radius:999px;
-margin-bottom:6px;
-background:rgba(0,0,0,.25);
-border:1px solid rgba(255,255,255,.12);
+.send-box input {
+  flex: 1;
+  margin: 0;
+  padding: 13px 16px;
+  border-radius: 14px;
+  background: #0f172a;
+  font-size: 0.92rem;
 }
 
-.send-box{
-display:flex;
-padding:10px;
-border-top:1px solid rgba(255,255,255,.1);
-gap:10px;
+.send-box input:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
-.send-box input{
-flex:1;
-margin:0;
+.btn-send {
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #00ffcc, #00d4aa);
+  color: #041016;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
 }
 
-.send-box button{
-width:70px;
+.btn-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
 }
 
-/* MOBILE */
-
-@media(max-width:900px){
-
-#panel{
-flex-direction:column;
+.send-hint {
+  font-size: 0.72rem;
+  color: #475569;
+  padding: 0 20px 10px;
+  background: rgba(8, 12, 24, 0.9);
 }
 
-.radio-side{
-width:100%;
-height:35%;
-}
+@media (max-width: 768px) {
+  .admin-header {
+    padding: 12px 14px;
+    flex-wrap: wrap;
+  }
 
-.chat-side{
-width:100%;
-height:65%;
-}
+  .admin-body {
+    flex-direction: column;
+  }
 
-}
+  .users-panel {
+    width: 100%;
+    max-height: 35vh;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
 
+  .listener-badge {
+    font-size: 0.78rem;
+    padding: 6px 12px;
+  }
+}
 </style>
 </head>
 
 <body>
 
 <!-- LOGIN -->
-
 <div id="loginBox">
-
-<h2>🎧 VibeFM Admin</h2>
-
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Senha">
-
-<button onclick="login()">ENTRAR</button>
-
+  <h2>🎧 VibeFM Admin</h2>
+  <p>Painel exclusivo para administradores</p>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Senha">
+  <button onclick="login()">ENTRAR</button>
 </div>
 
 <!-- PAINEL -->
-
 <div id="panel">
 
-<div class="radio-side">
+  <header class="admin-header">
+    <div class="admin-brand">
+      <div class="admin-brand-icon">🎧</div>
+      <div>
+        <h1>VibeFM Admin</h1>
+        <span>Painel de ouvintes</span>
+      </div>
+    </div>
+    <div class="admin-header-actions">
+      <div class="listener-badge">
+        <span class="listener-dot"></span>
+        <span id="ouvintesOnline">0</span> ouvintes online
+      </div>
+      <button class="btn-logout" onclick="logout()">
+        <i class="fa-solid fa-right-from-bracket"></i> Sair
+      </button>
+    </div>
+  </header>
 
-<iframe src="https://radiovibezonefm.vibefmbr.workers.dev/"></iframe>
+  <div class="admin-body">
 
-</div>
+    <aside class="users-panel">
+      <div class="users-panel-header">Ouvintes no chat</div>
+      <div class="users" id="users"></div>
+    </aside>
 
-<div class="chat-side">
+    <main class="chat-panel">
+      <div class="chat-panel-header">
+        <div class="chat-panel-title" id="chatTitle">Selecione um ouvinte</div>
+        <button class="btn-delete-all" onclick="excluirTudo()">
+          <i class="fa-solid fa-trash"></i> Excluir tudo
+        </button>
+      </div>
 
-<div class="top">
-💬 Painel de Ouvintes
-</div>
+      <div id="msgs">
+        <div class="chat-placeholder" id="chatPlaceholder">
+          <i class="fa-solid fa-comments"></i>
+          <p>Selecione um ouvinte na lista<br>para ver e responder mensagens</p>
+        </div>
+      </div>
 
-<div class="chat-container">
+      <div class="send-box">
+        <input id="replyInput" placeholder="Digite sua resposta..." disabled>
+        <button class="btn-send" id="btnSend" onclick="sendReply()" disabled title="Enviar">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+      <div class="send-hint">Pressione <strong>Enter</strong> para enviar</div>
+    </main>
 
-<div class="users" id="users"></div>
-
-<div class="messages">
-
-<div id="msgs"></div>
-
-<div class="send-box">
-
-<div style="display:flex;gap:10px;align-items:center;">
-  <button style="background:#ff4444;color:white;" onclick="excluirTudo()">🗑️ Excluir Tudo</button>
-</div>
-
-<input id="replyInput" placeholder="Responder ouvinte...">
-
-<button onclick="sendReply()">
-➤
-</button>
-
-</div>
-
-
-</div>
-
-</div>
-
-</div>
+  </div>
 
 </div>
 
 <script type="module">
 
-import { initializeApp,getApps }
+import { initializeApp, getApps }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
   getAuth,
   signInWithEmailAndPassword,
+  signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
 
 import {
-getDatabase,
-ref,
-push,
-onValue,
-set,
-remove
-}
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+  getDatabase,
+  ref,
+  push,
+  onValue,
+  set,
+  remove
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
-
-apiKey: "AIzaSyAhPqHUawzslFddbo0lQ9X2VCKHLt0WyIU",
-authDomain: "vibezonefm.firebaseapp.com",
-databaseURL: "https://vibezonefm-default-rtdb.firebaseio.com/",
-projectId: "vibezonefm",
-storageBucket: "vibezonefm.firebasestorage.app",
-messagingSenderId: "962940256886",
-appId: "1:962940256886:web:e1c6e69f31d4f7cb1f5557",
-measurementId: "G-1CCHE01VC4"
-
+  apiKey: "AIzaSyAhPqHUawzslFddbo0lQ9X2VCKHLt0WyIU",
+  authDomain: "vibezonefm.firebaseapp.com",
+  databaseURL: "https://vibezonefm-default-rtdb.firebaseio.com/",
+  projectId: "vibezonefm",
+  storageBucket: "vibezonefm.firebasestorage.app",
+  messagingSenderId: "962940256886",
+  appId: "1:962940256886:web:e1c6e69f31d4f7cb1f5557",
+  measurementId: "G-1CCHE01VC4"
 };
 
-const app =
-getApps().length
-? getApps()[0]
-: initializeApp(firebaseConfig);
-
+const app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
 const auth = getAuth(app);
-
 const db = getDatabase(app);
 
-let currentUid = null;
-
-
-/* LOGIN */
-
+let selectedChatUid = null;
+let selectedNome = null;
 let adminUnsubMessages = null;
 let usersLoaded = false;
-let currentAuthUnsub = null;
+let listenerCounterStarted = false;
+let renderedMap = {};
 
-function setPanelVisible(visible){
+function setPanelVisible(visible) {
   const panel = document.getElementById("panel");
   const loginBox = document.getElementById("loginBox");
-  if(!panel || !loginBox) return;
+  if (!panel || !loginBox) return;
 
-  if(visible){
+  if (visible) {
     panel.style.display = "flex";
     loginBox.style.display = "none";
   } else {
@@ -376,52 +605,68 @@ function setPanelVisible(visible){
   }
 }
 
-window.requireAdmAuth = function(){
-  const u = auth?.currentUser;
-  return !!u;
+window.requireAdmAuth = function () {
+  return !!auth?.currentUser;
 };
 
-window.login = function(){
+window.login = function () {
   const email = document.getElementById("email").value;
   const senha = document.getElementById("password").value;
-
-  if(!email || !senha) return;
+  if (!email || !senha) return;
 
   signInWithEmailAndPassword(auth, email, senha)
-    .catch((err)=>{
+    .catch((err) => {
       console.error(err);
       alert((err.code || "auth_error") + " - " + (err.message || err));
     });
 };
 
-function setGlobalAdminGuards(enabled){
-  // Bloqueia funções administrativas até login validado
+window.logout = function () {
+  signOut(auth).catch(console.error);
+};
+
+function setGlobalAdminGuards(enabled) {
   window.__admEnabled = enabled;
-
-  // handlers “virtuais” (as funções reais checam o guard)
 }
 
-function lockAdminActions(){
+function lockAdminActions() {
   setGlobalAdminGuards(false);
-  // desabilita seleção/ações no DOM
-  try{
-    if(window.__admChatUnsub){ window.__admChatUnsub(); }
-  }catch(_){ }
+  try {
+    if (window.__admChatUnsub) window.__admChatUnsub();
+  } catch (_) {}
 }
 
-function unlockAdminActions(){
+function unlockAdminActions() {
   setGlobalAdminGuards(true);
 }
 
-// Presença do ADM: escrita imediata true/false com base na sessão
-function setAdmPresenceOnline(isOnline){
-  try{
+function setAdmPresenceOnline(isOnline) {
+  try {
     set(ref(db, "onlineAdmins/main"), !!isOnline);
-  }catch(_){ }
+  } catch (_) {}
 }
 
-function ensureAdminState(){
-  if(!window.requireAdmAuth()){
+function startListenerCounter() {
+  if (listenerCounterStarted) return;
+  listenerCounterStarted = true;
+
+  onValue(ref(db, "onlineListeners"), (snap) => {
+    const data = snap.val() || {};
+    const total = Object.keys(data).length;
+    const el = document.getElementById("ouvintesOnline");
+    if (el) el.textContent = total;
+  });
+}
+
+function setChatEnabled(enabled) {
+  const input = document.getElementById("replyInput");
+  const btn = document.getElementById("btnSend");
+  if (input) input.disabled = !enabled;
+  if (btn) btn.disabled = !enabled;
+}
+
+function ensureAdminState() {
+  if (!window.requireAdmAuth()) {
     setPanelVisible(false);
     lockAdminActions();
     setAdmPresenceOnline(false);
@@ -430,9 +675,9 @@ function ensureAdminState(){
 
   setPanelVisible(true);
   unlockAdminActions();
+  startListenerCounter();
 
-  // liga listeners apenas uma vez, depois do login
-  if(!usersLoaded){
+  if (!usersLoaded) {
     loadUsers();
     usersLoaded = true;
   }
@@ -440,267 +685,211 @@ function ensureAdminState(){
   setAdmPresenceOnline(true);
 }
 
-currentAuthUnsub = onAuthStateChanged(auth, (user)=>{
-  if(!user){
-    // ao perder autenticação: ADM OFF
+onAuthStateChanged(auth, (user) => {
+  if (!user) {
     setAdmPresenceOnline(false);
     setPanelVisible(false);
     lockAdminActions();
-    currentUid = null;
+    selectedChatUid = null;
+    selectedNome = null;
+    listenerCounterStarted = false;
+    usersLoaded = false;
     return;
   }
 
-  currentUid = user.uid;
-  // ao logar: ADM ON
   ensureAdminState();
 });
 
-// Se a aba for fechada/navegada, tenta desligar presença imediatamente
-window.addEventListener('pagehide', () => {
-  if(window.requireAdmAuth()){
-    setAdmPresenceOnline(false);
-  }
-},{ once:false });
+window.addEventListener("pagehide", () => {
+  if (window.requireAdmAuth()) setAdmPresenceOnline(false);
+}, { once: false });
 
-/* USERS */
+function loadUsers() {
+  const usersDiv = document.getElementById("users");
+  renderedMap = renderedMap || {};
 
-let renderedMap = {};
+  onValue(ref(db, "mensagens"), (snapshot) => {
+    const data = snapshot.val();
+    usersDiv.innerHTML = "";
 
-function loadUsers(){
+    if (!data) {
+      usersDiv.innerHTML = '<div class="users-empty">Nenhum ouvinte ainda.<br>Aguardando mensagens...</div>';
+      return;
+    }
 
-const usersDiv =
-document.getElementById("users");
+    const usersMap = {};
 
-// cache de visualização por uid
-renderedMap = renderedMap || {};
+    Object.entries(data).forEach(([, msg]) => {
+      if (!msg || !msg.uid || msg.admin === true) return;
+      usersMap[msg.uid] = msg.nome || "Ouvinte";
+    });
 
-onValue(ref(db,"mensagens"),snapshot=>{
+    Object.entries(data).forEach(([, msg]) => {
+      if (!msg || !msg.uid || msg.admin === true) return;
+      const last = renderedMap[msg.uid]?.lastSeen || 0;
+      if ((msg.timestamp || 0) > last) {
+        renderedMap[msg.uid] = renderedMap[msg.uid] || { lastSeen: last };
+        renderedMap[msg.uid].hasNew = true;
+      }
+    });
 
-const data = snapshot.val();
+    const entries = Object.entries(usersMap);
+    if (!entries.length) {
+      usersDiv.innerHTML = '<div class="users-empty">Nenhum ouvinte ainda.<br>Aguardando mensagens...</div>';
+      return;
+    }
 
-usersDiv.innerHTML = "";
+    entries.forEach(([uid, nome]) => {
+      const state = renderedMap[uid] || { lastSeen: 0, hasNew: false };
+      const hasNew = !!state.hasNew;
+      const isActive = uid === selectedChatUid;
+      const clazz = `user${hasNew ? " has-new" : ""}${isActive ? " active" : ""}`;
+      const safeNome = nome.replace(/'/g, "\\'");
 
-if(!data) return;
-
-const usersMap = {};
-
-// listar ouvintes pelo uid, ignorando ADM
-Object.entries(data).forEach(([id,msg])=>{
-
-if(!msg || !msg.uid) return;
-
-if(msg.admin === true) return;
-
-// guarda nome
-usersMap[msg.uid] = msg.nome || "Ouvinte";
-
-});
-
-// identifica novas mensagens por uid (sem depender do card atual)
-Object.entries(data).forEach(([id,msg])=>{
-
-if(!msg || !msg.uid) return;
-
-if(msg.admin === true) return;
-
-// marca uid como "tem nova" se msg tiver timestamp mais recente que o último visto
-const last = renderedMap[msg.uid]?.lastSeen || 0;
-if((msg.timestamp || 0) > last){
-  renderedMap[msg.uid] = renderedMap[msg.uid] || { lastSeen: last };
-  renderedMap[msg.uid].hasNew = true;
+      usersDiv.innerHTML += `
+        <div class="${clazz}" data-uid="${uid}" onclick="openChat('${uid}','${safeNome}')">
+          👤 ${nome}
+          <span class="new-indicator">●</span>
+        </div>
+      `;
+    });
+  });
 }
 
-});
-
-Object.entries(usersMap).forEach(([uid,nome])=>{
-  const state = renderedMap[uid] || { lastSeen: 0, hasNew: false };
-  const hasNew = !!state.hasNew;
-  const clazz = hasNew ? 'user has-new' : 'user';
-
-usersDiv.innerHTML += `
-
-<div class="${clazz}"
-data-uid="${uid}"
-onclick="openChat('${uid}','${nome}')">
-
-👤 ${nome}
-
-<span class="new-indicator">🔴</span>
-
-</div>
-
-`;
-
-});
-
-});
-
-}
-
-/* CHAT */
-
-// Armazena as chaves das mensagens por uid do ouvinte
 window.msgKeysMap = {};
 
-window.openChat = function(uid,nome){
-
-  if(!window.requireAdmAuth || !window.requireAdmAuth()){
+window.openChat = function (uid, nome) {
+  if (!window.requireAdmAuth()) {
     alert("Faça login como ADM.");
     return;
   }
 
-currentUid = uid;
+  selectedChatUid = uid;
+  selectedNome = nome;
 
-// marca como visualizada: remove badge e para de piscar para esse uid
-if(typeof renderedMap !== 'undefined' && renderedMap[uid]){
-  renderedMap[uid].hasNew = false;
-  renderedMap[uid].lastSeen = Date.now();
-}
+  document.getElementById("chatTitle").innerHTML =
+    `Conversa com <span>${nome}</span>`;
 
+  setChatEnabled(true);
 
-// remove badge/efeitos de "nova mensagem" ao abrir a conversa
-renderedMap[currentUid] = renderedMap[currentUid] || {};
-renderedMap[currentUid].lastSeen = Date.now();
-renderedMap[currentUid].hasNew = false;
+  if (renderedMap[uid]) {
+    renderedMap[uid].hasNew = false;
+    renderedMap[uid].lastSeen = Date.now();
+  }
 
-const msgsDiv = document.getElementById("msgs");
+  document.querySelectorAll(".user").forEach((el) => {
+    el.classList.toggle("active", el.dataset.uid === uid);
+  });
 
-// Se já existe um listener do chat aberto, remove para evitar duplicação.
-if(window.__admChatUnsub){
-  window.__admChatUnsub();
-}
+  const msgsDiv = document.getElementById("msgs");
 
-// inicializa mapa de chaves para este uid
-window.msgKeysMap[uid] = [];
+  if (window.__admChatUnsub) window.__admChatUnsub();
 
-// listener único para o uid selecionado
-window.__admChatUnsub = onValue(ref(db,"mensagens"),snapshot=>{
+  window.msgKeysMap[uid] = [];
 
-const data = snapshot.val();
+  window.__admChatUnsub = onValue(ref(db, "mensagens"), (snapshot) => {
+    const data = snapshot.val();
+    msgsDiv.innerHTML = "";
 
-msgsDiv.innerHTML = "";
+    if (!data) return;
 
-if(!data) return;
+    window.msgKeysMap[uid] = [];
 
-window.msgKeysMap[uid] = [];
+    Object.entries(data).forEach(([key, msg]) => {
+      if (!msg || msg.uid !== uid) return;
 
-Object.entries(data).forEach(([key,msg])=>{
+      window.msgKeysMap[uid].push(key);
 
-if(!msg || msg.uid !== uid) return;
+      const delBtn = msg.admin !== true
+        ? `<button class="del-btn" onclick="excluirMsg('${key}')">🗑 Excluir</button>`
+        : "";
 
-window.msgKeysMap[uid].push(key);
+      msgsDiv.innerHTML += `
+        <div class="msg ${msg.admin === true ? "adm" : ""}">
+          <div class="badge">${msg.admin === true ? "ADM" : "OUVINTE"}</div>
+          ${msg.texto}
+          ${delBtn}
+        </div>
+      `;
+    });
 
-const delBtn = msg.admin !== true ?
-`<button onclick="excluirMsg('${key}')" style="margin-top:5px;background:#ff4444;border:none;border-radius:6px;color:white;padding:4px 8px;cursor:pointer;font-size:10px;">🗑️ Excluir</button>` : '';
+    msgsDiv.scrollTop = msgsDiv.scrollHeight;
+  });
 
-msgsDiv.innerHTML += `
-
-<div class="msg ${msg.admin === true ? 'adm' : ''}">
-
-<div class="badge">${msg.admin === true ? 'ADM' : 'OUVINTE'}</div>
-
-${msg.texto}
-
-${delBtn}
-
-</div>
-
-`;
-
-});
-
-msgsDiv.scrollTop = msgsDiv.scrollHeight;
-
-});
-
+  document.getElementById("replyInput")?.focus();
 };
 
-/* RESPONDER */
-
-window.sendReply = function(){
-
-  if(!window.requireAdmAuth || !window.requireAdmAuth()){
+window.sendReply = function () {
+  if (!window.requireAdmAuth()) {
     alert("Faça login como ADM.");
     return;
   }
 
-const input =
-document.getElementById("replyInput");
+  if (!selectedChatUid) {
+    alert("Selecione um ouvinte primeiro.");
+    return;
+  }
 
-if(!input.value.trim()) return;
+  const input = document.getElementById("replyInput");
+  const texto = input.value.trim();
+  if (!texto) return;
 
-push(ref(db,"mensagens"),{
-uid: currentUid,
-texto: input.value,
-admin: true,
-nome: "ADM",
-timestamp: Date.now()
-});
+  push(ref(db, "mensagens"), {
+    uid: selectedChatUid,
+    texto,
+    admin: true,
+    nome: "ADM",
+    timestamp: Date.now()
+  });
 
-input.value="";
-
+  input.value = "";
 };
 
-/* AUTO RESPOSTA */
-
-window.autoReply = function(uid){
-
-  if(!window.requireAdmAuth || !window.requireAdmAuth()){
+window.excluirMsg = function (key) {
+  if (!window.requireAdmAuth()) {
     alert("Faça login como ADM.");
     return;
   }
-
-push(ref(db,"mensagens"),{
-
-uid:uid,
-
-texto:"🤖 Obrigado pela mensagem! Em breve o ADM vai responder você 🎧",
-
-adm:true,
-
-timestamp:Date.now()
-
-});
-
+  if (!confirm("Excluir esta mensagem?")) return;
+  remove(ref(db, "mensagens/" + key));
 };
 
-/* EXCLUIR MENSAGEM */
-
-window.excluirMsg = function(key){
-
-  if(!window.requireAdmAuth || !window.requireAdmAuth()){
+window.excluirTudo = async function () {
+  if (!window.requireAdmAuth()) {
     alert("Faça login como ADM.");
     return;
   }
+  if (!confirm("Excluir TODAS as mensagens do chat?")) return;
 
-  if(!confirm("Excluir esta mensagem?")) return;
-
-  remove(ref(db,"mensagens/" + key));
-
-};
-
-window.excluirTudo = async function(){
-
-  if(!window.requireAdmAuth || !window.requireAdmAuth()){
-    alert("Faça login como ADM.");
-    return;
-  }
-
-  if(!confirm("Excluir TODAS as mensagens do chat?")) return;
-
-  try{
-    // Remove em massa do Realtime Database (sincroniza automaticamente todos os clientes).
+  try {
     await remove(ref(db, "mensagens"));
-
-    // Limpa cache local (caso exista)
-    try{ localStorage.removeItem("vibe_chat_rendered"); }catch(_){ }
-
-  }catch(e){
+    try { localStorage.removeItem("vibe_chat_rendered"); } catch (_) {}
+    selectedChatUid = null;
+    selectedNome = null;
+    setChatEnabled(false);
+    document.getElementById("chatTitle").textContent = "Selecione um ouvinte";
+    document.getElementById("msgs").innerHTML = `
+      <div class="chat-placeholder">
+        <i class="fa-solid fa-comments"></i>
+        <p>Selecione um ouvinte na lista<br>para ver e responder mensagens</p>
+      </div>
+    `;
+  } catch (e) {
     console.error(e);
     alert("Falha ao excluir mensagens.");
   }
 };
 
+document.getElementById("replyInput")?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" && !e.shiftKey) {
+    e.preventDefault();
+    sendReply();
+  }
+});
+
+document.getElementById("password")?.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") login();
+});
 
 </script>
 

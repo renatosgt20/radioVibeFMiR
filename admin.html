@@ -632,14 +632,16 @@ button:active {
              text-decoration:none;
              font-size:11.5px;
              color:#e2e8f0;
-             white-space:nowrap;
-             overflow:hidden;
-             text-overflow:ellipsis;
-             max-width:520px;
+             white-space:normal;
+             overflow:visible;
+             text-overflow:clip;
+             width:100%;
+             word-break:break-word;
              display:block;
              min-height:16px;">
             —
           </a>
+
           <div style="font-size:10px;color:#64748b;margin-top:2px;">(clique abre o link completo)</div>
         </div>
       </div>
@@ -650,18 +652,27 @@ button:active {
     </div>
   </header>
 
-  <!-- Controles da rádio (somente ADM logado) -->
+  <!-- Controles da rádio (ADM) -->
   <div class="radio-controls-bar">
-    <div class="radio-controls-group">
+    <div class="radio-controls-group" style="gap:12px;">
       <label>Rádio</label>
-      <button class="btn-radio btn-radio-play" id="admTogglePlay" onclick="admTogglePlay()" title="Play/Pause">
-        <i class="fa-solid fa-play" id="admToggleIcon"></i>
+
+      <!-- BOTÃO PLAY/PAUSE no estilo do site -->
+      <button class="btn-radio btn-radio-play" style="width:auto; padding:10px 18px; border-radius:999px; display:flex; align-items:center; gap:10px;"
+        onclick="admTogglePlay()" title="Ouvir agora / Parar">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; background:rgba(0,0,0,0.15); border:1px solid rgba(0,255,204,0.6);">▶</span>
+        <span style="font-weight:900;">OUVIR AGORA</span>
       </button>
-      <button class="btn-radio" onclick="admRadioPrev()" title="Música anterior">
+
+      <!-- BOTÕES MESMA COR para voltar / mudar faixa -->
+      <button class="btn-radio" style="width:auto; padding:10px 14px; border-radius:999px; display:flex; align-items:center; gap:10px;" onclick="admRadioPrev()" title="Voltar faixa">
         <i class="fa-solid fa-backward-step"></i>
+        <span style="font-weight:900;">VOLTAR</span>
       </button>
-      <button class="btn-radio" onclick="admRadioNext()" title="Próxima música">
+
+      <button class="btn-radio" style="width:auto; padding:10px 14px; border-radius:999px; display:flex; align-items:center; gap:10px;" onclick="admRadioNext()" title="Próxima faixa">
         <i class="fa-solid fa-forward-step"></i>
+        <span style="font-weight:900;">PRÓXIMA</span>
       </button>
     </div>
 
@@ -684,6 +695,7 @@ button:active {
       <button class="btn-vol-restore" onclick="admRestoreMusicVolume()">100%</button>
     </div>
   </div>
+
 
   <div class="admin-body">
 

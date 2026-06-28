@@ -477,6 +477,117 @@ button:active {
     padding: 6px 12px;
   }
 }
+
+/* CONTROLES DA RÁDIO (ADM) */
+.radio-controls-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 24px;
+  background: rgba(8, 12, 24, 0.95);
+  border-bottom: 1px solid rgba(0, 255, 204, 0.12);
+  flex-shrink: 0;
+}
+
+.radio-controls-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.radio-controls-group label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-right: 4px;
+}
+
+.btn-radio {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(0, 255, 204, 0.12);
+  border: 1px solid rgba(0, 255, 204, 0.3);
+  color: #00ffcc;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btn-radio:hover {
+  background: rgba(0, 255, 204, 0.22);
+}
+
+.btn-radio-play {
+  background: linear-gradient(135deg, #00ffcc, #00d4aa);
+  color: #041016;
+  border: none;
+  width: 48px;
+  height: 48px;
+}
+
+.btn-vinheta {
+  padding: 10px 16px;
+  width: auto;
+  background: linear-gradient(135deg, #8a2be2, #6d28d9);
+  color: white;
+  border: none;
+  font-size: 0.82rem;
+  border-radius: 12px;
+}
+
+.leader-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 12px;
+  background: rgba(234, 179, 8, 0.1);
+  border: 1px solid rgba(234, 179, 8, 0.35);
+  color: #fcd34d;
+  font-size: 0.82rem;
+  min-width: 180px;
+}
+
+.leader-crown {
+  font-size: 1.1rem;
+}
+
+.leader-type {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+.leader-none {
+  color: #64748b;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.volume-control input[type="range"] {
+  width: 100px;
+  accent-color: #00ffcc;
+}
+
+.btn-vol-restore {
+  padding: 6px 10px;
+  width: auto;
+  font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
 </style>
 </head>
 
@@ -538,6 +649,44 @@ button:active {
     </div>
   </header>
 
+  <!-- Controles da rádio (somente ADM logado) -->
+  <div class="radio-controls-bar">
+    <div class="radio-controls-group">
+      <label>Rádio</label>
+      <button class="btn-radio btn-radio-play" onclick="admRadioPlay()" title="Play">
+        <i class="fa-solid fa-play"></i>
+      </button>
+      <button class="btn-radio" onclick="admRadioPause()" title="Pause">
+        <i class="fa-solid fa-pause"></i>
+      </button>
+      <button class="btn-radio" onclick="admRadioPrev()" title="Música anterior">
+        <i class="fa-solid fa-backward-step"></i>
+      </button>
+      <button class="btn-radio" onclick="admRadioNext()" title="Próxima música">
+        <i class="fa-solid fa-forward-step"></i>
+      </button>
+    </div>
+
+    <div id="leaderBadge" class="leader-badge">
+      <span class="leader-none">👑 Sem líder ativo</span>
+    </div>
+
+    <div class="radio-controls-group">
+      <label>Vinheta</label>
+      <button class="btn-vinheta" onclick="admVinhetaPlay()">
+        <i class="fa-solid fa-bullhorn"></i> Tocar vinheta
+      </button>
+    </div>
+
+    <div class="volume-control">
+      <i class="fa-solid fa-volume-low"></i>
+      <span>Vol. música</span>
+      <input type="range" id="admMusicVolume" min="0.05" max="1" step="0.05" value="0.25"
+        oninput="admSetMusicVolume(this.value)">
+      <button class="btn-vol-restore" onclick="admRestoreMusicVolume()">100%</button>
+    </div>
+  </div>
+
   <div class="admin-body">
 
     <aside class="users-panel">
@@ -573,6 +722,11 @@ button:active {
 
 </div>
 
+<audio id="audio" preload="none" style="position:absolute;width:0;height:0;opacity:0;pointer-events:none"></audio>
+<audio id="admVinhetaAudio" preload="none" style="position:absolute;width:0;height:0;opacity:0;pointer-events:none"></audio>
+
+<script src="radio2.js"></script>
+
 <script type="module">
 
 import { initializeApp, getApps }
@@ -591,8 +745,14 @@ import {
   push,
   onValue,
   set,
-  remove
+  remove,
+  get,
+  onDisconnect
 } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+import { initAdminRadioSync } from "./radio-sync.js";
+
+const fb = { ref, set, onValue, get, onDisconnect, remove };
 
 const firebaseConfig = {
   apiKey: "AIzaSyAhPqHUawzslFddbo0lQ9X2VCKHLt0WyIU",
@@ -615,6 +775,7 @@ let adminUnsubMessages = null;
 let usersLoaded = false;
 let listenerCounterStarted = false;
 let renderedMap = {};
+let adminRadioSync = null;
 
 function setPanelVisible(visible) {
   const panel = document.getElementById("panel");
@@ -637,7 +798,10 @@ window.requireAdmAuth = function () {
 window.login = function () {
   const email = document.getElementById("email").value;
   const senha = document.getElementById("password").value;
-  if (!email || !senha) return;
+  if (!email || !senha) {
+    alert("Preencha Email e Senha");
+    return;
+  }
 
   signInWithEmailAndPassword(auth, email, senha)
     .catch((err) => {
@@ -645,6 +809,7 @@ window.login = function () {
       alert((err.code || "auth_error") + " - " + (err.message || err));
     });
 };
+
 
 window.logout = function () {
   signOut(auth).catch(console.error);
@@ -708,6 +873,11 @@ function ensureAdminState() {
   }
 
   setAdmPresenceOnline(true);
+
+  if (!adminRadioSync) {
+    adminRadioSync = initAdminRadioSync(db, fb, auth);
+    adminRadioSync.start();
+  }
 }
 
 onAuthStateChanged(auth, (user) => {
@@ -719,6 +889,10 @@ onAuthStateChanged(auth, (user) => {
     selectedNome = null;
     listenerCounterStarted = false;
     usersLoaded = false;
+    if (adminRadioSync) {
+      adminRadioSync.cleanup();
+      adminRadioSync = null;
+    }
     return;
   }
 
@@ -949,11 +1123,31 @@ document.getElementById("replyInput")?.addEventListener("keydown", (e) => {
   }
 });
 
+// Auto-preencher credenciais vindas do mini-login do site (index.html)
+(function autoFillAdmLoginFromStorage() {
+  try {
+    const email = localStorage.getItem("admEmail") || "";
+    const senha = localStorage.getItem("admSenha") || "";
+
+    const emailEl = document.getElementById("email");
+    const passEl = document.getElementById("password");
+
+    if (emailEl && email) emailEl.value = email;
+    if (passEl && senha) passEl.value = senha;
+
+    // Só para o admin: foca senha se houver valor
+    if (passEl && senha) passEl.focus();
+  } catch (_) {
+    // silencioso
+  }
+})();
+
 document.getElementById("password")?.addEventListener("keydown", (e) => {
   if (e.key === "Enter") login();
 });
 
 </script>
+
 
 </body>
 </html>

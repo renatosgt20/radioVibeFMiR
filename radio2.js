@@ -14,6 +14,16 @@ let audioLiberado = false;
 // anti-repetição imediata (evita ended escolher a mesma faixa)
 let ultimaMusicaSrc = null;
 let proximoPending = false;
+let historicoMusicas = [];
+
+// Sync global (Firebase)
+let syncEnabled = false;
+let isSyncLeader = false;
+let applyingRemoteSync = false;
+let onTrackEndedCallback = null;
+let onStartedListeningCallback = null;
+let onStoppedListeningCallback = null;
+let defaultMusicVolume = 1;
 
 // ==============================
 // LOCKS/FLAGS anti-concorrência (evita AbortError, play/pause simultâneos e loops)
@@ -1175,6 +1185,11 @@ async function tocarMusica(src) {
   }
   if (!playerEl) return;
 
+  if (!applyingRemoteSync && historicoMusicas[historicoMusicas.length - 1] !== src) {
+    historicoMusicas.push(src);
+    if (historicoMusicas.length > 40) historicoMusicas.shift();
+  }
+
   // Cloudinary + HTTP/2 pode falhar quando reaproveita conexão/cache.
   // Para forçar novo request do MP3 quando trocamos faixa (ou ao retomar após erro),
   // usamos cache-bust.
@@ -1261,6 +1276,25 @@ async function proximaMusica() {
   } finally {
     proximoPending = false;
   }
+}
+
+async function musicaAnterior() {
+  if (playPending || proximoPending) return null;
+  if (historicoMusicas.length < 2) return null;
+
+  historicoMusicas.pop();
+  const prev = historicoMusicas[historicoMusicas.length - 1];
+  if (!prev) return null;
+
+  ultimaMusicaSrc = prev;
+  await tocarMusica(prev);
+  atualizarBtnAgora();
+  return prev;
+}
+
+async function nextTrackInternal() {
+  await proximaMusica();
+  return ultimaMusicaSrc || playerEl?.src || null;
 }
 
 
@@ -1357,9 +1391,11 @@ async function tocarRadio() {
   if (!playerEl.paused && !playerEl.ended) {
     pauseRequested = false;
     try {
-      // Antes de pausar, garanta que não há play recém-disparado em loop
       if (!playPending) {
         playerEl.pause();
+        if (syncEnabled && onStoppedListeningCallback) {
+          onStoppedListeningCallback();
+        }
       }
     } catch (e) {
       console.log("Erro ao pausar:", e);
@@ -1370,7 +1406,11 @@ async function tocarRadio() {
   // Caso inicial: se não há src/sem tocar ainda, inicia a primeira música
   const temSrc = !!playerEl.getAttribute('src') || !!playerEl.src;
   if (!temSrc && !tocando) {
-    // define pastaAtual/idx e toca a primeira faixa
+    if (syncEnabled && onStartedListeningCallback) {
+      await onStartedListeningCallback();
+      return;
+    }
+
     pastaAtual = getPastaInicialPorHorario();
     indexMusicaNaFase = 0;
 
@@ -1550,6 +1590,11 @@ function setupAudioEvents() {
     tocando = false;
     syncUIFromAudioState();
 
+    if (syncEnabled && onTrackEndedCallback) {
+      onTrackEndedCallback();
+      return;
+    }
+
     // Ao terminar naturalmente, tenta próxima música.
     setTimeout(() => proximaMusica(), 0);
   });
@@ -1608,6 +1653,114 @@ setupAudioEvents();
 // Texto do botão é controlado EXCLUSIVAMENTE pelos eventos: play/pause/ended.)
 if (playerEl) {
   atualizarBtnAgora();
+}
+
+// API de sincronização global (Firebase)
+window.VibeRadioEngine = {
+  setSyncEnabled(v) { syncEnabled = !!v; },
+  setIsLeader(v) { isSyncLeader = !!v; },
+  set onTrackEnded(fn) { onTrackEndedCallback = fn; },
+  set onStartedListening(fn) { onStartedListeningCallback = fn; },
+  set onStoppedListening(fn) { onStoppedListeningCallback = fn; },
+
+  getSyncState() {
+    return {
+      src: ultimaMusicaSrc || playerEl?.src || "",
+      pasta: pastaAtual || getPastaInicialPorHorario(),
+      isPlaying: !!playerEl && !playerEl.paused && !playerEl.ended,
+      history: historicoMusicas.slice()
+    };
+  },
+
+  setMusicVolume(vol) {
+    if (!playerEl) return;
+    const v = Math.max(0, Math.min(1, vol));
+    playerEl.volume = v;
+    defaultMusicVolume = v;
+  },
+
+  async applyRemoteState(state) {
+    if (!state || !playerEl) return;
+    applyingRemoteSync = true;
+    try {
+      if (state.pasta) pastaAtual = state.pasta;
+      if (Array.isArray(state.history) && state.history.length) {
+        historicoMusicas = state.history.slice();
+      }
+      if (state.src && playerEl.src !== state.src) {
+        ultimaMusicaSrc = state.src;
+        playerEl.src = state.src;
+      }
+      if (state.isPlaying) {
+        await playerEl.play().catch(() => {});
+        tocando = true;
+      } else {
+        playerEl.pause();
+        tocando = false;
+      }
+      atualizarBtnAgora();
+    } finally {
+      applyingRemoteSync = false;
+    }
+  },
+
+  async playFromSync() {
+    const temSrc = !!playerEl?.src;
+    if (!temSrc) {
+      pastaAtual = getPastaInicialPorHorario();
+      indexMusicaNaFase = 0;
+      const arquivos = getArquivosDaPasta(pastaAtual);
+      const musica = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase);
+      indexMusicaNaFase++;
+      historicoMusicas = [];
+      ultimaMusicaSrc = musica;
+      await tocarMusica(musica);
+    } else {
+      await playerEl.play().catch(() => {});
+    }
+    tocando = true;
+    atualizarBtnAgora();
+  },
+
+  pauseFromSync() {
+    try { playerEl?.pause(); } catch (_) {}
+    tocando = false;
+    atualizarBtnAgora();
+  },
+
+  async nextFromSync() {
+    await nextTrackInternal();
+  },
+
+  async prevFromSync() {
+    await musicaAnterior();
+  },
+
+  async playVinheta(vinhetaState) {
+    if (!vinhetaState || !vinhetaState.active || !vinhetaState.src) return;
+    let vinhetaEl = document.getElementById("vinheta-audio");
+    if (!vinhetaEl) {
+      vinhetaEl = document.createElement("audio");
+      vinhetaEl.id = "vinheta-audio";
+      vinhetaEl.preload = "none";
+      document.body.appendChild(vinhetaEl);
+    }
+    vinhetaEl.src = vinhetaState.src;
+    try { await vinhetaEl.play(); } catch (_) {}
+  },
+
+  publishStateExtra() {
+    return this.getSyncState();
+  }
+};
+
+window.__vibeAdminAutoNext = async function () {
+  await window.VibeRadioEngine.nextFromSync();
+  return window.VibeRadioEngine.getSyncState();
+};
+
+if (typeof window.__vibeStartListenerSync === "function") {
+  window.__vibeStartListenerSync();
 }
 
 

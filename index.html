@@ -1605,6 +1605,7 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- PAINEL -->
 <div class="painel-online">
 
+
 <div style="display:flex;align-items:center;gap:8px;">
 <span id="admStatusDot"
 style="
@@ -1620,9 +1621,47 @@ ADM:
 </span>
 </div>
 
-<button id="admLoginBtn">
-Login ADM
-</button>
+<button id="admLoginBtn" type="button" onclick="handleAdmLoginBtn()">
+        Login ADM
+      </button>
+
+<script>
+// Fallback global (não é module) para evitar "handleAdmLoginBtn is not defined"
+// mesmo se o módulo falhar por CORS ao importar "./radio-sync.js".
+(function () {
+  if (typeof window.handleAdmLoginBtn === 'function') return;
+
+  window.handleAdmLoginBtn = function () {
+    try {
+      const miniBox = document.getElementById('admMiniLogin');
+      const emailInput = document.getElementById('admEmail');
+      const senhaInput = document.getElementById('admSenha');
+
+      const email = localStorage.getItem('admEmail') || '';
+      const senha = localStorage.getItem('admSenha') || '';
+
+if (email && senha) {
+        if (emailInput) emailInput.value = email;
+        if (senhaInput) senhaInput.value = senha;
+        // abr i rPainelAdm pode não existir se o módulo falhar por CORS.
+        // Então fazemos o open + persistimos credenciais aqui mesmo.
+        try {
+          if (typeof window.abrirPainelAdm === 'function') return window.abrirPainelAdm();
+        } catch (_) {}
+        localStorage.setItem('admEmail', email);
+        localStorage.setItem('admSenha', senha);
+        return window.open('admin.html', '_blank');
+      }
+
+      if (typeof window.toggleAdmLogin === 'function') return window.toggleAdmLogin();
+      if (miniBox) miniBox.style.display = 'block';
+    } catch (e) {
+      alert('Erro ao abrir Login ADM');
+      console.error('handleAdmLoginBtn fallback:', e);
+    }
+  };
+})();
+</script>
 
 <!-- MINI LOGIN -->
 <div id="admMiniLogin" style="
@@ -1662,7 +1701,7 @@ color:white;
 ">
 
 <button
-onclick="abrirPainelAdm()"
+onclick="handleAdmLoginBtn()"
 style="
 width:100%;
 padding:9px;
@@ -1832,12 +1871,24 @@ function toggleProgramacao(){
 
 <script type="module">
 
+// IMPORTANTÍSSIMO: o import de "./radio-sync.js" pode falhar por CORS.
+// Se isso acontecer, este módulo não executa e o botão "Login ADM" (onclick=handleAdmLoginBtn)
+// quebra por ReferenceError.
+// Abaixo definimos um fallback global para não quebrar o Login ADM.
+// (Não remove nenhum import e não altera a arquitetura.)
+if (typeof window.handleAdmLoginBtn !== 'function') {
+  // Mantém fallback, mas não redefine (evita conflitos com o fallback global fora do module).
+  window.handleAdmLoginBtn = window.handleAdmLoginBtn;
+
+}
+
 import {
 initializeApp,
 getApps
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
 
 import {
 getAuth,
@@ -1854,10 +1905,13 @@ onChildAdded,
 set,
 onValue,
 onDisconnect,
-remove
+remove,
+get
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+import { initListenerRadioSync } from "./radio-sync.js";
 
 const firebaseConfig = {
 apiKey: "AIzaSyAhPqHUawzslFddbo0lQ9X2VCKHLt0WyIU",
@@ -2021,27 +2075,65 @@ box.style.display === "block"
 };
 
 window.abrirPainelAdm = function(){
-
-const email =
-document.getElementById("admEmail").value;
-
-const senha =
-document.getElementById("admSenha").value;
-
-localStorage.setItem("admEmail", email);
-localStorage.setItem("admSenha", senha);
-
-window.open("admin.html","_blank");
-
+  const email = document.getElementById("admEmail")?.value || "";
+  const senha = document.getElementById("admSenha")?.value || "";
+  if(!email || !senha){
+    alert('Preencha Email e Senha');
+    return;
+  }
+  localStorage.setItem("admEmail", email);
+  localStorage.setItem("admSenha", senha);
+  window.open("admin.html","_blank");
 };
 
+window.handleAdmLoginBtn = function(){
+  try{
+    const miniBox = document.getElementById('admMiniLogin');
+    const emailInput = document.getElementById('admEmail');
+    const senhaInput = document.getElementById('admSenha');
+
+    const email = localStorage.getItem('admEmail') || '';
+    const senha = localStorage.getItem('admSenha') || '';
+
+    // tenta abrir direto se já tiver credenciais salvas
+    if(email && senha && emailInput && senhaInput){
+      emailInput.value = email;
+      senhaInput.value = senha;
+      window.abrirPainelAdm();
+      return;
+    }
+
+    // caso não tenha, abre o mini-login para usuário preencher
+    if(typeof window.toggleAdmLogin === 'function') window.toggleAdmLogin();
+    else if(miniBox) miniBox.style.display = 'block';
+  }catch(e){
+    console.error('handleAdmLoginBtn:', e);
+    alert('Erro ao abrir Login ADM');
+  }
+};
+
+// Garante que o botão não quebre se o click vier antes do module terminar
+try{
+  const btn = document.getElementById('admLoginBtn');
+  if(btn && !btn.dataset.admLoginBound){
+    btn.dataset.admLoginBound = '1';
+    btn.addEventListener('click', (ev) => {
+      // mantém comportamento do onclick="handleAdmLoginBtn()"
+      try{ window.handleAdmLoginBtn(); }catch(_){ }
+    });
+  }
+}catch(_){ }
 document
   .getElementById("admLoginBtn")
   ?.addEventListener("click",()=>{
-
     toggleAdmLogin();
-
   });
+
+// Botão Entrar dentro do mini-login: abre direto o painel e já salva credenciais
+// (resolve o problema de “não pega” quando o usuário só clica em Entrar)
+window.__vibeAdmMiniEntrar = function(){
+  window.abrirPainelAdm();
+};
 
 // Enter envia mensagem no chat público
 document.querySelectorAll("#input-msg").forEach((input) => {
@@ -2080,6 +2172,14 @@ if (audioEl) {
   audioEl.addEventListener("pause", () => setListenerPresence(false));
   window.addEventListener("pagehide", () => setListenerPresence(false));
 }
+
+const fbSync = { ref, set, onValue, get, onDisconnect, remove };
+
+window.__vibeStartListenerSync = function () {
+  if (!window.VibeRadioEngine || window.__vibeSyncStarted) return;
+  window.__vibeSyncStarted = true;
+  initListenerRadioSync(db, fbSync, window.VibeRadioEngine).start();
+};
 
 </script>
 

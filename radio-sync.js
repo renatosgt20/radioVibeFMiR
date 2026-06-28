@@ -3,7 +3,8 @@
  */
 
 export const VINHETAS = [
-  "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3"
+  "https://audio.jukehost.co.uk/019f0fd0-a97a-701d-a343-12a965bab062",
+  "https://audio.jukehost.co.uk/019f0fd0-a9b3-719b-970a-66edb84cfa50",
 ];
 
 export const PROGRAMAS = {
@@ -17,7 +18,8 @@ export const PROGRAMAS = {
   rootsvibe: "☀️ Reggae Roots ☀️",
   baladavibe: "💫 inVibe 💫",
   frequêncianight: "🎶 Frequência Night 🎶",
-  vibezonefm: "📻 Vinheta Vibe FM"
+
+  
 };
 
 function computeLeader(listeners) {

@@ -6,6 +6,10 @@
 let playerEl = document.getElementById("audio");
 
 let tocando = false;
+// true enquanto a vinheta (vibezonefm) estiver tocando
+let vinhetaEmTocando = false;
+// índice da vinheta alternada (0/1)
+let vinhetaIdxAtual = 0;
 let pastaAtual = "";
 let filaAtual = [];
 let idxAtual = 0;
@@ -45,7 +49,8 @@ const PASTAS = {
 
   vibezonefm: {
     arquivos: [
-    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3",
+    "https://audio.jukehost.co.uk/019f0fd0-a97a-701d-a343-12a965bab062",
+    "https://audio.jukehost.co.uk/019f0fd0-a9b3-719b-970a-66edb84cfa50",
 
     ]
   },
@@ -1223,9 +1228,37 @@ async function tocarMusica(src) {
 
 // ==============================
 // PRÓXIMA MÚSICA
+// (vibezonefm: tocar 1 arquivo SOMENTE quando mudar a programação)
 // ==============================
 
+function deveTocarVibezonefmAoMudarProgramacao() {
+  const now = new Date(
+    new Date().toLocaleString("en-US", { timeZone: "America/Belem" })
+  );
+
+  const day = now.getDay(); // 0=Dom ... 6=Sáb
+  const h = now.getHours();
+
+  // Bloqueio: SÁBADO 18:00 até DOMINGO 06:00
+  if (day === 6 && h >= 18) return false;      // Sáb 18+
+  if (day === 0 && h < 6) return false;        // Dom 00-05:59
+
+  // Não tocar aos sábados (regra principal)
+  if (day === 6) return false;
+
+  // Permite seg-sex e domingo (exceto bloqueio acima)
+  if (day >= 1 && day <= 5) return true;
+  if (day === 0) {
+    // domingo 06:00 em diante permitido; e 18:00-23:59 também, pois o bloqueio informado já foi Sáb 18 -> Dom 06
+    return true;
+  }
+
+  return false;
+}
+
 async function proximaMusica() {
+
+
   // Evita loops/duplicidade se `ended` disparar mais de uma vez.
   if (proximoPending) return;
   // Não avança playlist enquanto play/pause estão no meio do caminho.
@@ -1241,7 +1274,23 @@ async function proximaMusica() {
       indexMusicaNaFase = 0;
       console.log("📅 Mudando programação para:", pastaAtual);
       ultimaMusicaSrc = null; // ao mudar de fase, não força anti-repetição do src anterior
+
+      // Se mudou a programação e pode tocar vibezonefm, toca SOMENTE 1 arquivo da pasta vibezonefm
+      if (deveTocarVibezonefmAoMudarProgramacao()) {
+        const arquivosV = getArquivosDaPasta("vibezonefm");
+        if (arquivosV && arquivosV.length) {
+          let musicaV = pickAleatorioSemRepeticao("vibezonefm", arquivosV, 0);
+          if (musicaV) {
+            // impede esta chamada de continuar selecionando a música da pasta normal
+            ultimaMusicaSrc = musicaV;
+            await tocarMusica(musicaV);
+            atualizarBtnAgora();
+            return;
+          }
+        }
+      }
     }
+
 
     const arquivos = getArquivosDaPasta(pastaAtual);
     if (!arquivos.length) return;
@@ -1318,7 +1367,14 @@ const PROGRAMAS = {
 };
 
 function atualizarBtnAgora() {
+  // Quando está tocando vinheta, não mostrar o botão/overlay “OUVIR AGORA”.
   const btn = document.getElementById("btnAgora");
+  if (!btn) return;
+  if (vinhetaEmTocando) {
+    btn.style.display = "none";
+    return;
+  }
+
   const nomeSpan = document.getElementById("nomePrograma");
   if (!btn || !nomeSpan) return;
 
@@ -1738,6 +1794,11 @@ window.VibeRadioEngine = {
 
   async playVinheta(vinhetaState) {
     if (!vinhetaState || !vinhetaState.active || !vinhetaState.src) return;
+
+    // Durante a vinheta, desativa a programação normal
+    vinhetaEmTocando = true;
+    pauseRequested = true;
+
     let vinhetaEl = document.getElementById("vinheta-audio");
     if (!vinhetaEl) {
       vinhetaEl = document.createElement("audio");
@@ -1745,8 +1806,41 @@ window.VibeRadioEngine = {
       vinhetaEl.preload = "none";
       document.body.appendChild(vinhetaEl);
     }
+
+    // Garantir 1 listener (troca segura)
+    vinhetaEl.onended = async () => {
+      try {
+        vinhetaEmTocando = false;
+
+        // Após vinheta, SEMPRE tocar 1 música da pasta vibezonefm (preferência: somente vibezonefm)
+        // Depois disso, a programação normal volta a seguir via ended/proximoMusica.
+        const arquivosV = getArquivosDaPasta("vibezonefm");
+        if (arquivosV && arquivosV.length) {
+          // escolhe 1 aleatória determinística por fase/horário usando o mesmo método já existente
+          const idx = Math.max(0, indexMusicaNaFase | 0);
+          const musicaV = pickAleatorioSemRepeticao("vibezonefm", arquivosV, idx);
+          if (musicaV) {
+            ultimaMusicaSrc = musicaV;
+            // bloqueia avanço da playlist enquanto troca src
+            proximoPending = true;
+            playPending = true;
+            pauseRequested = false;
+            await tocarMusica(musicaV);
+          }
+        }
+      } finally {
+        proximoPending = false;
+        playPending = false;
+      }
+    };
+
     vinhetaEl.src = vinhetaState.src;
-    try { await vinhetaEl.play(); } catch (_) {}
+    try {
+      await vinhetaEl.play();
+    } catch (_) {
+      // se falhar, não trava o fluxo
+      vinhetaEmTocando = false;
+    }
   },
 
   publishStateExtra() {

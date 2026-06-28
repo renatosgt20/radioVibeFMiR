@@ -654,11 +654,8 @@ button:active {
   <div class="radio-controls-bar">
     <div class="radio-controls-group">
       <label>Rádio</label>
-      <button class="btn-radio btn-radio-play" onclick="admRadioPlay()" title="Play">
-        <i class="fa-solid fa-play"></i>
-      </button>
-      <button class="btn-radio" onclick="admRadioPause()" title="Pause">
-        <i class="fa-solid fa-pause"></i>
+      <button class="btn-radio btn-radio-play" id="admTogglePlay" onclick="admTogglePlay()" title="Play/Pause">
+        <i class="fa-solid fa-play" id="admToggleIcon"></i>
       </button>
       <button class="btn-radio" onclick="admRadioPrev()" title="Música anterior">
         <i class="fa-solid fa-backward-step"></i>
@@ -727,6 +724,13 @@ button:active {
 <audio id="admVinhetaAudio" preload="none" style="position:absolute;width:0;height:0;opacity:0;pointer-events:none"></audio>
 
 <script src="radio2.js"></script>
+<script>
+  function admTogglePlay() {
+    const isPlaying = window.__admIsPlaying === true;
+    if (isPlaying) return window.admRadioPause?.();
+    return window.admRadioPlay?.();
+  }
+</script>
 
 <script type="module">
 
@@ -908,6 +912,11 @@ window.addEventListener("pagehide", () => {
 // - Programa atual: texto de PROGRAMAS[pastaAtual]
 // - Arquivo tocando: url atual (musica)
 function setAdmProgramacaoUI(programa, arquivo) {
+  try {
+    const st = window.VibeRadioEngine?.getSyncState?.();
+    window.__admIsPlaying = !!st?.isPlaying;
+  } catch (_) {}
+
   const elPrograma = document.getElementById('admProgramaAtual');
   const elArquivo = document.getElementById('admArquivoAtual');
 

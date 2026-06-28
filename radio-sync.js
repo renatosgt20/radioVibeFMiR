@@ -162,7 +162,8 @@ export function initAdminRadioSync(db, fb, auth) {
     unsubscribers.push(
       onValue(ref(db, "radioSync/command"), (snap) => {
         const cmd = snap.val();
-        if (cmd?.by === "admin") processAdminCommand(cmd);
+        if (!cmd || cmd.by !== "admin") return;
+        processAdminCommand(cmd);
       })
     );
 

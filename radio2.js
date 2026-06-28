@@ -1183,11 +1183,22 @@ function withCacheBust(src) {
   }
 }
 
-async function tocarMusica(src) {
-  if (!src) {
-    console.warn("Nenhuma música encontrada");
-    return;
-  }
+  async function tocarMusica(src) {
+    if (!src) {
+      console.warn("Nenhuma música encontrada");
+      return;
+    }
+
+    // garante que o ADM toggle saiba o estado real após iniciarmos
+    try { window.__admIsPlaying = true; } catch (_) {}
+
+    // marca estado para UI/estatísticas locais
+    try {
+      if (typeof window.__admLastSrc === "undefined") window.__admLastSrc = null;
+      window.__admLastSrc = src;
+    } catch (_) {}
+
+
   if (!playerEl) return;
 
   if (!applyingRemoteSync && historicoMusicas[historicoMusicas.length - 1] !== src) {

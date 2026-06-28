@@ -40,6 +40,13 @@ const PASTAS = {
     ]
   },
 
+    frequêncianight: {
+    arquivos: [
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3",
+ 
+    ]
+  },
+
   rootsvibe: {
     arquivos: [
     "https://audio.jukehost.co.uk/019ef6b6-39ec-7149-bef0-9482ff7eb400",
@@ -101,6 +108,7 @@ const PASTAS = {
     arquivos: [
     "https://audio.jukehost.co.uk/019ef1b8-4a6a-7202-8eb7-4ac302a5ad27",
     "https://audio.jukehost.co.uk/019ef4e1-21fb-7289-a9ad-7db845e0070f",
+    "https://audio.jukehost.co.uk/019f0e4a-0422-732b-bbcc-b72a4a84d959",
     "https://audio.jukehost.co.uk/019ef1b8-5bb5-730d-8da5-187ad7408311",
     "https://audio.jukehost.co.uk/019ef1b8-b19c-72fd-b912-cdc57cf6acd7",
     "https://audio.jukehost.co.uk/019ef4db-de2d-7154-84e3-ab0d01ecd0df",
@@ -357,6 +365,8 @@ const PASTAS = {
     arquivos: [
     "https://audio.jukehost.co.uk/019ef5d5-b08f-73c6-a2dc-1be905f02de4",
     "https://audio.jukehost.co.uk/019ef5d5-a61f-7113-82f9-acf63c70760a",
+    "https://audio.jukehost.co.uk/019f0ed9-a411-7064-8252-364c12938b96",
+    "https://audio.jukehost.co.uk/019f0ed9-9f11-71e6-8344-dc321ada4fb7",
     "https://audio.jukehost.co.uk/019ef5d5-60f8-7369-a685-ef03868777b3", 
     "https://audio.jukehost.co.uk/019ef4dc-9480-73d6-85e7-2dc9fe23e9c7",
     "https://audio.jukehost.co.uk/019ef5d5-a3f5-73e7-964d-cf9120801052",
@@ -374,6 +384,8 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef4dc-a655-73e6-9aed-cef52cf3959c",
     "https://audio.jukehost.co.uk/019ef5d5-a55d-70af-aff3-79d5f6aa88f4",
     "https://audio.jukehost.co.uk/019ef5d5-a2c4-73d7-9bb6-8de04c960087",
+    "https://audio.jukehost.co.uk/019f0ede-9dea-72f9-a3aa-e0ece808ff5a",
+    "https://audio.jukehost.co.uk/019f0ede-6cf5-7210-b466-40c66a991e44",
     "https://audio.jukehost.co.uk/019ef5d5-a7c6-728b-a8c6-79bff1da30b0",
     "https://audio.jukehost.co.uk/019ef5d5-9ee8-73d9-9b26-f3a7d217b438",
     "https://audio.jukehost.co.uk/019ef5d5-7b3a-73e4-a804-255514299b45",
@@ -441,6 +453,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef43e-09df-7270-9574-1efc8ec02f38",
     "https://audio.jukehost.co.uk/019ef472-e4f4-71b4-925a-403c7647a414",
     "https://audio.jukehost.co.uk/019ef473-7010-71e2-9c12-d8b20ad0f7e0",
+    "https://audio.jukehost.co.uk/019f0e4a-0422-732b-bbcc-b72a4a84d959",
     "https://audio.jukehost.co.uk/019ef473-149c-71d8-a2e1-d491cd8bca9f",
     "https://audio.jukehost.co.uk/019ef4dc-3935-7065-84f6-170bd37418ff",
     "https://audio.jukehost.co.uk/019ef473-0583-73f7-aae9-ad6275a3f1dd",
@@ -742,19 +755,6 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef4db-ec43-7294-aafc-d1bd9511b77e",
     "https://audio.jukehost.co.uk/019ef657-9749-705d-b64b-357c7cadb7d1",
     "https://audio.jukehost.co.uk/019ef657-794d-713a-a088-98589afd49ad",
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     
     ]
@@ -1277,8 +1277,9 @@ const PROGRAMAS = {
   grove:       "🌀 PSY Vibe 🌀 ",
   night:       "🌙 PSY Vibe 🌙",
   forest:      "🌲 PSY Vibe 🌲 ",
-  rootsvibe:   "🟢🟡🔴Reggae Roots🟢🟡🔴",
-  baladavibe:  "💫🌙inVibe🌙💫"
+  rootsvibe:   "☀️Reggae Roots☀️",
+  baladavibe:  "💫🌙inVibe🌙💫",
+  frequêncianight: "🎶⚡ Frequência Night ⚡🎶"
 
 };
 
@@ -1290,6 +1291,17 @@ function atualizarBtnAgora() {
   // sincroniza pelo estado real do audio (evita "tocando" preso)
   const isPlaying = !!playerEl && !playerEl.paused && !playerEl.ended;
   tocando = isPlaying;
+
+  // Exporta estado para o admin.js via localStorage
+  // (para mostrar programa atual + arquivo tocando abaixo do VibefmADM)
+  try {
+    const programaAtual = isPlaying && pastaAtual ? (PROGRAMAS[pastaAtual] || pastaAtual) : null;
+    const arquivoAtual = isPlaying ? (ultimaMusicaSrc || playerEl?.src || null) : null;
+    localStorage.setItem('vibe_radio_now', JSON.stringify({
+      programaAtual: programaAtual,
+      arquivoAtual: arquivoAtual
+    }));
+  } catch (_) {}
 
   if (isPlaying && pastaAtual) {
     btn.style.display = "block";

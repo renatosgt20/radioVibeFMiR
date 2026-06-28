@@ -640,6 +640,7 @@ button:active {
              min-height:16px;">
             —
           </a>
+          <div style="font-size:10px;color:#64748b;margin-top:2px;">(clique abre o link completo)</div>
         </div>
       </div>
 
@@ -910,7 +911,12 @@ function setAdmProgramacaoUI(programa, arquivo) {
   const elPrograma = document.getElementById('admProgramaAtual');
   const elArquivo = document.getElementById('admArquivoAtual');
   if (elPrograma) elPrograma.textContent = programa || '—';
-  if (elArquivo) elArquivo.textContent = arquivo || '—';
+  if (elArquivo) {
+    elArquivo.textContent = arquivo || '—';
+    // Para debug: sempre guardar o link completo no href (ao clicar abre a URL)
+    // Se arquivo vier como null/undefined, mantemos href como '#'.
+    elArquivo.href = arquivo || '#';
+  }
 }
 
 function getProgFromStorage() {

@@ -1799,6 +1799,13 @@ window.VibeRadioEngine = {
     vinhetaEmTocando = true;
     pauseRequested = true;
 
+    // Regras de sincronização: quando a vinheta começa, consideramos que o sistema está
+    // "em reprodução" para fins de acompanhamento do líder/ouvintes.
+    // (Isso evita o ADM iniciar "como não-líder" e quebrar o comportamento.)
+    tocando = true;
+    atualizarBtnAgora();
+
+
     let vinhetaEl = document.getElementById("vinheta-audio");
     if (!vinhetaEl) {
       vinhetaEl = document.createElement("audio");

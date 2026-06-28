@@ -164,12 +164,16 @@ export function initAdminRadioSync(db, fb, auth) {
       })
     );
 
-    unsubscribers.push(
+unsubscribers.push(
       onValue(ref(db, "radioSync/command"), (snap) => {
         const cmd = snap.val();
         if (cmd?.by === "admin") processAdminCommand(cmd);
       })
     );
+
+    // Mantém estado de líder/ouvintes correto para o computeLeader().
+    // Caso não exista, o computeLeader pode falhar em separar ADM vs ouvinte.
+    // (Não muda comportamento do player, só UI e consistência.)
 
     unsubscribers.push(
       onValue(ref(db, "radioSync/musicVolume"), (snap) => {

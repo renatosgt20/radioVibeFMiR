@@ -1795,12 +1795,21 @@ window.VibeRadioEngine = {
         playerEl.src = state.src;
       }
       if (state.isPlaying) {
-        await playerEl.play().catch(() => {});
-        tocando = true;
+        // Play em resposta a clique do ADM (ou evento de sync) pode falhar.
+        // Sem ação do usuário, o navegador lança NotAllowedError.
+        // Aqui suprimimos para não quebrar a UI/loop.
+        try {
+          await playerEl.play();
+          tocando = true;
+        } catch (e) {
+          // Mantém como pausado se o navegador bloquear autoplay.
+          tocando = false;
+        }
       } else {
-        playerEl.pause();
+        try { playerEl.pause(); } catch (_) {}
         tocando = false;
       }
+
       atualizarBtnAgora();
     } finally {
       applyingRemoteSync = false;

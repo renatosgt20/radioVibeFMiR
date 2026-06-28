@@ -1797,19 +1797,42 @@ window.VibeRadioEngine = {
   },
 
   async playFromSync() {
-    const temSrc = !!playerEl?.src;
+    // Garante que o ADM consiga iniciar mesmo quando "src" ainda não existe.
+    // Também aplica a regra do vibezonefm antes da programação normal no primeiro start.
+
+    const temSrc = !!playerEl?.src || !!playerEl?.getAttribute?.('src');
+
     if (!temSrc) {
       pastaAtual = getPastaInicialPorHorario();
       indexMusicaNaFase = 0;
+      historicoMusicas = [];
+
+      // Se permitido, toca 1 música da pasta vibezonefm primeiro.
+      if (deveTocarVibezonefmAoMudarProgramacao()) {
+        const arquivosV = getArquivosDaPasta("vibezonefm");
+        if (arquivosV && arquivosV.length) {
+          const musicaV = pickAleatorioSemRepeticao("vibezonefm", arquivosV, indexMusicaNaFase);
+          if (musicaV) {
+            ultimaMusicaSrc = musicaV;
+            await tocarMusica(musicaV);
+            // segue com a programação normal via proximaMusica()
+            await proximaMusica();
+            atualizarBtnAgora();
+            tocando = true;
+            return;
+          }
+        }
+      }
+
       const arquivos = getArquivosDaPasta(pastaAtual);
       const musica = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase);
       indexMusicaNaFase++;
-      historicoMusicas = [];
       ultimaMusicaSrc = musica;
       await tocarMusica(musica);
     } else {
       await playerEl.play().catch(() => {});
     }
+
     tocando = true;
     atualizarBtnAgora();
   },

@@ -980,7 +980,7 @@ const PASTAS = {
 };
 
 // ==============================
-// ALEATORIEDADE SINCRONIZADA (determinística mas “embaralhada”)
+// ALEATORIEDADE SINCRONIZADA (determinística mas "embaralhada")
 // ==============================
 // Mantém a mesma sequência para todos (sem Math.random), mas a ordem dentro da pasta
 // não fica na ordem do array.
@@ -995,7 +995,7 @@ function hashStringToInt(str) {
   return (h >>> 0);
 }
 
-// Mulberry32 PRNG determinístico (gera “aleatoriedade” igual em todos)
+// Gera "aleatoriedade" igual em todos
 function mulberry32(seed) {
   let a = seed >>> 0;
   return function () {

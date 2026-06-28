@@ -794,6 +794,12 @@ import { initAdminRadioSync } from "./radio-sync.js";
 
 const fb = { ref, set, onValue, get, onDisconnect, remove };
 
+// DEBUG: ajuda a identificar por que o painel não abre (login ADM)
+function __admDebug(){
+  try { console.log('[ADM-DEBUG]', arguments); } catch(_){ }
+}
+
+
 const firebaseConfig = {
   apiKey: "AIzaSyAhPqHUawzslFddbo0lQ9X2VCKHLt0WyIU",
   authDomain: "vibezonefm.firebaseapp.com",
@@ -836,6 +842,7 @@ window.requireAdmAuth = function () {
 };
 
 window.login = function () {
+  console.log('[ADM-DEBUG] login() chamado');
   const email = document.getElementById("email").value;
   const senha = document.getElementById("password").value;
   if (!email || !senha) {

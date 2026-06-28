@@ -19,7 +19,7 @@ export const PROGRAMAS = {
   baladavibe: "💫 inVibe 💫",
   frequêncianight: "🎶 Frequência Night 🎶",
 
-  
+ 
 };
 
 function computeLeader(listeners) {

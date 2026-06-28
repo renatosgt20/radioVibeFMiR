@@ -726,10 +726,19 @@ button:active {
 <script src="radio2.js"></script>
 <script>
   function admTogglePlay() {
-    const isPlaying = window.__admIsPlaying === true;
-    if (isPlaying) return window.admRadioPause?.();
-    return window.admRadioPlay?.();
+    // Não depende de flag local (__admIsPlaying), pois pode ficar desatualizada.
+    // Decide pelo estado real no Firebase/engine (via radioSync/state ou local fallback).
+    try {
+      const engState = window.VibeRadioEngine?.getSyncState?.();
+      if (engState && typeof engState.isPlaying === "boolean") {
+        return engState.isPlaying ? window.admRadioPause?.() : window.admRadioPlay?.();
+      }
+    } catch (_) {}
+
+    const st = window.__admIsPlaying === true;
+    return st ? window.admRadioPause?.() : window.admRadioPlay?.();
   }
+
 </script>
 
 <script type="module">
@@ -912,12 +921,10 @@ window.addEventListener("pagehide", () => {
 // - Programa atual: texto de PROGRAMAS[pastaAtual]
 // - Arquivo tocando: url atual (musica)
 function setAdmProgramacaoUI(programa, arquivo) {
-  try {
-    const st = window.VibeRadioEngine?.getSyncState?.();
-    window.__admIsPlaying = !!st?.isPlaying;
-  } catch (_) {}
-
+  // Apenas UI + link do arquivo tocando.
+  // O toggle play/pause não deve depender dessa flag local.
   const elPrograma = document.getElementById('admProgramaAtual');
+
   const elArquivo = document.getElementById('admArquivoAtual');
 
   // Cabeçalho sempre atualizado
@@ -941,6 +948,7 @@ function setAdmProgramacaoUI(programa, arquivo) {
 
 
 function getProgFromStorage() {
+
   try {
     const obj = JSON.parse(localStorage.getItem('vibe_radio_now') || '{}');
     return {

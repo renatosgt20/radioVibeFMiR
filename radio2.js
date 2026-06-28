@@ -1795,22 +1795,20 @@ window.VibeRadioEngine = {
         playerEl.src = state.src;
       }
       if (state.isPlaying) {
-        // Play em resposta a clique do ADM (ou evento de sync) pode falhar.
-        // Sem ação do usuário, o navegador lança NotAllowedError.
-        // Aqui suprimimos para não quebrar a UI/loop.
+        // Se play() falhar por autoplay policy, a UI deve refletir o estado real do <audio>.
         try {
           await playerEl.play();
-          tocando = true;
         } catch (e) {
-          // Mantém como pausado se o navegador bloquear autoplay.
-          tocando = false;
+          // Mantém como pausado; tocando será recalculado pelo sync UI.
         }
       } else {
         try { playerEl.pause(); } catch (_) {}
-        tocando = false;
       }
 
+      // Atualiza UI baseada no estado real do player (evita "botão preso" no ADM)
+      try { syncUIFromAudioState(); } catch (_) {}
       atualizarBtnAgora();
+
     } finally {
       applyingRemoteSync = false;
     }
@@ -1859,7 +1857,16 @@ window.VibeRadioEngine = {
 
   pauseFromSync() {
     try { playerEl?.pause(); } catch (_) {}
+
+    // força UI no estado "parado" do ADM
     tocando = false;
+    try {
+      // se o evento de pause não disparar (policy/race), ainda assim atualiza o botão
+      if (typeof window.syncUIFromAudioState === 'function') {
+        window.syncUIFromAudioState();
+      }
+    } catch (_) {}
+
     atualizarBtnAgora();
   },
 

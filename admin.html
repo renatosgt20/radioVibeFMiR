@@ -726,18 +726,32 @@ button:active {
 <script src="radio2.js"></script>
 <script>
   function admTogglePlay() {
-    // Não depende de flag local (__admIsPlaying), pois pode ficar desatualizada.
-    // Decide pelo estado real no Firebase/engine (via radioSync/state ou local fallback).
+    // ADM alterna play/pause APENAS quando o usuário clicar.
+    // Estado serve só para escolher se manda play ou pause.
+    let isPlaying = null;
+
+
     try {
       const engState = window.VibeRadioEngine?.getSyncState?.();
-      if (engState && typeof engState.isPlaying === "boolean") {
-        return engState.isPlaying ? window.admRadioPause?.() : window.admRadioPlay?.();
-      }
+      if (engState && typeof engState.isPlaying === "boolean") isPlaying = engState.isPlaying;
     } catch (_) {}
 
-    const st = window.__admIsPlaying === true;
-    return st ? window.admRadioPause?.() : window.admRadioPlay?.();
+    if (isPlaying === null) {
+      // fallback: guarda estado no localStorage quando setAdmProgramacaoUI é chamado
+      try {
+        const obj = JSON.parse(localStorage.getItem('vibe_radio_engine_state') || '{}');
+        if (typeof obj.isPlaying === 'boolean') isPlaying = obj.isPlaying;
+      } catch (_) {}
+    }
+
+    if (typeof isPlaying === 'boolean') {
+      return isPlaying ? window.admRadioPause?.() : window.admRadioPlay?.();
+    }
+
+    // fallback final (não ideal): tenta play se desconhece estado
+    return window.admRadioPlay?.();
   }
+
 
 </script>
 
@@ -890,8 +904,10 @@ function ensureAdminState() {
 
   if (!adminRadioSync) {
     adminRadioSync = initAdminRadioSync(db, fb, auth);
+    // ADM não deve iniciar rádio sozinho ao entrar.
     adminRadioSync.start();
   }
+
 }
 
 onAuthStateChanged(auth, (user) => {
@@ -922,10 +938,16 @@ window.addEventListener("pagehide", () => {
 // - Arquivo tocando: url atual (musica)
 function setAdmProgramacaoUI(programa, arquivo) {
   // Apenas UI + link do arquivo tocando.
-  // O toggle play/pause não deve depender dessa flag local.
+  // Mesmo assim, guardamos o isPlaying em localStorage para fallback do toggle.
   const elPrograma = document.getElementById('admProgramaAtual');
 
   const elArquivo = document.getElementById('admArquivoAtual');
+
+  try {
+    const st = window.VibeRadioEngine?.getSyncState?.();
+    localStorage.setItem('vibe_radio_engine_state', JSON.stringify({ isPlaying: !!st?.isPlaying }));
+  } catch (_) {}
+
 
   // Cabeçalho sempre atualizado
   if (elPrograma) elPrograma.textContent = programa || '—';

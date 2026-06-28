@@ -79,13 +79,8 @@ export function initAdminRadioSync(db, fb, auth) {
   async function processAdminCommand(cmd) {
     const eng = window.VibeRadioEngine;
     if (!eng || !cmd) return;
-
-    // Não use "<=". Se dois comandos iguais forem gravados com seq diferente,
-    // precisamos processar ambos. E se não tiver seq direito, ainda assim executa.
-    if (typeof cmd.seq === "number") {
-      if (cmd.seq <= lastAdminCmd) return;
-      lastAdminCmd = cmd.seq;
-    }
+    if ((cmd.seq || 0) <= lastAdminCmd) return;
+    lastAdminCmd = cmd.seq;
 
     switch (cmd.action) {
       case "play":
@@ -105,10 +100,8 @@ export function initAdminRadioSync(db, fb, auth) {
       default:
         return;
     }
-
     await publishStateFromEngine();
   }
-
 
   function updateProgramUI(state) {
     const prog = document.getElementById("admProgramaAtual");
@@ -164,16 +157,12 @@ export function initAdminRadioSync(db, fb, auth) {
       })
     );
 
-unsubscribers.push(
+    unsubscribers.push(
       onValue(ref(db, "radioSync/command"), (snap) => {
         const cmd = snap.val();
         if (cmd?.by === "admin") processAdminCommand(cmd);
       })
     );
-
-    // Mantém estado de líder/ouvintes correto para o computeLeader().
-    // Caso não exista, o computeLeader pode falhar em separar ADM vs ouvinte.
-    // (Não muda comportamento do player, só UI e consistência.)
 
     unsubscribers.push(
       onValue(ref(db, "radioSync/musicVolume"), (snap) => {
@@ -203,7 +192,12 @@ unsubscribers.push(
   }
 
   window.admRadioPlay = async function () {
+    // play do ADM deve funcionar sempre (mesmo que ele não seja líder),
+    // porque o ouvinte segue via radioSync/state.
     await sendCommand("play");
+
+    // Atualiza estado imediatamente com segurança.
+    await publishStateFromEngine().catch(() => {});
   };
 
   window.admRadioPause = async function () {
@@ -243,13 +237,8 @@ unsubscribers.push(
     await window.admSetMusicVolume(1);
   };
 
-  // Login ADM é implementado em `admin.html` (signInWithEmailAndPassword).
-  // O radio-sync.js não deve tentar autenticar (Firebase Auth não está disponível aqui).
-
-
   return { start, cleanup };
 }
-
 
 /** Site principal — ouvintes */
 export function initListenerRadioSync(db, fb, engine) {

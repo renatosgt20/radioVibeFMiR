@@ -910,14 +910,26 @@ window.addEventListener("pagehide", () => {
 function setAdmProgramacaoUI(programa, arquivo) {
   const elPrograma = document.getElementById('admProgramaAtual');
   const elArquivo = document.getElementById('admArquivoAtual');
+
+  // Cabeçalho sempre atualizado
   if (elPrograma) elPrograma.textContent = programa || '—';
+
+  // Link do arquivo (precisa mostrar link completo e abrir em nova aba)
   if (elArquivo) {
     elArquivo.textContent = arquivo || '—';
-    // Para debug: sempre guardar o link completo no href (ao clicar abre a URL)
-    // Se arquivo vier como null/undefined, mantemos href como '#'.
     elArquivo.href = arquivo || '#';
+    elArquivo.target = "_blank";
   }
+
+  // Guarda também no localStorage para sobreviver a refresh e para o painel inicial
+  try {
+    localStorage.setItem('vibe_radio_now', JSON.stringify({
+      programaAtual: programa || null,
+      arquivoAtual: arquivo || null
+    }));
+  } catch (_) {}
 }
+
 
 function getProgFromStorage() {
   try {

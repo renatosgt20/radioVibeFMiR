@@ -1195,9 +1195,7 @@ async function tocarMusica(src) {
     if (historicoMusicas.length > 40) historicoMusicas.shift();
   }
 
-  // Cloudinary + HTTP/2 pode falhar quando reaproveita conexão/cache.
-  // Para forçar novo request do MP3 quando trocamos faixa (ou ao retomar após erro),
-  // usamos cache-bust.
+  // Força novo request do MP3 quando trocamos faixa (ou ao retomar após erro)
   const finalSrc = withCacheBust(src);
 
   // Troca o src somente se necessário
@@ -1205,25 +1203,39 @@ async function tocarMusica(src) {
     playerEl.src = finalSrc;
   }
 
+  // Helper: play com retry curto (principalmente para Chrome)
+  async function tryPlayWithRetry(attempts, delayMs) {
+    let lastErr = null;
+    for (let i = 0; i < attempts; i++) {
+      try {
+        await playerEl.play();
+        return true;
+      } catch (e) {
+        lastErr = e;
+        // pequenas esperas ajudam quando o Chrome ainda está travando autoplay/src swap
+        if (delayMs && i < attempts - 1) {
+          await new Promise((r) => setTimeout(r, delayMs));
+        }
+      }
+    }
+    if (lastErr) console.log("Erro ao tocar (retry falhou):", lastErr);
+    return false;
+  }
 
   try {
-    // Evita múltiplos play() sobrepostos via locks globais.
-    if (!playPending) {
-      playPending = true;
-    }
+    if (!playPending) playPending = true;
 
-    await playerEl.play();
-    tocando = true;
-    console.log("🎵 Tocando:", pastaAtual);
+    // Chrome costuma falhar em play() logo após troca de src (race condition). Retry resolve.
+    const ok = await tryPlayWithRetry(3, 120);
+
+    tocando = !!ok;
+    if (ok) console.log("🎵 Tocando:", pastaAtual);
   } catch (e) {
     console.log("Erro ao tocar:", e);
     tocando = false;
-
-    // se falhou por concorrência/pause, liberamos rapidamente o flag de playPending.
-    // (o lock principal é controlado por tocarRadio())
-    // Não setamos playPending=false aqui para não quebrar token/lock do clique.
   }
 }
+
 
 
 // ==============================
@@ -1276,12 +1288,14 @@ async function proximaMusica() {
       ultimaMusicaSrc = null; // ao mudar de fase, não força anti-repetição do src anterior
 
       // Se mudou a programação e pode tocar vibezonefm, toca SOMENTE 1 arquivo da pasta vibezonefm
+      // IMPORTANTE: isto deve acontecer SEMPRE antes de tocar qualquer música da programação normal.
       if (deveTocarVibezonefmAoMudarProgramacao()) {
         const arquivosV = getArquivosDaPasta("vibezonefm");
         if (arquivosV && arquivosV.length) {
-          let musicaV = pickAleatorioSemRepeticao("vibezonefm", arquivosV, 0);
+          // aleatório determinístico por fase/horário (não fixa em 0)
+          let musicaV = pickAleatorioSemRepeticao("vibezonefm", arquivosV, indexMusicaNaFase);
           if (musicaV) {
-            // impede esta chamada de continuar selecionando a música da pasta normal
+            // marca para evitar anti-repetição quebrando ordem e impede seleção da pasta normal
             ultimaMusicaSrc = musicaV;
             await tocarMusica(musicaV);
             atualizarBtnAgora();
@@ -1460,6 +1474,7 @@ async function tocarRadio() {
   }
 
   // Caso inicial: se não há src/sem tocar ainda, inicia a primeira música
+  // REGRA: sempre tocar 1 arquivo de vibezonefm antes da programação normal (quando permitido pelo horário).
   const temSrc = !!playerEl.getAttribute('src') || !!playerEl.src;
   if (!temSrc && !tocando) {
     if (syncEnabled && onStartedListeningCallback) {
@@ -1471,6 +1486,27 @@ async function tocarRadio() {
     indexMusicaNaFase = 0;
 
     atualizarBtnAgora();
+
+    // REGRA: sempre tocar 1 arquivo de vibezonefm antes da programação normal (quando permitido pelo horário).
+    // Isso garante que no primeiro start não comece diretamente pela pasta da programação.
+    if (deveTocarVibezonefmAoMudarProgramacao()) {
+      const arquivosV = getArquivosDaPasta("vibezonefm");
+      if (arquivosV && arquivosV.length) {
+        const musicaV = pickAleatorioSemRepeticao("vibezonefm", arquivosV, indexMusicaNaFase);
+        if (musicaV) {
+          ultimaMusicaSrc = musicaV;
+          // evita que proximaMusica() em paralelo troque de faixa enquanto inicia
+          proximoPending = true;
+          playPending = true;
+          await tocarMusica(musicaV);
+          proximoPending = false;
+          playPending = false;
+          proximaMusica(); // após vibezonefm, a lógica padrão segue com a programação normal
+          atualizarBtnAgora();
+          return;
+        }
+      }
+    }
 
     const arquivos = getArquivosDaPasta(pastaAtual);
     const musica = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase);

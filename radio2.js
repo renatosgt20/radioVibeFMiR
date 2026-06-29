@@ -35,7 +35,8 @@ const PASTAS = {
 
   vibezonefm: {
     arquivos: [
-    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3",
+    "https://audio.jukehost.co.uk/019f0fd0-a97a-701d-a343-12a965bab062",
+    "https://audio.jukehost.co.uk/019f0fd0-a9b3-719b-970a-66edb84cfa50",
 
     ]
   },
@@ -372,6 +373,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef5d5-a3f5-73e7-964d-cf9120801052",
     "https://audio.jukehost.co.uk/019ef5d5-a6f6-7046-8cc2-376a5164d4c5",
     "https://audio.jukehost.co.uk/019ef5d5-59c8-7161-bd48-049a993dbd0e",
+    "https://audio.jukehost.co.uk/019f0ede-6cf5-7210-b466-40c66a991e44",
     "https://audio.jukehost.co.uk/019ef5d5-a76a-7188-ab4d-bedc2b3ede22",
     "https://audio.jukehost.co.uk/019ef5d5-9f61-70cc-a295-e81f16fd2ab7",
     "https://audio.jukehost.co.uk/019ef5d5-7a7a-72d4-bd06-4734a2b9cef6",

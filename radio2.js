@@ -6,10 +6,6 @@
 let playerEl = document.getElementById("audio");
 
 let tocando = false;
-// true enquanto a vinheta (vibezonefm) estiver tocando
-let vinhetaEmTocando = false;
-// índice da vinheta alternada (0/1)
-let vinhetaIdxAtual = 0;
 let pastaAtual = "";
 let filaAtual = [];
 let idxAtual = 0;
@@ -18,16 +14,6 @@ let audioLiberado = false;
 // anti-repetição imediata (evita ended escolher a mesma faixa)
 let ultimaMusicaSrc = null;
 let proximoPending = false;
-let historicoMusicas = [];
-
-// Sync global (Firebase)
-let syncEnabled = false;
-let isSyncLeader = false;
-let applyingRemoteSync = false;
-let onTrackEndedCallback = null;
-let onStartedListeningCallback = null;
-let onStoppedListeningCallback = null;
-let defaultMusicVolume = 1;
 
 // ==============================
 // LOCKS/FLAGS anti-concorrência (evita AbortError, play/pause simultâneos e loops)
@@ -49,8 +35,7 @@ const PASTAS = {
 
   vibezonefm: {
     arquivos: [
-    "https://audio.jukehost.co.uk/019f0fd0-a97a-701d-a343-12a965bab062",
-    "https://audio.jukehost.co.uk/019f0fd0-a9b3-719b-970a-66edb84cfa50",
+    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3",
 
     ]
   },
@@ -980,7 +965,7 @@ const PASTAS = {
 };
 
 // ==============================
-// ALEATORIEDADE SINCRONIZADA (determinística mas "embaralhada")
+// ALEATORIEDADE SINCRONIZADA (determinística mas “embaralhada”)
 // ==============================
 // Mantém a mesma sequência para todos (sem Math.random), mas a ordem dentro da pasta
 // não fica na ordem do array.
@@ -995,7 +980,7 @@ function hashStringToInt(str) {
   return (h >>> 0);
 }
 
-// Gera "aleatoriedade" igual em todos
+// Mulberry32 PRNG determinístico (gera “aleatoriedade” igual em todos)
 function mulberry32(seed) {
   let a = seed >>> 0;
   return function () {
@@ -1183,30 +1168,16 @@ function withCacheBust(src) {
   }
 }
 
-  async function tocarMusica(src) {
-    if (!src) {
-      console.warn("Nenhuma música encontrada");
-      return;
-    }
-
-    // garante que o ADM toggle saiba o estado real após iniciarmos
-    try { window.__admIsPlaying = true; } catch (_) {}
-
-    // marca estado para UI/estatísticas locais
-    try {
-      if (typeof window.__admLastSrc === "undefined") window.__admLastSrc = null;
-      window.__admLastSrc = src;
-    } catch (_) {}
-
-
+async function tocarMusica(src) {
+  if (!src) {
+    console.warn("Nenhuma música encontrada");
+    return;
+  }
   if (!playerEl) return;
 
-  if (!applyingRemoteSync && historicoMusicas[historicoMusicas.length - 1] !== src) {
-    historicoMusicas.push(src);
-    if (historicoMusicas.length > 40) historicoMusicas.shift();
-  }
-
-  // Força novo request do MP3 quando trocamos faixa (ou ao retomar após erro)
+  // Cloudinary + HTTP/2 pode falhar quando reaproveita conexão/cache.
+  // Para forçar novo request do MP3 quando trocamos faixa (ou ao retomar após erro),
+  // usamos cache-bust.
   const finalSrc = withCacheBust(src);
 
   // Troca o src somente se necessário
@@ -1214,74 +1185,32 @@ function withCacheBust(src) {
     playerEl.src = finalSrc;
   }
 
-  // Helper: play com retry curto (principalmente para Chrome)
-  async function tryPlayWithRetry(attempts, delayMs) {
-    let lastErr = null;
-    for (let i = 0; i < attempts; i++) {
-      try {
-        await playerEl.play();
-        return true;
-      } catch (e) {
-        lastErr = e;
-        // pequenas esperas ajudam quando o Chrome ainda está travando autoplay/src swap
-        if (delayMs && i < attempts - 1) {
-          await new Promise((r) => setTimeout(r, delayMs));
-        }
-      }
-    }
-    if (lastErr) console.log("Erro ao tocar (retry falhou):", lastErr);
-    return false;
-  }
 
   try {
-    if (!playPending) playPending = true;
+    // Evita múltiplos play() sobrepostos via locks globais.
+    if (!playPending) {
+      playPending = true;
+    }
 
-    // Chrome costuma falhar em play() logo após troca de src (race condition). Retry resolve.
-    const ok = await tryPlayWithRetry(3, 120);
-
-    tocando = !!ok;
-    if (ok) console.log("🎵 Tocando:", pastaAtual);
+    await playerEl.play();
+    tocando = true;
+    console.log("🎵 Tocando:", pastaAtual);
   } catch (e) {
     console.log("Erro ao tocar:", e);
     tocando = false;
+
+    // se falhou por concorrência/pause, liberamos rapidamente o flag de playPending.
+    // (o lock principal é controlado por tocarRadio())
+    // Não setamos playPending=false aqui para não quebrar token/lock do clique.
   }
 }
-
 
 
 // ==============================
 // PRÓXIMA MÚSICA
-// (vibezonefm: tocar 1 arquivo SOMENTE quando mudar a programação)
 // ==============================
 
-function deveTocarVibezonefmAoMudarProgramacao() {
-  const now = new Date(
-    new Date().toLocaleString("en-US", { timeZone: "America/Belem" })
-  );
-
-  const day = now.getDay(); // 0=Dom ... 6=Sáb
-  const h = now.getHours();
-
-  // Bloqueio: SÁBADO 18:00 até DOMINGO 06:00
-  if (day === 6 && h >= 18) return false;      // Sáb 18+
-  if (day === 0 && h < 6) return false;        // Dom 00-05:59
-
-  // Não tocar aos sábados (regra principal)
-  if (day === 6) return false;
-
-  // Permite seg-sex e domingo (exceto bloqueio acima)
-  if (day >= 1 && day <= 5) return true;
-  if (day === 0) {
-    // domingo 06:00 em diante permitido; e 18:00-23:59 também, pois o bloqueio informado já foi Sáb 18 -> Dom 06
-    return true;
-  }
-
-  return false;
-}
-
 async function proximaMusica() {
-
-
   // Evita loops/duplicidade se `ended` disparar mais de uma vez.
   if (proximoPending) return;
   // Não avança playlist enquanto play/pause estão no meio do caminho.
@@ -1297,25 +1226,7 @@ async function proximaMusica() {
       indexMusicaNaFase = 0;
       console.log("📅 Mudando programação para:", pastaAtual);
       ultimaMusicaSrc = null; // ao mudar de fase, não força anti-repetição do src anterior
-
-      // Se mudou a programação e pode tocar vibezonefm, toca SOMENTE 1 arquivo da pasta vibezonefm
-      // IMPORTANTE: isto deve acontecer SEMPRE antes de tocar qualquer música da programação normal.
-      if (deveTocarVibezonefmAoMudarProgramacao()) {
-        const arquivosV = getArquivosDaPasta("vibezonefm");
-        if (arquivosV && arquivosV.length) {
-          // aleatório determinístico por fase/horário (não fixa em 0)
-          let musicaV = pickAleatorioSemRepeticao("vibezonefm", arquivosV, indexMusicaNaFase);
-          if (musicaV) {
-            // marca para evitar anti-repetição quebrando ordem e impede seleção da pasta normal
-            ultimaMusicaSrc = musicaV;
-            await tocarMusica(musicaV);
-            atualizarBtnAgora();
-            return;
-          }
-        }
-      }
     }
-
 
     const arquivos = getArquivosDaPasta(pastaAtual);
     if (!arquivos.length) return;
@@ -1352,25 +1263,6 @@ async function proximaMusica() {
   }
 }
 
-async function musicaAnterior() {
-  if (playPending || proximoPending) return null;
-  if (historicoMusicas.length < 2) return null;
-
-  historicoMusicas.pop();
-  const prev = historicoMusicas[historicoMusicas.length - 1];
-  if (!prev) return null;
-
-  ultimaMusicaSrc = prev;
-  await tocarMusica(prev);
-  atualizarBtnAgora();
-  return prev;
-}
-
-async function nextTrackInternal() {
-  await proximaMusica();
-  return ultimaMusicaSrc || playerEl?.src || null;
-}
-
 
 // ==============================
 // BOTÃO PLAY
@@ -1392,14 +1284,7 @@ const PROGRAMAS = {
 };
 
 function atualizarBtnAgora() {
-  // Quando está tocando vinheta, não mostrar o botão/overlay “OUVIR AGORA”.
   const btn = document.getElementById("btnAgora");
-  if (!btn) return;
-  if (vinhetaEmTocando) {
-    btn.style.display = "none";
-    return;
-  }
-
   const nomeSpan = document.getElementById("nomePrograma");
   if (!btn || !nomeSpan) return;
 
@@ -1472,11 +1357,9 @@ async function tocarRadio() {
   if (!playerEl.paused && !playerEl.ended) {
     pauseRequested = false;
     try {
+      // Antes de pausar, garanta que não há play recém-disparado em loop
       if (!playPending) {
         playerEl.pause();
-        if (syncEnabled && onStoppedListeningCallback) {
-          onStoppedListeningCallback();
-        }
       }
     } catch (e) {
       console.log("Erro ao pausar:", e);
@@ -1485,39 +1368,13 @@ async function tocarRadio() {
   }
 
   // Caso inicial: se não há src/sem tocar ainda, inicia a primeira música
-  // REGRA: sempre tocar 1 arquivo de vibezonefm antes da programação normal (quando permitido pelo horário).
   const temSrc = !!playerEl.getAttribute('src') || !!playerEl.src;
   if (!temSrc && !tocando) {
-    if (syncEnabled && onStartedListeningCallback) {
-      await onStartedListeningCallback();
-      return;
-    }
-
+    // define pastaAtual/idx e toca a primeira faixa
     pastaAtual = getPastaInicialPorHorario();
     indexMusicaNaFase = 0;
 
     atualizarBtnAgora();
-
-    // REGRA: sempre tocar 1 arquivo de vibezonefm antes da programação normal (quando permitido pelo horário).
-    // Isso garante que no primeiro start não comece diretamente pela pasta da programação.
-    if (deveTocarVibezonefmAoMudarProgramacao()) {
-      const arquivosV = getArquivosDaPasta("vibezonefm");
-      if (arquivosV && arquivosV.length) {
-        const musicaV = pickAleatorioSemRepeticao("vibezonefm", arquivosV, indexMusicaNaFase);
-        if (musicaV) {
-          ultimaMusicaSrc = musicaV;
-          // evita que proximaMusica() em paralelo troque de faixa enquanto inicia
-          proximoPending = true;
-          playPending = true;
-          await tocarMusica(musicaV);
-          proximoPending = false;
-          playPending = false;
-          proximaMusica(); // após vibezonefm, a lógica padrão segue com a programação normal
-          atualizarBtnAgora();
-          return;
-        }
-      }
-    }
 
     const arquivos = getArquivosDaPasta(pastaAtual);
     const musica = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase);
@@ -1693,11 +1550,6 @@ function setupAudioEvents() {
     tocando = false;
     syncUIFromAudioState();
 
-    if (syncEnabled && onTrackEndedCallback) {
-      onTrackEndedCallback();
-      return;
-    }
-
     // Ao terminar naturalmente, tenta próxima música.
     setTimeout(() => proximaMusica(), 0);
   });
@@ -1756,198 +1608,6 @@ setupAudioEvents();
 // Texto do botão é controlado EXCLUSIVAMENTE pelos eventos: play/pause/ended.)
 if (playerEl) {
   atualizarBtnAgora();
-}
-
-// API de sincronização global (Firebase)
-window.VibeRadioEngine = {
-  setSyncEnabled(v) { syncEnabled = !!v; },
-  setIsLeader(v) { isSyncLeader = !!v; },
-  set onTrackEnded(fn) { onTrackEndedCallback = fn; },
-  set onStartedListening(fn) { onStartedListeningCallback = fn; },
-  set onStoppedListening(fn) { onStoppedListeningCallback = fn; },
-
-  getSyncState() {
-    return {
-      src: ultimaMusicaSrc || playerEl?.src || "",
-      pasta: pastaAtual || getPastaInicialPorHorario(),
-      isPlaying: !!playerEl && !playerEl.paused && !playerEl.ended,
-      history: historicoMusicas.slice()
-    };
-  },
-
-  setMusicVolume(vol) {
-    if (!playerEl) return;
-    const v = Math.max(0, Math.min(1, vol));
-    playerEl.volume = v;
-    defaultMusicVolume = v;
-  },
-
-  async applyRemoteState(state) {
-    if (!state || !playerEl) return;
-    applyingRemoteSync = true;
-    try {
-      if (state.pasta) pastaAtual = state.pasta;
-      if (Array.isArray(state.history) && state.history.length) {
-        historicoMusicas = state.history.slice();
-      }
-      if (state.src && playerEl.src !== state.src) {
-        ultimaMusicaSrc = state.src;
-        playerEl.src = state.src;
-      }
-      if (state.isPlaying) {
-        // Se play() falhar por autoplay policy, a UI deve refletir o estado real do <audio>.
-        try {
-          await playerEl.play();
-        } catch (e) {
-          // Mantém como pausado; tocando será recalculado pelo sync UI.
-        }
-      } else {
-        try { playerEl.pause(); } catch (_) {}
-      }
-
-      // Atualiza UI baseada no estado real do player (evita "botão preso" no ADM)
-      try { syncUIFromAudioState(); } catch (_) {}
-      atualizarBtnAgora();
-
-    } finally {
-      applyingRemoteSync = false;
-    }
-  },
-
-  async playFromSync() {
-    // Garante que o ADM consiga iniciar mesmo quando "src" ainda não existe.
-    // Também aplica a regra do vibezonefm antes da programação normal no primeiro start.
-
-    const temSrc = !!playerEl?.src || !!playerEl?.getAttribute?.('src');
-
-    if (!temSrc) {
-      pastaAtual = getPastaInicialPorHorario();
-      indexMusicaNaFase = 0;
-      historicoMusicas = [];
-
-      // Se permitido, toca 1 música da pasta vibezonefm primeiro.
-      if (deveTocarVibezonefmAoMudarProgramacao()) {
-        const arquivosV = getArquivosDaPasta("vibezonefm");
-        if (arquivosV && arquivosV.length) {
-          const musicaV = pickAleatorioSemRepeticao("vibezonefm", arquivosV, indexMusicaNaFase);
-          if (musicaV) {
-            ultimaMusicaSrc = musicaV;
-            await tocarMusica(musicaV);
-            // segue com a programação normal via proximaMusica()
-            await proximaMusica();
-            atualizarBtnAgora();
-            tocando = true;
-            return;
-          }
-        }
-      }
-
-      const arquivos = getArquivosDaPasta(pastaAtual);
-      const musica = pickAleatorioSemRepeticao(pastaAtual, arquivos, indexMusicaNaFase);
-      indexMusicaNaFase++;
-      ultimaMusicaSrc = musica;
-      await tocarMusica(musica);
-    } else {
-      await playerEl.play().catch(() => {});
-    }
-
-    tocando = true;
-    atualizarBtnAgora();
-  },
-
-  pauseFromSync() {
-    try { playerEl?.pause(); } catch (_) {}
-
-    // força UI no estado "parado" do ADM
-    tocando = false;
-    try {
-      // se o evento de pause não disparar (policy/race), ainda assim atualiza o botão
-      if (typeof window.syncUIFromAudioState === 'function') {
-        window.syncUIFromAudioState();
-      }
-    } catch (_) {}
-
-    atualizarBtnAgora();
-  },
-
-  async nextFromSync() {
-    await nextTrackInternal();
-  },
-
-  async prevFromSync() {
-    await musicaAnterior();
-  },
-
-  async playVinheta(vinhetaState) {
-    if (!vinhetaState || !vinhetaState.active || !vinhetaState.src) return;
-
-    // Durante a vinheta, desativa a programação normal
-    vinhetaEmTocando = true;
-    pauseRequested = true;
-
-    // Regras de sincronização: quando a vinheta começa, consideramos que o sistema está
-    // "em reprodução" para fins de acompanhamento do líder/ouvintes.
-    // (Isso evita o ADM iniciar "como não-líder" e quebrar o comportamento.)
-    tocando = true;
-    atualizarBtnAgora();
-
-
-    let vinhetaEl = document.getElementById("vinheta-audio");
-    if (!vinhetaEl) {
-      vinhetaEl = document.createElement("audio");
-      vinhetaEl.id = "vinheta-audio";
-      vinhetaEl.preload = "none";
-      document.body.appendChild(vinhetaEl);
-    }
-
-    // Garantir 1 listener (troca segura)
-    vinhetaEl.onended = async () => {
-      try {
-        vinhetaEmTocando = false;
-
-        // Após vinheta, SEMPRE tocar 1 música da pasta vibezonefm (preferência: somente vibezonefm)
-        // Depois disso, a programação normal volta a seguir via ended/proximoMusica.
-        const arquivosV = getArquivosDaPasta("vibezonefm");
-        if (arquivosV && arquivosV.length) {
-          // escolhe 1 aleatória determinística por fase/horário usando o mesmo método já existente
-          const idx = Math.max(0, indexMusicaNaFase | 0);
-          const musicaV = pickAleatorioSemRepeticao("vibezonefm", arquivosV, idx);
-          if (musicaV) {
-            ultimaMusicaSrc = musicaV;
-            // bloqueia avanço da playlist enquanto troca src
-            proximoPending = true;
-            playPending = true;
-            pauseRequested = false;
-            await tocarMusica(musicaV);
-          }
-        }
-      } finally {
-        proximoPending = false;
-        playPending = false;
-      }
-    };
-
-    vinhetaEl.src = vinhetaState.src;
-    try {
-      await vinhetaEl.play();
-    } catch (_) {
-      // se falhar, não trava o fluxo
-      vinhetaEmTocando = false;
-    }
-  },
-
-  publishStateExtra() {
-    return this.getSyncState();
-  }
-};
-
-window.__vibeAdminAutoNext = async function () {
-  await window.VibeRadioEngine.nextFromSync();
-  return window.VibeRadioEngine.getSyncState();
-};
-
-if (typeof window.__vibeStartListenerSync === "function") {
-  window.__vibeStartListenerSync();
 }
 
 

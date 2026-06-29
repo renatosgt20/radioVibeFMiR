@@ -503,35 +503,10 @@ button:active {
       </div>
     </div>
     <div class="admin-header-actions">
-      <div class="listener-badge" style="margin-right:10px;">
+      <div class="listener-badge">
         <span class="listener-dot"></span>
         <span id="ouvintesOnline">0</span> ouvintes online
       </div>
-
-      <!-- Botão/programação tocando lado do VibefmADM (lado esquerdo do ouvinte online) -->
-      <div class="listener-badge" style="padding:10px 14px;max-width:520px; margin-right:10px;">
-        <div style="display:flex;flex-direction:column;gap:6px;line-height:1.15;min-width:220px;">
-          <div style="font-weight:900;color:#00ffcc;font-size:12px;">Programa atual</div>
-          <a id="admProgramaAtual" href="#" target="_blank"
-             style="text-decoration:none;font-size:12px;color:#e2e8f0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:520px;">
-            —
-          </a>
-          <div style="font-weight:900;color:#00ffcc;font-size:12px;margin-top:2px;">Arquivo tocando</div>
-          <a id="admArquivoAtual" href="#" target="_blank" style="
-             text-decoration:none;
-             font-size:11.5px;
-             color:#e2e8f0;
-             white-space:nowrap;
-             overflow:hidden;
-             text-overflow:ellipsis;
-             max-width:520px;
-             display:block;
-             min-height:16px;">
-            —
-          </a>
-        </div>
-      </div>
-
       <button class="btn-logout" onclick="logout()">
         <i class="fa-solid fa-right-from-bracket"></i> Sair
       </button>
@@ -728,43 +703,6 @@ onAuthStateChanged(auth, (user) => {
 window.addEventListener("pagehide", () => {
   if (window.requireAdmAuth()) setAdmPresenceOnline(false);
 }, { once: false });
-
-// Sync da programação do player (usa o estado salvo no painel do site)
-// - Programa atual: texto de PROGRAMAS[pastaAtual]
-// - Arquivo tocando: url atual (musica)
-function setAdmProgramacaoUI(programa, arquivo) {
-  const elPrograma = document.getElementById('admProgramaAtual');
-  const elArquivo = document.getElementById('admArquivoAtual');
-  if (elPrograma) elPrograma.textContent = programa || '—';
-  if (elArquivo) elArquivo.textContent = arquivo || '—';
-}
-
-function getProgFromStorage() {
-  try {
-    const obj = JSON.parse(localStorage.getItem('vibe_radio_now') || '{}');
-    return {
-      programa: obj.programaAtual,
-      arquivo: obj.arquivoAtual
-    };
-  } catch (_) {
-    return { programa: '—', arquivo: '—' };
-  }
-}
-
-(function syncNowFromStorage(){
-  try {
-    const now = getProgFromStorage();
-    setAdmProgramacaoUI(now.programa, now.arquivo);
-  } catch (_) {}
-})();
-
-window.addEventListener('storage', (e) => {
-  if (!e || e.key !== 'vibe_radio_now') return;
-  try {
-    const now = getProgFromStorage();
-    setAdmProgramacaoUI(now.programa, now.arquivo);
-  } catch (_) {}
-});
 
 function loadUsers() {
   const usersDiv = document.getElementById("users");

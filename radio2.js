@@ -16,6 +16,12 @@ let ultimaMusicaSrc = null;
 let proximoPending = false;
 
 // ==============================
+// VINHETAS (tocar 1x antes da primeira música ao trocar programação)
+// ==============================
+let vinhetaPendente = false; // setado quando a programação/pasta muda fora do período PSY
+
+
+// ==============================
 // LOCKS/FLAGS anti-concorrência (evita AbortError, play/pause simultâneos e loops)
 // ==============================
 let playPending = false;        // existe um playerEl.play() pendente (await em andamento)
@@ -1143,6 +1149,20 @@ function getArquivosDaPasta(nomePasta) {
   return PASTAS[nomePasta]?.arquivos || [];
 }
 
+function estaNoHorarioPsy() {
+  // PSY fica em: grove/night/forest conforme getPastaInicialPorHorario()
+  const pasta = getPastaInicialPorHorario();
+  return pasta === 'grove' || pasta === 'night' || pasta === 'forest';
+}
+
+function pickVinhetaAleatoria() {
+  const vinhetas = getArquivosDaPasta('vibezonefm');
+  if (!vinhetas || !vinhetas.length) return null;
+  const i = Math.floor(Math.random() * vinhetas.length);
+  return vinhetas[i];
+}
+
+
 function avancarParaNovaFaseSePreciso() {
   const fase = getPastaInicialPorHorario();
   if (fase !== pastaAtual) {
@@ -1225,12 +1245,34 @@ async function proximaMusica() {
       indexMusicaNaFase = 0;
       console.log("📅 Mudando programação para:", pastaAtual);
       ultimaMusicaSrc = null; // ao mudar de fase, não força anti-repetição do src anterior
+
+      // Ao trocar programação/pasta fora do período PSY,
+      // tocar 1 vinheta aleatória antes da primeira música.
+      if (!estaNoHorarioPsy()) {
+        vinhetaPendente = true;
+      } else {
+        vinhetaPendente = false;
+      }
+    }
+
+
+    // Se a programação mudou, tocar 1 vinheta aleatória antes da 1ª música (fora do período PSY)
+    if (vinhetaPendente && !estaNoHorarioPsy()) {
+      const vinheta = pickVinhetaAleatoria();
+      vinhetaPendente = false;
+      if (vinheta) {
+        ultimaMusicaSrc = null; // evita anti-repetição da música por causa da vinheta
+        await tocarMusica(vinheta);
+        atualizarBtnAgora();
+        return;
+      }
     }
 
     const arquivos = getArquivosDaPasta(pastaAtual);
     if (!arquivos.length) return;
 
     // escolhe nova faixa tentando não repetir a atual imediatamente
+
     let tentativa = 0;
     let musica = null;
 
@@ -1421,12 +1463,13 @@ async function tocarRadio() {
     } catch (_) {}
 
 
-    // Se estava pausado/ended, só tenta play.
-    if (playerEl.paused || playerEl.ended) {
-      await playerEl.play();
-    }
+  // Se estava pausado/ended, só tenta play.
+  if (playerEl.paused || playerEl.ended) {
+    await playerEl.play();
+  }
 
-    // Se durante o await o usuário pediu pause, aplica.
+  // Se durante o await o usuário pediu pause, aplica.
+
     if (pauseRequested && lastPlayToken === token) {
       pauseRequested = false;
       try { playerEl.pause(); } catch (_) {}

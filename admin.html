@@ -573,6 +573,117 @@ button:active {
 
 </div>
 
+<!-- ============================================================ -->
+<!-- ADMIN-LISTENER.JS - Versão FINAL e SIMPLES                    -->
+<!-- ============================================================ -->
+<script>
+(function() {
+  console.log('🎵 Inicializando listeners do Admin...');
+
+  // Aguarda o player estar pronto (NO painel do admin, não deve dar spam de console)
+  function waitForPlayer(retries = 20) {
+    const audio = document.getElementById('audio');
+
+    if (audio) {
+      console.log('✅ Player encontrado!');
+      setupListeners(audio);
+      return;
+    }
+
+    if (retries <= 0) {
+      console.log('⚠️ Player não encontrado no admin (parando tentativas).');
+      return;
+    }
+
+    // reduz spam: loga só a cada 5 tentativas
+    if (retries % 5 === 0) {
+      console.log('⏳ Aguardando player no admin...');
+    }
+
+    setTimeout(function() {
+      waitForPlayer(retries - 1);
+    }, 1000);
+  }
+
+
+  function setupListeners(audio) {
+    
+    // ============================================================
+    // LISTENER: PLAY/PAUSE
+    // ============================================================
+    // Observação: no painel do admin NÃO pode iniciar o áudio sozinho.
+    // Então este listener só PAUSA quando o evento pedir.
+    // O play deve acontecer apenas pelo usuário no site principal.
+    window.addEventListener('playerTogglePlay', function(e) {
+      console.log('🎵 Admin: Toggle Play/Pause', e.detail);
+      
+      const shouldPlay = e.detail && e.detail.isPlaying;
+      
+      // Só atua no PAUSE.
+      if (!shouldPlay) {
+        if (!audio.paused) {
+          audio.pause();
+          console.log('⏸️ Pausado pelo Admin');
+        }
+      }
+    });
+
+
+    // ============================================================
+    // LISTENER: PRÓXIMA MÚSICA
+    // ============================================================
+    window.addEventListener('playerNextTrack', function() {
+      console.log('⏭️ Admin: Próxima música');
+      
+      if (typeof window.proximaMusica === 'function') {
+        window.proximaMusica();
+      } else {
+        // Fallback: recarrega
+        audio.pause();
+        setTimeout(function() {
+          audio.load();
+          audio.play().catch(function() {});
+        }, 200);
+      }
+    });
+
+    // ============================================================
+    // LISTENER: MÚSICA ANTERIOR
+    // ============================================================
+    window.addEventListener('playerPreviousTrack', function() {
+      console.log('⏮️ Admin: Música anterior');
+      
+      // Tenta usar indexMusicaNaFase do radio2.js
+      if (typeof window.indexMusicaNaFase !== 'undefined' && typeof window.proximaMusica === 'function') {
+        if (window.indexMusicaNaFase > 0) {
+          window.indexMusicaNaFase = window.indexMusicaNaFase - 2;
+          window.proximaMusica();
+        } else {
+          window.indexMusicaNaFase = 0;
+          window.proximaMusica();
+        }
+      } else {
+        // Fallback: volta início da música
+        if (audio.src) {
+          audio.currentTime = 0;
+          if (audio.paused) {
+            audio.play().catch(function() {});
+          }
+        }
+      }
+    });
+
+    console.log('✅ Listeners do Admin registrados com sucesso!');
+  }
+
+  // Inicia
+  waitForPlayer();
+})();
+
+// ========= TOGGLE COMPAT (corrige caso scripts esperem tocarRadio/tocarMusica via evento) =========
+// Alguns browsers podem impedir play() sem ação do usuário; por isso também tenta toggle do player principal.
+</script>
+
 <script type="module">
 
 import { initializeApp, getApps }
@@ -735,9 +846,42 @@ window.addEventListener("pagehide", () => {
 function setAdmProgramacaoUI(programa, arquivo) {
   const elPrograma = document.getElementById('admProgramaAtual');
   const elArquivo = document.getElementById('admArquivoAtual');
-  if (elPrograma) elPrograma.textContent = programa || '—';
-  if (elArquivo) elArquivo.textContent = arquivo || '—';
+
+  const progTxt = (programa && String(programa).trim()) ? String(programa) : '';
+  const fileTxt = (arquivo && String(arquivo).trim()) ? String(arquivo) : '';
+
+  if (elPrograma) elPrograma.textContent = progTxt || '— (sem dados)';
+  if (elArquivo) elArquivo.textContent = fileTxt || '— (sem dados)';
+
+  // Links: se vier URL, coloca no href (mantém visual igual).
+  try {
+    if (elPrograma && (programa || '').startsWith('http')) elPrograma.href = programa;
+    if (elArquivo && (arquivo || '').startsWith('http')) elArquivo.href = arquivo;
+  } catch (_) {}
 }
+
+// Debug rápido para entender por que não chega nada no painel.
+function debugAdmProgramacaoStorage() {
+  try {
+    const raw = localStorage.getItem('vibe_radio_now');
+    const elPrograma = document.getElementById('admProgramaAtual');
+    const elArquivo = document.getElementById('admArquivoAtual');
+
+    if (elPrograma && !raw) elPrograma.textContent = '— (localStorage vazio)';
+    if (elArquivo && !raw) elArquivo.textContent = '— (localStorage vazio)';
+
+    if (raw && (elPrograma || elArquivo)) {
+      const obj = JSON.parse(raw);
+      // não altera layout: só mostra um resumo em caso de falha
+      if (elPrograma) elPrograma.title = 'vibe_radio_now=' + raw;
+      if (elArquivo) elArquivo.title = 'vibe_radio_now=' + raw;
+    }
+  } catch (e) {
+    // ignora
+  }
+}
+
+
 
 function getProgFromStorage() {
   try {
@@ -753,10 +897,12 @@ function getProgFromStorage() {
 
 (function syncNowFromStorage(){
   try {
+    debugAdmProgramacaoStorage();
     const now = getProgFromStorage();
     setAdmProgramacaoUI(now.programa, now.arquivo);
   } catch (_) {}
 })();
+
 
 window.addEventListener('storage', (e) => {
   if (!e || e.key !== 'vibe_radio_now') return;

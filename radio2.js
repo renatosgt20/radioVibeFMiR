@@ -20,6 +20,15 @@ let proximoPending = false;
 // ==============================
 let vinhetaPendente = false; // setado quando a programação/pasta muda fora do período PSY
 
+// ==============================
+// VINHETA VIBEZONEFM A CADA 1H (somente entre músicas)
+// ==============================
+let ultimaVinhetaHoraTs = 0; // timestamp (ms) da última vinheta executada
+let ultimaVinhetaHoraPasta = ""; // evita disparos em troca de pasta (mantém contagem por “programa ativo”)
+
+
+
+
 
 // ==============================
 // LOCKS/FLAGS anti-concorrência (evita AbortError, play/pause simultâneos e loops)
@@ -1121,7 +1130,7 @@ function getPastaInicialPorHorario() {
 
   // 12h-14h
   if (h >= 12 && h < 14) {
-    return "hitsvibe";
+    return "lofi";
   }
 
   // 14h-17h
@@ -1266,6 +1275,49 @@ async function proximaMusica() {
       }
     }
 
+    // Vinheta vibezonefm a cada 1h (somente entre músicas)
+    // - não interrompe música (executa antes de tocar próxima)
+    // - baseada no timestamp da última vinheta
+    // - desabilitada completamente aos sábados
+    if (!estaNoHorarioPsy()) {
+      const now = new Date(
+        new Date().toLocaleString("en-US", { timeZone: "America/Belem" })
+      );
+
+      const day = now.getDay(); // 0=Dom, 6=Sáb
+
+      const pastaHorario = getPastaInicialPorHorario();
+
+      // mantém contagem por “programa ativo” (evita disparar de hora em hora ao mudar de pasta)
+      // e só roda quando a programação/pasta atual é a mesma que a última vinheta.
+      const pastaKey = pastaHorario || "";
+
+      if (day !== 6) {
+        const podeDispararHora = (
+          !ultimaVinhetaHoraTs ||
+          (Date.now() - ultimaVinhetaHoraTs) >= 3600000
+        );
+
+        if (podeDispararHora && ultimaVinhetaHoraPasta !== pastaKey) {
+          // Observação: a condição ultimaVinhetaHoraPasta !== pastaKey garante que
+          // a contagem reinicia quando a programação/pasta muda, mas sem reiniciar por “troca de música”.
+          // (quando retornar aqui dentro da mesma pasta, ultimaVinhetaHoraPasta já será igual)
+          ultimaVinhetaHoraTs = Date.now();
+          ultimaVinhetaHoraPasta = pastaKey;
+
+          const vinheta = pickVinhetaAleatoria();
+          if (vinheta) {
+            ultimaMusicaSrc = null;
+            await tocarMusica(vinheta);
+            atualizarBtnAgora();
+            return;
+          }
+        }
+      }
+    }
+
+
+
     const arquivos = getArquivosDaPasta(pastaAtual);
     if (!arquivos.length) return;
 
@@ -1318,7 +1370,7 @@ const PROGRAMAS = {
   forest:      "🌲 PSY Vibe 🌲 ",
   rootsvibe:   "☀️Reggae Roots☀️",
   baladavibe:  "💫🌙inVibe🌙💫",
-  frequêncianight: "🎶⚡ Frequência Night ⚡🎶"
+  frequêncianight: "🎶⚡ Frequência Night ⚡🎶",
 
 };
 

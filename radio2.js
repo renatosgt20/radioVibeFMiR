@@ -58,7 +58,7 @@ const PASTAS = {
 
     frequêncianight: {
     arquivos: [
-    "https://res.cloudinary.com/dmodpbtae/video/upload/v1778115456/musica96_hvrhoz.mp3",
+    "https://audio.jukehost.co.uk/019f494f-d8b3-725e-b0bd-1020ec0d3cf9",
  
     ]
   },
@@ -462,9 +462,11 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef472-c1f1-70f6-8733-c4782ddd3d8b",
     "https://audio.jukehost.co.uk/019ef4dc-8f0d-7249-aa1e-89f3de8bbc53",
     "https://audio.jukehost.co.uk/019ef43e-02f6-71fa-953b-a4233cf48e9a",
+    "https://audio.jukehost.co.uk/019f494f-8ac6-70cb-921d-fe3a46acd354",
     "https://audio.jukehost.co.uk/019ef4e1-2043-7129-b629-a84dc055ebde",
     "https://audio.jukehost.co.uk/019ef43e-09df-7270-9574-1efc8ec02f38",
     "https://audio.jukehost.co.uk/019ef472-e4f4-71b4-925a-403c7647a414",
+    "https://audio.jukehost.co.uk/019f494f-8727-73f8-9790-645127311886",
     "https://audio.jukehost.co.uk/019ef473-7010-71e2-9c12-d8b20ad0f7e0",
     "https://audio.jukehost.co.uk/019f0e4a-0422-732b-bbcc-b72a4a84d959",
     "https://audio.jukehost.co.uk/019ef473-149c-71d8-a2e1-d491cd8bca9f",
@@ -491,6 +493,8 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef4db-efea-737e-8a35-45fc8b79fa51",
     "https://audio.jukehost.co.uk/019ef473-01de-70b3-8baf-797f4da79a1c",
     "https://audio.jukehost.co.uk/019ef472-bcc5-708c-a0e9-c94546b8982a",
+    "https://audio.jukehost.co.uk/019f494f-8968-7152-962a-0a4386fb9075",
+    "https://audio.jukehost.co.uk/019f494f-8771-713d-8bbb-2e9bbe4f9bac",
     "https://audio.jukehost.co.uk/019ef473-3ef7-7274-8909-3612c46baa19",
     "https://audio.jukehost.co.uk/019ef472-c388-7340-b05f-74db5c191866",
     "https://audio.jukehost.co.uk/019ef472-e4f4-71b4-925a-403c7647a414",
@@ -501,6 +505,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef4db-dded-72e8-a8a8-50d9f56d0354",
     "https://audio.jukehost.co.uk/019ef4db-a375-7397-8fb8-939d4d71518e",
     "https://audio.jukehost.co.uk/019ef43d-f9d3-719b-bcd8-ab3d99e86f8d",
+    "https://audio.jukehost.co.uk/019f494f-8734-7051-a6af-837e6c493bca",
     "https://audio.jukehost.co.uk/019ef4db-fab9-739c-a105-979d60a69c46",
     "https://audio.jukehost.co.uk/019ef473-0f1a-70a4-bef2-2938cea6723b",
     "https://audio.jukehost.co.uk/019ef4db-d161-703d-877d-e02dbc12e453",
@@ -650,6 +655,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef47c-3514-710a-a016-db954e4f8c7b",
     "https://audio.jukehost.co.uk/019ef47c-34e5-7276-9b54-1b2aecb6cdb5",
     "https://audio.jukehost.co.uk/019ef47c-34e5-7242-821e-9a6a09e5956e",
+    "https://audio.jukehost.co.uk/019f494f-92cb-7384-8188-d50b0905cdc1",
     "https://audio.jukehost.co.uk/019ef473-2870-72c8-a9b2-bef1b5d2ee0c",
     "https://audio.jukehost.co.uk/019ef473-38f0-70fe-8389-f67051f896ce",
     "https://audio.jukehost.co.uk/019ef473-3b41-713b-9d06-ad0d2247b233",

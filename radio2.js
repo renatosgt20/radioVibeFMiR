@@ -1090,13 +1090,13 @@ function getPastaInicialPorHorario() {
   // =========================================
 
   // Ajuste pedido:
-  // - Domingo: rootsvibe 21h até 00h (na prática: 21h-23:59)
+  // - Domingo: baladavibe 21h até 00h (na prática: 21h-23:59)
   // - Segunda a sexta: rootsvibe 18h-19h
   // - Segunda a sexta: baladavibe 19h-02h
 
-  // Domingo 21h-23:59 => rootsvibe
+  // Domingo 21h-23:59 => baladavibe
   if (day === 0 && h >= 21 && h <= 23) {
-    return "rootsvibe";
+    return "baladavibe";
   }
 
   // Seg-Sex

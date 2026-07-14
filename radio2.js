@@ -1150,13 +1150,13 @@ function getPastaInicialPorHorario() {
     return "hitsvibe";
   }
 
-  // 12h-14h
-  if (h >= 12 && h < 14) {
+  // 12h-13h
+  if (h >= 12 && h < 13) {
     return "lofi";
   }
 
-  // 14h-17h
-  if (h >= 14 && h < 17) {
+  // 13h-17h
+  if (h >= 13 && h < 17) {
     return "hitsvibe";
   }
 

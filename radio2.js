@@ -48,10 +48,12 @@ let connectionRecoveryTimer = null;
 
 const PASTAS = {
 
+  // // // // // // // Vinhetas da radio // // // // // // // // // // 
   vibezonefm: {
     arquivos: [
     "https://audio.jukehost.co.uk/019f0fd0-a97a-701d-a343-12a965bab062",
     "https://audio.jukehost.co.uk/019f0fd0-a9b3-719b-970a-66edb84cfa50",
+    "https://audio.jukehost.co.uk/019f6d74-058a-7320-b99e-106741b177c5",
 
     ]
   },
@@ -1134,13 +1136,13 @@ function getPastaInicialPorHorario() {
     return "lofi";
   }
 
-  // 04h-06h
-  if (h >= 4 && h < 6) {
+  // 04h-05h
+  if (h >= 4 && h < 5) {
     return "chilldrive";
   }
 
-  // 06h-08h
-  if (h >= 6 && h < 8) {
+  // 05h-08h
+  if (h >= 5 && h < 8) {
     return "fundaovibe";
   }
 

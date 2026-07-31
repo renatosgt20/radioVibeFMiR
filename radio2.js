@@ -1102,6 +1102,11 @@ function getPastaInicialPorHorario() {
     if (h >= 5 && h < 6) {
       return "grove";
     }
+
+    // 18h até 19h = rootsvibe (Reggae Roots) - apenas domingo
+    if (h >= 18 && h < 19) {
+      return "rootsvibe";
+    }
   }
 
   // =========================================
@@ -1315,10 +1320,10 @@ async function proximaMusica() {
       // e só roda quando a programação/pasta atual é a mesma que a última vinheta.
       const pastaKey = pastaHorario || "";
 
-      if (day !== 6) {
+if (day !== 6) {
         const podeDispararHora = (
           !ultimaVinhetaHoraTs ||
-          (Date.now() - ultimaVinhetaHoraTs) >= 3600000
+          (Date.now() - ultimaVinhetaHoraTs) >= 1800000
         );
 
         if (podeDispararHora && ultimaVinhetaHoraPasta !== pastaKey) {

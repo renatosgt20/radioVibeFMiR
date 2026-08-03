@@ -21,7 +21,7 @@ let proximoPending = false;
 let vinhetaPendente = false; // setado quando a programação/pasta muda fora do período PSY
 
 // ==============================
-// VINHETA VIBEZONEFM A CADA 1H (somente entre músicas)
+// VINHETA VIBEZONEFM A CADA 30 MIN (somente entre músicas)
 // ==============================
 let ultimaVinhetaHoraTs = 0; // timestamp (ms) da última vinheta executada
 let ultimaVinhetaHoraPasta = ""; // evita disparos em troca de pasta (mantém contagem por “programa ativo”)
@@ -1167,7 +1167,7 @@ function getPastaInicialPorHorario() {
 
   // 17h-18h
   if (h >= 17 && h < 18) {
-    return "fundaovibe";
+    return "lofi";
   }
 
   // resto
@@ -1302,7 +1302,7 @@ async function proximaMusica() {
       }
     }
 
-    // Vinheta vibezonefm a cada 1h (somente entre músicas)
+    // Vinheta vibezonefm a cada 30 min (somente entre músicas)
     // - não interrompe música (executa antes de tocar próxima)
     // - baseada no timestamp da última vinheta
     // - desabilitada completamente aos sábados
@@ -1315,20 +1315,15 @@ async function proximaMusica() {
 
       const pastaHorario = getPastaInicialPorHorario();
 
-      // mantém contagem por “programa ativo” (evita disparar de hora em hora ao mudar de pasta)
-      // e só roda quando a programação/pasta atual é a mesma que a última vinheta.
       const pastaKey = pastaHorario || "";
 
 if (day !== 6) {
         const podeDispararHora = (
           !ultimaVinhetaHoraTs ||
-          (Date.now() - ultimaVinhetaHoraTs) >= 1800000
+          (Date.now() - ultimaVinhetaHoraTs) >= 1800000 // 30 minutos
         );
 
-        if (podeDispararHora && ultimaVinhetaHoraPasta !== pastaKey) {
-          // Observação: a condição ultimaVinhetaHoraPasta !== pastaKey garante que
-          // a contagem reinicia quando a programação/pasta muda, mas sem reiniciar por “troca de música”.
-          // (quando retornar aqui dentro da mesma pasta, ultimaVinhetaHoraPasta já será igual)
+        if (podeDispararHora) {
           ultimaVinhetaHoraTs = Date.now();
           ultimaVinhetaHoraPasta = pastaKey;
 

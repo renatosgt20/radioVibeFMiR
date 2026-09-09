@@ -200,6 +200,13 @@ body::before{
   pointer-events:none;
 }
 
+/* PLANETA */
+.solar{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+}
 
 .earth{
   position:absolute;
@@ -242,54 +249,35 @@ body::before{
   text-align:center;
 }
 
-/* Container principal do vídeo */
-.video-container {
-  position: relative;
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px; /* Altura mínima */
-}
+#logo-video{
+  width:min(85vw,700px);
 
-.video-wrapper {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #0a0a0a;
-  z-index: -1;
-}
+  max-height:550px;
 
-#logo-video {
-  width: 100vw;
-  height: 95vh;
-  object-fit: cover;
-  border-radius: 20px;
-  
-  /* EFEITO DE GLOW NAS BORDAS */
-  box-shadow: 
-    0 0 60px rgba(0, 255, 204, 0.05),
-    0 0 120px rgba(138, 43, 226, 0.04),
-    inset 0 0 60px rgba(0, 255, 204, 0.02);
-  
-  /* SEUS FILTROS */
-  opacity: .98;
-  mix-blend-mode: screen;
-  filter:
-    blur(.1px)
-    brightness(1.12)
-    contrast(1.15)
-    saturate(1.35)
-    drop-shadow(0 0 25px rgba(0,255,255,.18))
-    drop-shadow(0 0 45px rgba(168,85,247,.14));
+  object-fit:cover;
+
+  transform:translateY(-80px);
+
+  opacity:.98;
+
+  border-radius:40px;
+
+  mix-blend-mode:screen;
+
+  mask-image: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(0,0,0,0) 82%);
+-webkit-mask-image: radial-gradient(circle, rgba(0,0,0,1) 38%, rgba(0,0,0,0) 82%);
+
+filter:
+blur(.1px)
+brightness(1.12)
+contrast(1.15)
+saturate(1.35)
+drop-shadow(0 0 25px rgba(0,255,255,.18))
+drop-shadow(0 0 45px rgba(168,85,247,.14));
+
+  box-shadow:
+  0 0 80px rgba(0,255,204,.10),
+  0 0 120px rgba(138,43,226,.08);
 }
 
 #fm-badge{
@@ -870,6 +858,13 @@ body::before{
     width:9px;
   }
 
+  /* PLANETA */
+  .earth{
+    width:240px;
+    height:240px;
+
+    bottom:-70px;
+  }
 
   .overlay{
     width:330px;
@@ -1282,6 +1277,13 @@ Dos clássicos que marcaram época aos sucessos que estão em alta, nossa progra
   <source src="background.mp4" type="video/mp4">
 </video>
 
+<canvas id="espaco"></canvas>
+
+<div class="solar">
+  <div class="earth">
+    <div class="overlay"></div>
+  </div>
+</div>
 
 <div class="main">
   <video autoplay muted loop playsinline id="logo-video">
@@ -1687,7 +1689,67 @@ Entrar
 </div>
 
 <script>
+const canvas = document.getElementById("espaco");
+const ctx = canvas.getContext("2d");
 
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+// ⭐ FUNDO (80%) - mais estrelas pulsando
+let fundo = [];
+for (let i = 0; i < 3000; i++) {
+  fundo.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: Math.random() * 2,
+    alpha: Math.random(),
+    speed: Math.random() * 0.03 + 0.005
+  });
+}
+
+// 🚀 MOVIMENTO (20%)
+let movimento = [];
+for (let i = 0; i < 300; i++) {
+  movimento.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    z: Math.random() * canvas.width
+  });
+}
+
+function animar() {
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // ⭐ fundo com brilho
+  fundo.forEach(e => {
+    e.alpha += e.speed;
+    if (e.alpha <= 0 || e.alpha >= 1) e.speed *= -1;
+
+    ctx.beginPath();
+    ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,255,255,${e.alpha})`;
+    ctx.fill();
+  });
+
+  // 🚀 profundidade
+  movimento.forEach(e => {
+    e.z -= 2;
+    if (e.z <= 0) e.z = canvas.width;
+
+    let x = (e.x - canvas.width/2) * (canvas.width/e.z) + canvas.width/2;
+    let y = (e.y - canvas.height/2) * (canvas.width/e.z) + canvas.height/2;
+
+    let size = (1 - e.z/canvas.width) * 2.5;
+
+    ctx.fillStyle = "white";
+    ctx.fillRect(x, y, size, size);
+  });
+
+  requestAnimationFrame(animar);
+}
+
+animar();
 
 function toggleChat(){
   const box = document.getElementById("chat-box");

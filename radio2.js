@@ -659,7 +659,6 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef477-0023-7322-923c-9cbe017d0f4e",
     "https://audio.jukehost.co.uk/019ef47e-0a0d-7215-a0f2-f16d8ef62722",
     "https://audio.jukehost.co.uk/019ef473-323e-734e-b849-4cd3882003cd",
-    "https://audio.jukehost.co.uk/019ef473-2d44-73b2-acd3-d2ca0f433945",
     "https://audio.jukehost.co.uk/019ef47c-c01d-715f-bfa5-59a499fb825a",
     "https://audio.jukehost.co.uk/019ef473-71b8-738c-9283-250e99b54aba",
     "https://audio.jukehost.co.uk/019ef473-3d1e-714f-9908-6a50c9a2fbbe",
@@ -1167,7 +1166,7 @@ function getPastaInicialPorHorario() {
 
   // 17h-18h
   if (h >= 17 && h < 18) {
-    return "lofi";
+    return "fundaovibe";
   }
 
   // resto

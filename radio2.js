@@ -1078,7 +1078,7 @@ function getPastaInicialPorHorario() {
   if (day === 6) {
     // 18h até 21h
     if (h >= 18 && h < 21) {
-      return "grove";
+      return "baladavibe";
     }
 
     // 21h até 23:59
@@ -1123,13 +1123,10 @@ function getPastaInicialPorHorario() {
 
   // Seg-Sex
   if (day >= 1 && day <= 5) {
-    // 18h-19h => baladavibe
-    if (h >= 18 && h < 19) {
-      return "baladavibe";
-    }
+   
 
-    // 19h-02h => baladavibe
-    if (h >= 19 || h < 2) {
+    // 18h-02h => baladavibe
+    if (h >= 18 || h < 2) {
       return "baladavibe";
     }
   }
@@ -1168,7 +1165,7 @@ function getPastaInicialPorHorario() {
   if (h >= 17 && h < 18) {
     return "fundaovibe";
   }
-
+ 
   // resto
   return "hitsvibe";
 }

@@ -1153,7 +1153,7 @@ function getPastaInicialPorHorario() {
 
   // 12h-13h
   if (h >= 12 && h < 13) {
-    return "lofi";
+    return "fundaovibe";
   }
 
   // 13h-17h

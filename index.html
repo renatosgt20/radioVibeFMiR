@@ -159,7 +159,7 @@
   100%{transform:scale(1);}
 }
 body{
-  background:black;
+  background: transparent; /* Era 'black', mude para 'transparent' */
   overflow:hidden;
   font-family:Arial,sans-serif;
   color:white;
@@ -168,21 +168,17 @@ body{
 #bg-video{
   position:fixed;
   inset:0;
-
   width:100%;
   height:100%;
-
   object-fit:cover;
-
   z-index:0;
-
-  opacity:0.18;
-
-  mix-blend-mode:screen;
-
+  opacity: 1; 
+  mix-blend-mode: normal; 
   pointer-events:none;
+  
+  /* Filtro suave apenas para dar um leve UP no brilho */
+  filter: brightness(1.1) contrast(1.05); 
 }
-
 canvas{
   position:fixed;
   inset:0;
@@ -200,35 +196,6 @@ body::before{
   pointer-events:none;
 }
 
-/* PLANETA */
-.solar{
-  position:fixed;
-  inset:0;
-  z-index:1;
-  pointer-events:none;
-}
-
-.earth{
-  position:absolute;
-  left:50%;
-  bottom:-180px;
-  transform:translateX(-50%) scaleX(.92);
-  width:320px;
-  height:320px;
-  border-radius:50%;
-  background:url("https://img00.deviantart.net/04ef/i/2009/114/3/e/new_earth_texture_map_by_lightondesigns.jpg");
-  background-size:cover;
-  box-shadow:
-  0 -150px 50px black inset,
-  0 0 40px 15px #8cbaff inset,
-  0 0 10px 2px #8cbaff inset,
-  0 -6px 30px #7894a9;
-  animation:spinPlanet 8s linear infinite;
-}
-
-.overlay{
-  border-bottom:230px solid rgba(0,0,0,.15);
-}
 /* PARA TELA PC  */
 
 @keyframes spinPlanet{
@@ -730,7 +697,7 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
 
   position:relative;
 
-  top:20px;
+  top:570px;
 
   z-index:10;
 }
@@ -845,26 +812,11 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
     transform:scale(.95);
   }
 
-  /* EQUALIZER */
-  .equalizer{
-    width:170px;
-
-    height:42px;
-
-    margin-top:18px;
-  }
 
   .bar{
     width:9px;
   }
 
-  /* PLANETA */
-  .earth{
-    width:240px;
-    height:240px;
-
-    bottom:-70px;
-  }
 
   .overlay{
     width:330px;
@@ -918,7 +870,7 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   position:relative;
   z-index:2;
 
-  margin-top:-160px; /* sobe um pouco o bloco */
+  margin-top:400px; /* sobe um pouco o bloco */
   padding:0;
   gap:0;
 
@@ -926,49 +878,6 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   max-width:100vw;
 }
 
-
-/* EQUALIZADOR (compacto e sem overflow) */
-.equalizer{
-  display:flex;
-  flex:0 0 auto;
-  flex-direction:row;
-  align-items:flex-end;
-  justify-content:center;
-  gap:clamp(2.5px, 0.8vw, 5.5px);
-
-  /* mantém premium, mas menor */
-  height:64px;
-  max-height:64px;
-
-  width:min(80vw, 340px);
-  max-width:100vw;
-
-  margin:0 auto;
-  padding:0;
-
-  overflow:hidden;
-  transform:translateZ(0);
-}
-
-
-.equalizer span{
-  display:block;
-
-  /* barras pequenas e proporcionais */
-  width:clamp(4px, 1.1vw, 8px);
-  border-radius:999px;
-
-  /* altura base controlada via animation (scaleY) */
-  height:100%;
-  transform-origin:bottom;
-
-  background:linear-gradient(to top, #ff00aa, #bb00ff, #00e5ff);
-  box-shadow:
-    0 0 6px rgba(255,0,255,0.7),
-    0 0 12px rgba(0,229,255,0.45);
-
-  animation: neonEqualizer 1.05s infinite ease-in-out;
-}
 
 /* variação de amplitude sem alterar layout/altura total */
 .equalizer span:nth-child(1){ --amp:0.35; animation-delay:0.00s; }
@@ -1008,15 +917,6 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
   50%{ transform:scale(1.15); filter:brightness(1.35); }
 }
 
-.radio-status{
-  color:#00ffd5;
-  font-size:22px;
-  margin:6px 0 0; /* reduz push excessivo */
-  text-shadow:
-    0 0 10px rgba(0,255,213,0.45),
-    0 0 22px rgba(0,255,213,0.22);
-  max-width:100vw;
-}
 
 .radio-status span{
   color:#eaffff;
@@ -1114,9 +1014,6 @@ drop-shadow(0 0 45px rgba(168,85,247,.14));
     gap:5px;
   }
 
-  .equalizer span{
-    width:clamp(4px, 2vw, 7px);
-  }
 
   .radio-status{
     font-size:18px;
@@ -1277,20 +1174,9 @@ Dos clássicos que marcaram época aos sucessos que estão em alta, nossa progra
   <source src="background.mp4" type="video/mp4">
 </video>
 
-<canvas id="espaco"></canvas>
-
-<div class="solar">
-  <div class="earth">
-    <div class="overlay"></div>
-  </div>
 </div>
 
 <div class="main">
-  <video autoplay muted loop playsinline id="logo-video">
-  <source src="background.mp4" type="video/mp4">
-</video>
-
-
 
 
 <p class="slogan">🌌 Web Rádio  ⚡ - PA-Brasil 🚀</p>
@@ -1678,7 +1564,7 @@ Entrar
 
 <div style="margin-top:10px;">
 👨‍💻 ADM :
-<span id="admCount"> **RM** </span>
+<span id="admCount"> RM </span>
 </div>
 
 <div id="ouvintesRow" style="display:none;margin-top:5px;">
@@ -1695,59 +1581,7 @@ const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-// ⭐ FUNDO (80%) - mais estrelas pulsando
-let fundo = [];
-for (let i = 0; i < 3000; i++) {
-  fundo.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    size: Math.random() * 2,
-    alpha: Math.random(),
-    speed: Math.random() * 0.03 + 0.005
-  });
-}
 
-// 🚀 MOVIMENTO (20%)
-let movimento = [];
-for (let i = 0; i < 300; i++) {
-  movimento.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    z: Math.random() * canvas.width
-  });
-}
-
-function animar() {
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // ⭐ fundo com brilho
-  fundo.forEach(e => {
-    e.alpha += e.speed;
-    if (e.alpha <= 0 || e.alpha >= 1) e.speed *= -1;
-
-    ctx.beginPath();
-    ctx.arc(e.x, e.y, e.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,255,255,${e.alpha})`;
-    ctx.fill();
-  });
-
-  // 🚀 profundidade
-  movimento.forEach(e => {
-    e.z -= 2;
-    if (e.z <= 0) e.z = canvas.width;
-
-    let x = (e.x - canvas.width/2) * (canvas.width/e.z) + canvas.width/2;
-    let y = (e.y - canvas.height/2) * (canvas.width/e.z) + canvas.height/2;
-
-    let size = (1 - e.z/canvas.width) * 2.5;
-
-    ctx.fillStyle = "white";
-    ctx.fillRect(x, y, size, size);
-  });
-
-  requestAnimationFrame(animar);
-}
 
 animar();
 

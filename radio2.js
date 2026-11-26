@@ -65,6 +65,13 @@ const PASTAS = {
     ]
   },
 
+      iinzone: {
+    arquivos: [
+    "https://audio.jukehost.co.uk/019f494f-d8b3-725e-b0bd-1020ec0d3cf9",
+ 
+    ]
+  },
+
   rootsvibe: {
     arquivos: [
     "https://audio.jukehost.co.uk/019ef6b6-39ec-7149-bef0-9482ff7eb400",
@@ -146,6 +153,8 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef1b8-b0fb-70bb-b6f5-8aa3c1e4441f",
     "https://audio.jukehost.co.uk/019ef1b8-a5b7-7317-bbaa-46aab4a64d59",
     "https://audio.jukehost.co.uk/019ef1b8-aa22-7056-8527-e4062381fa33",
+    "https://audio.jukehost.co.uk/01a2131f-8cbf-70ad-840c-a5576d907e2a",
+    "https://audio.jukehost.co.uk/01a2131f-7f9a-718f-8a83-57fa973dddf0",
     "https://audio.jukehost.co.uk/019ef4e1-2174-736b-8738-85387165f9a0",
     "https://audio.jukehost.co.uk/019f5b57-0b6c-704a-ae07-1debf6c3d7a7",
     "https://audio.jukehost.co.uk/019ef473-2155-71a8-b663-3acb92a60db5",
@@ -154,6 +163,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef1b8-4b0f-70c8-93b9-c3f573e08180",
     "https://audio.jukehost.co.uk/01a1fb8c-8fb0-7059-9be2-04be873b6fd2",
     "https://audio.jukehost.co.uk/019ef1b8-7fbb-70e7-8811-83296c4055b5",
+    "https://audio.jukehost.co.uk/01a2131f-5713-7155-89b0-e7688d0abd8b",
     "https://audio.jukehost.co.uk/019f5b57-0b6c-704a-ae07-1debf6c3d7a7",
     "https://audio.jukehost.co.uk/019f5b56-fa6e-7079-bba0-d47779510d8e",
     "https://audio.jukehost.co.uk/019ef1b8-ceb4-7160-9fae-2b33cec7c0ef",
@@ -161,18 +171,23 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef472-855e-7363-bec9-2904c8fe7b9e",
     "https://audio.jukehost.co.uk/019ef473-3000-713d-be8b-6231ebed44e9",
     "https://audio.jukehost.co.uk/019ef473-2968-71e7-8dfe-a7aeabba456f",
+    "https://audio.jukehost.co.uk/01a2131f-8f06-734c-ab74-5c379ec2c4a1",
     "https://audio.jukehost.co.uk/019ef1b8-c48f-7384-affe-222c2a2447cf",
     "https://audio.jukehost.co.uk/019ef1b8-c801-7131-a40d-6e363b0207cd",
     "https://audio.jukehost.co.uk/019ef1b8-c5d7-729e-8367-f6626d627588",
     "https://audio.jukehost.co.uk/019ef1b8-d652-7367-aaa9-d89148a21037",
     "https://audio.jukehost.co.uk/01a1fb8c-8ecc-738e-a777-b26d0a7dc817",
     "https://audio.jukehost.co.uk/019ef1b8-77ce-72e5-9ec3-9a71451d80b5",
+    "https://audio.jukehost.co.uk/01a2131f-5546-714c-b58f-aeb68eab1721",
     "https://audio.jukehost.co.uk/019ef1b8-8845-714a-b3e2-2bed9abc82f6",
     "https://audio.jukehost.co.uk/019ef1b8-c408-7316-8450-80d32ab4f1cb",
     "https://audio.jukehost.co.uk/01a1c61a-cc22-70e9-ae51-fd6bf8ac666e",
     "https://audio.jukehost.co.uk/019ef1b8-4ba7-7206-8337-3b54a0388c71",
     "https://audio.jukehost.co.uk/019ef1b8-d998-73aa-8696-ff26a7ccd7e1",
     "https://audio.jukehost.co.uk/019ef1b8-b13a-7391-aa83-766dc467429a",
+    "https://audio.jukehost.co.uk/01a2131f-7f47-7362-9192-476d3d7c08d6",
+    "https://audio.jukehost.co.uk/01a2131f-8fae-73f6-abc3-502d5ab3b9e9",
+    "https://audio.jukehost.co.uk/01a2131f-801f-709c-80f9-f07a0cf9b87b",
     "https://audio.jukehost.co.uk/019ef1b8-c4d6-7103-86f5-177093904993",
     "https://audio.jukehost.co.uk/019ef1b8-7c45-73c4-a5bc-e15eef35dfe2",
     "https://audio.jukehost.co.uk/019ef1b8-d013-72e3-bd74-b61e46fcf3e5",
@@ -201,6 +216,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef1b8-7921-71ac-a95f-6e32818a152f",
     "https://audio.jukehost.co.uk/019ef1b8-c325-7258-808d-b16f83d9baab",
     "https://audio.jukehost.co.uk/019ef1b8-c8e1-704a-8109-fd446c6c634a",
+    "https://audio.jukehost.co.uk/01a2131f-637d-7085-a5b6-40a5b38b80a1",
     "https://audio.jukehost.co.uk/019ef1b8-cb90-7328-b493-25c7a6acfde6",
     "https://audio.jukehost.co.uk/019ef1b8-7f45-714b-a6a8-c5dcffc4ee22",
     "https://audio.jukehost.co.uk/019ef1b8-a8e1-7281-a00a-ca977dd0a49c",
@@ -239,6 +255,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef472-dc5c-7349-98bb-abf6ba393cd2",
     "https://audio.jukehost.co.uk/019ef47e-0a0d-7215-a0f2-f16d8ef62722",
     "https://audio.jukehost.co.uk/019ef473-71b8-738c-9283-250e99b54aba",
+    "https://audio.jukehost.co.uk/01a2131f-5aa4-712c-9c99-0cdea6c338ad",
     "https://audio.jukehost.co.uk/019ef473-3d1e-714f-9908-6a50c9a2fbbe",
     "https://audio.jukehost.co.uk/019ef47c-c06e-7191-a2b6-18ba19198ce0",
     "https://audio.jukehost.co.uk/019ef473-4a83-708d-b6fa-c95632d05550",
@@ -255,10 +272,13 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef47b-93bd-7115-ab97-9676bc9a9bf2",
     "https://audio.jukehost.co.uk/019ef473-42aa-715c-aeb0-688f2b0331c9",
     "https://audio.jukehost.co.uk/019ef473-28f4-7354-8df5-9bbf2e683f76",
+    "https://audio.jukehost.co.uk/01a2131f-643c-70d1-bc67-e5c664b05c10",
+    "https://audio.jukehost.co.uk/01a2131f-90fe-7105-b3e4-024c0ae15c08",
     "https://audio.jukehost.co.uk/019ef473-4b03-73bf-b46a-ee811200244a",
     "https://audio.jukehost.co.uk/019ef472-d985-7308-9131-5ccca2d56c73",
     "https://audio.jukehost.co.uk/019ef47e-d204-7268-b903-f91087ae0ce5",
     "https://audio.jukehost.co.uk/019ef473-3b8d-7298-aa4b-d328bc188ab1",
+    "https://audio.jukehost.co.uk/01a1fb8c-945c-718d-8ed5-347f271eae99",
     "https://audio.jukehost.co.uk/019ef478-47b1-7371-b388-f3595630a116",
     "https://audio.jukehost.co.uk/019ef473-4656-72a6-b342-dc203f352af7",
     "https://audio.jukehost.co.uk/019ef478-45de-724c-b35a-ce5795faa1ff",
@@ -327,6 +347,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef472-ce53-71d1-9bb9-fc9385b31be7",
     "https://audio.jukehost.co.uk/019ef472-b24a-715e-ac00-de95b23eb7d8",
     "https://audio.jukehost.co.uk/019ef473-2155-71a8-b663-3acb92a60db5",
+    "https://audio.jukehost.co.uk/01a2131f-4f42-70bd-9df2-6c4bdc792af5",
     "https://audio.jukehost.co.uk/019ef473-25a7-70cd-9713-8390495360de",
     "https://audio.jukehost.co.uk/019ef4e1-21fb-7289-a9ad-7db845e0070f",
     "https://audio.jukehost.co.uk/019ef4e7-4bf4-7300-8795-bb8bda46e7d6",
@@ -371,6 +392,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef4dc-3c91-7105-a4d3-6394dc04bdd4",
     "https://audio.jukehost.co.uk/019ef4dc-592a-7084-9da9-88a6d16a1042",
     "https://audio.jukehost.co.uk/019ef4dc-3f19-7085-bbda-4a82db812ada",
+    "https://audio.jukehost.co.uk/01a2131f-6229-71fd-a96d-4d7991161472",
     "https://audio.jukehost.co.uk/019ef4dc-3f60-72b3-b2ef-2f3fd696c219",
     "https://audio.jukehost.co.uk/019ef4dc-41e6-72a5-a797-087e6b7e523d",
     "https://audio.jukehost.co.uk/019ef4dc-437a-727a-8757-fb7f047b9009",
@@ -483,31 +505,45 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef43e-02f6-71fa-953b-a4233cf48e9a",
     "https://audio.jukehost.co.uk/01a1fb8c-8e50-7045-bc32-d83a4236ec67",
     "https://audio.jukehost.co.uk/01a1fb8c-8cea-720a-b500-801adb8a5bdf",
+    "https://audio.jukehost.co.uk/01a2131f-6887-7358-bf48-54bf5352afe4",
+    "https://audio.jukehost.co.uk/01a2131f-8ecb-7051-80e3-0da242817711",
     "https://audio.jukehost.co.uk/019f5b57-133d-715e-a99b-3f5439e6230e",
     "https://audio.jukehost.co.uk/01a1c60b-1591-71d7-8527-bfd60d988cdf",
     "https://audio.jukehost.co.uk/01a1fb8c-8e89-735e-bb19-7fbf560b8797",
+    "https://audio.jukehost.co.uk/01a2131f-801f-709c-80f9-f07a0cf9b87b",
     "https://audio.jukehost.co.uk/01a1fb8c-9086-711a-aa81-db6a1f0dcf5b",
     "https://audio.jukehost.co.uk/019f494f-8ac6-70cb-921d-fe3a46acd354",
+    "https://audio.jukehost.co.uk/01a2131f-8cbf-70ad-840c-a5576d907e2a",
     "https://audio.jukehost.co.uk/019ef4e1-2043-7129-b629-a84dc055ebde",
     "https://audio.jukehost.co.uk/01a1fb8c-94e0-72d1-a9f2-af52d1aff64c",
     "https://audio.jukehost.co.uk/019ef43e-09df-7270-9574-1efc8ec02f38",
+    "https://audio.jukehost.co.uk/01a1fb8c-945c-718d-8ed5-347f271eae99",
     "https://audio.jukehost.co.uk/019ef472-e4f4-71b4-925a-403c7647a414",
     "https://audio.jukehost.co.uk/01a1fb8c-8fb0-7059-9be2-04be873b6fd2",
     "https://audio.jukehost.co.uk/019f494f-8727-73f8-9790-645127311886",
     "https://audio.jukehost.co.uk/01a1fb8c-8ca4-7061-b737-eaab5bd20862",
     "https://audio.jukehost.co.uk/01a1fb8c-8ecc-738e-a777-b26d0a7dc817",
+    "https://audio.jukehost.co.uk/01a2131f-8f06-734c-ab74-5c379ec2c4a1",
+    "https://audio.jukehost.co.uk/01a2131f-7f9a-718f-8a83-57fa973dddf0",
     "https://audio.jukehost.co.uk/019ef473-7010-71e2-9c12-d8b20ad0f7e0",
     "https://audio.jukehost.co.uk/019f0e4a-0422-732b-bbcc-b72a4a84d959",
+    "https://audio.jukehost.co.uk/01a2131f-9144-7000-8178-14bce3bf36f3",
+    "https://audio.jukehost.co.uk/01a2131f-91e1-73e6-b6d9-512b9003915a",
+    "https://audio.jukehost.co.uk/01a2131f-9098-7051-abbb-5706d96f46cf",
     "https://audio.jukehost.co.uk/01a1fb8c-7fe0-73de-bd27-b71c36c99e2a",
+    "https://audio.jukehost.co.uk/01a2131f-5546-714c-b58f-aeb68eab1721",
     "https://audio.jukehost.co.uk/01a1fb8c-8c54-72b5-9c1b-8b782e9b5dab",
     "https://audio.jukehost.co.uk/019ef473-149c-71d8-a2e1-d491cd8bca9f",
+    "https://audio.jukehost.co.uk/01a2131f-7f47-7362-9192-476d3d7c08d6",
     "https://audio.jukehost.co.uk/019ef4dc-3935-7065-84f6-170bd37418ff",
     "https://audio.jukehost.co.uk/019f5b56-fb84-7011-a053-403cbc861fd0",
+    "https://audio.jukehost.co.uk/01a2131f-9028-733c-9b1c-4ecd6ed385be",
     "https://audio.jukehost.co.uk/019ef473-0583-73f7-aae9-ad6275a3f1dd",
     "https://audio.jukehost.co.uk/019ef4dc-07ea-7195-b5db-66e810d352ad",
     "https://audio.jukehost.co.uk/019ef43d-d166-71f8-b79b-53a302108bce",
     "https://audio.jukehost.co.uk/019ef4dc-3f60-72b3-b2ef-2f3fd696c219",
     "https://audio.jukehost.co.uk/019f5b57-0be2-7365-bc18-65bd9fdd16d3",
+    "https://audio.jukehost.co.uk/01a2131f-923c-70f3-b606-01bc513c79c4",
     "https://audio.jukehost.co.uk/01a1fb8c-8ecc-738e-a777-b26d0a7dc817",
     "https://audio.jukehost.co.uk/01a1fb8c-7ee7-71ad-8f78-da11c76f14f0",
     "https://audio.jukehost.co.uk/019f5b57-0830-7246-ae79-73b641267042",
@@ -528,6 +564,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef43e-0ad8-721c-87cc-08ca187e380a",
     "https://audio.jukehost.co.uk/019f5b57-0b6c-704a-ae07-1debf6c3d7a7",
     "https://audio.jukehost.co.uk/019ef472-b208-70df-9a5f-fab166d86563",
+    "https://audio.jukehost.co.uk/01a2131f-8f7c-7229-b791-7a00b65af3d7",
     "https://audio.jukehost.co.uk/01a1fb8c-8e89-735e-bb19-7fbf560b8797",
     "https://audio.jukehost.co.uk/019ef4dc-4936-70be-be3c-5fb971066a7a",
     "https://audio.jukehost.co.uk/019ef4dc-0583-714e-b0cc-2a03c91882d8",
@@ -538,6 +575,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef4db-efea-737e-8a35-45fc8b79fa51",
     "https://audio.jukehost.co.uk/019ef473-01de-70b3-8baf-797f4da79a1c",
     "https://audio.jukehost.co.uk/019ef472-bcc5-708c-a0e9-c94546b8982a",
+    "https://audio.jukehost.co.uk/01a2131f-5713-7155-89b0-e7688d0abd8b",
     "https://audio.jukehost.co.uk/019f494f-8968-7152-962a-0a4386fb9075",
     "https://audio.jukehost.co.uk/019f494f-8771-713d-8bbb-2e9bbe4f9bac",
     "https://audio.jukehost.co.uk/019ef473-3ef7-7274-8909-3612c46baa19",
@@ -552,12 +590,16 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef4dc-3b49-7288-9673-2fa8a921e5bb",
     "https://audio.jukehost.co.uk/019ef4db-dded-72e8-a8a8-50d9f56d0354",
     "https://audio.jukehost.co.uk/019ef4db-a375-7397-8fb8-939d4d71518e",
+    "https://audio.jukehost.co.uk/01a2131f-8d58-7351-8c17-e68ede7fd2e8",
     "https://audio.jukehost.co.uk/019ef43d-f9d3-719b-bcd8-ab3d99e86f8d",
     "https://audio.jukehost.co.uk/019f494f-8734-7051-a6af-837e6c493bca",
     "https://audio.jukehost.co.uk/019ef4db-fab9-739c-a105-979d60a69c46",
     "https://audio.jukehost.co.uk/019ef473-0f1a-70a4-bef2-2938cea6723b",
     "https://audio.jukehost.co.uk/019ef4db-d161-703d-877d-e02dbc12e453",
     "https://audio.jukehost.co.uk/019ef43e-0537-72de-b24a-1e15daadf904",
+    "https://audio.jukehost.co.uk/01a2131f-91a1-73d8-a971-cebce09c08fb",
+    "https://audio.jukehost.co.uk/01a2131f-90fe-7105-b3e4-024c0ae15c08",
+    "https://audio.jukehost.co.uk/01a2131f-637d-7085-a5b6-40a5b38b80a1",
     "https://audio.jukehost.co.uk/019ef43d-a519-73c0-bd2d-a228e42a6c8a",
     "https://audio.jukehost.co.uk/019ef472-ea52-7303-af8d-6d68f5236c96",
     "https://audio.jukehost.co.uk/019ef472-f92e-71bc-afd6-2f2baf4d9aad",
@@ -565,9 +607,18 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef4dc-592a-7084-9da9-88a6d16a1042",
     "https://audio.jukehost.co.uk/01a1fb8c-8c54-72b5-9c1b-8b782e9b5dab",
     "https://audio.jukehost.co.uk/019ef4db-ef81-71d2-945f-d147cb449f93",
+    "https://audio.jukehost.co.uk/01a2131f-643c-70d1-bc67-e5c664b05c10",
     "https://audio.jukehost.co.uk/019ef4dc-3f19-7085-bbda-4a82db812ada",
     "https://audio.jukehost.co.uk/019ef4dc-329a-7364-ad13-711fd653f302",
     "https://audio.jukehost.co.uk/019ef43d-cbf0-7195-beb8-0aee861ab801",
+    "https://audio.jukehost.co.uk/01a2131f-8e40-718f-9333-ae9703f1aa36",
+    "https://audio.jukehost.co.uk/01a2131f-695d-71e3-ada5-50515b15962d",
+    "https://audio.jukehost.co.uk/01a2131f-8c71-72bf-95a2-c00860728f72",
+    "https://audio.jukehost.co.uk/01a2131f-8e17-710e-a964-262e94822952",
+    "https://audio.jukehost.co.uk/01a2131f-81fb-7333-9b88-d9d623f2207b",
+    "https://audio.jukehost.co.uk/01a2131f-92dc-73a2-a6f5-584b96471e91",
+    "https://audio.jukehost.co.uk/01a2131f-5aa4-712c-9c99-0cdea6c338ad",
+    "https://audio.jukehost.co.uk/01a2131f-6292-709f-8659-bcd2329d6e74",
     "https://audio.jukehost.co.uk/019ef43e-082c-7038-b10d-0a9b0ca4ae05",
     "https://audio.jukehost.co.uk/019ef4dc-70b9-700f-8355-772e7d0ac76a",
     "https://audio.jukehost.co.uk/019ef4dc-9615-73e5-b508-77956ccf25aa",
@@ -580,6 +631,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef4db-e6ce-716a-ba30-40678e25db6e",
     "https://audio.jukehost.co.uk/019ef43d-af68-71c9-81fd-2821b8b7e660",
     "https://audio.jukehost.co.uk/019ef4dc-5e40-7346-b834-10e0b13d7222",
+    "https://audio.jukehost.co.uk/01a2131f-8d9a-7205-8d30-920c18e5dcb5",
     "https://audio.jukehost.co.uk/019ef4dc-6435-73e9-a4b6-3ab55b23494d",
     "https://audio.jukehost.co.uk/019ef43d-f904-70e4-b6b5-202838b3ead6",
     "https://audio.jukehost.co.uk/019ef4dc-458c-736b-8fe9-6c3a0670d253",
@@ -627,6 +679,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef43d-fae7-7175-8429-d6e9665dd917",
     "https://audio.jukehost.co.uk/019ef43e-07aa-73b6-81b4-a29a321e5025",
     "https://audio.jukehost.co.uk/019ef4dc-40f0-73ba-bd1c-08fc2dfb3a3b",
+    "https://audio.jukehost.co.uk/01a2131f-8d03-73b3-93b2-461a12af2e92",
     "https://audio.jukehost.co.uk/019ef473-1daa-712d-ae50-4a462bae8e6d",
     "https://audio.jukehost.co.uk/019ef43d-a471-7048-a30b-e680c4118432",
     "https://audio.jukehost.co.uk/019ef4dc-0a2b-7010-9570-e051cf7eef72",
@@ -689,6 +742,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef472-dc5c-7349-98bb-abf6ba393cd2",
     "https://audio.jukehost.co.uk/019ef4db-f328-7398-aa67-f5fa1590f815",
     "https://audio.jukehost.co.uk/019ef477-0023-7322-923c-9cbe017d0f4e",
+    "https://audio.jukehost.co.uk/01a2131f-8ea1-73fe-9183-994fa2af1c2b",
     "https://audio.jukehost.co.uk/019ef47e-0a0d-7215-a0f2-f16d8ef62722",
     "https://audio.jukehost.co.uk/019ef473-323e-734e-b849-4cd3882003cd",
     "https://audio.jukehost.co.uk/019ef47c-c01d-715f-bfa5-59a499fb825a",
@@ -779,6 +833,7 @@ const PASTAS = {
     "https://audio.jukehost.co.uk/019ef472-c1b8-71f8-97e1-098ca7f8a0f6",
     "https://audio.jukehost.co.uk/019ef47d-288e-71de-a2de-604d61014358",
     "https://audio.jukehost.co.uk/019ef473-0ecb-71c9-9ab9-a7ca10463393",
+    "https://audio.jukehost.co.uk/01a2131f-9280-7344-984d-5814ea73d54c",
     "https://audio.jukehost.co.uk/019ef472-be61-70bd-b36b-00d572a0bf3e",
     "https://audio.jukehost.co.uk/019ef472-fcd2-7377-820f-804cc9abfbdc",
     "https://audio.jukehost.co.uk/019ef473-3000-713d-be8b-6231ebed44e9",
@@ -838,6 +893,7 @@ const PASTAS = {
    "https://audio.jukehost.co.uk/01a1fb8c-8ea1-72df-bd83-71002e7e2c1b",
    "https://audio.jukehost.co.uk/019ef4db-e44d-735f-bc74-8aab85c3a253",
    "https://audio.jukehost.co.uk/019ef4dc-c28d-736b-953f-51e11180eb39",
+   "https://audio.jukehost.co.uk/01a2131f-8f3d-71a2-8673-241ae53766fa",
    "https://audio.jukehost.co.uk/019ef657-af74-7336-9a29-031c11c0658a",
    "https://audio.jukehost.co.uk/019ef657-9d3f-7355-b8ee-40cb10fe9895",
    "https://audio.jukehost.co.uk/019ef657-60f9-7130-a65a-6431bcb65662",
@@ -848,6 +904,7 @@ const PASTAS = {
    "https://audio.jukehost.co.uk/019ef657-96fa-72eb-b9e3-d68b01a90e48",
    "https://audio.jukehost.co.uk/019ef657-5160-7299-a340-f6eb3e5c15d2",
    "https://audio.jukehost.co.uk/019ef65f-b214-734c-83b3-f28ac4680863",
+   "https://audio.jukehost.co.uk/01a2131f-8f7c-7229-b791-7a00b65af3d7",
    "https://audio.jukehost.co.uk/019ef657-54e0-71ce-a28a-49c8ea9bd543",
    "https://audio.jukehost.co.uk/019ef657-51a1-710f-b737-87a4433ed3b7",
    "https://audio.jukehost.co.uk/019ef657-5368-7332-b642-f055d06c11ba",
@@ -857,6 +914,9 @@ const PASTAS = {
    "https://audio.jukehost.co.uk/019ef661-0085-70bd-b6de-aaa6f0e6b424",
    "https://audio.jukehost.co.uk/019ef659-e578-7258-af3b-62e2d1b69b4d",
    "https://audio.jukehost.co.uk/019ef657-7a9d-715b-a997-ada46a453ae3",
+   "https://audio.jukehost.co.uk/01a2131f-68d7-71d3-afe4-00f3fbe877dd",
+   "https://audio.jukehost.co.uk/01a2131f-7fdf-7005-929b-c3b2c2c59711",
+   "https://audio.jukehost.co.uk/01a2131f-6555-7189-a8a3-24f4be28e763",
    "https://audio.jukehost.co.uk/019ef661-0098-72b5-b7ac-7d4bec37afc5",
    "https://audio.jukehost.co.uk/019ef657-4e6d-7393-989d-e1437d8085ba",
    "https://audio.jukehost.co.uk/019ef657-4eb5-7263-9892-c3c662f92a3e",
@@ -874,6 +934,7 @@ const PASTAS = {
    "https://audio.jukehost.co.uk/019ef657-5428-7123-b51b-dcaf3fab548f",
    "https://audio.jukehost.co.uk/019ef65c-3dcd-73b8-befc-812cfd0b699c",
    "https://audio.jukehost.co.uk/019ef659-9f30-735b-b477-a1f065b2f9cd",
+   "https://audio.jukehost.co.uk/01a2131f-6301-7134-a4e4-5871a71e7ea9",
    "https://audio.jukehost.co.uk/019ef657-50d8-72e5-a436-94ca3079e07b",
    "https://audio.jukehost.co.uk/019ef657-4cf0-7308-82a9-3299ba9603ca",
    "https://audio.jukehost.co.uk/019ef657-9e76-731a-aee0-dfffc630a311",
@@ -908,9 +969,8 @@ const PASTAS = {
    "https://audio.jukehost.co.uk/019ef657-9edb-73bb-baad-d1183500d05d",
    "https://audio.jukehost.co.uk/019ef657-a3db-71ec-845c-bf60cacb5d50",
    "https://audio.jukehost.co.uk/019ef657-6b74-734d-9107-32c8ae372d90",
-   "https://audio.jukehost.co.uk/019ef657-6b74-734d-9107-32c8ae372d90",
    "https://audio.jukehost.co.uk/019ef657-9749-705d-b64b-357c7cadb7d1",
-   ""
+   
 
 
     ]
@@ -1137,7 +1197,7 @@ function getPastaInicialPorHorario() {
 
     // 18h até 19h = rootsvibe (Reggae Roots) - apenas domingo
     if (h >= 18 && h < 19) {
-      return "rootsvibe";
+      return "baladavibe";
     }
   }
 
@@ -1187,7 +1247,7 @@ function getPastaInicialPorHorario() {
 
   // 12h-13h
   if (h >= 12 && h < 13) {
-    return "fundaovibe";
+    return "baladavibe";
   }
 
   // 13h-17h
@@ -1197,11 +1257,11 @@ function getPastaInicialPorHorario() {
 
   // 17h-18h
   if (h >= 17 && h < 18) {
-    return "fundaovibe";
+    return "baladavibe";
   }
  
   // resto
-  return "hitsvibe";
+  return "baladavibe";
 }
 
 // ==============================
@@ -1350,7 +1410,7 @@ async function proximaMusica() {
 if (day !== 6) {
         const podeDispararHora = (
           !ultimaVinhetaHoraTs ||
-          (Date.now() - ultimaVinhetaHoraTs) >= 1800000 // 30 minutos
+          (Date.now() - ultimaVinhetaHoraTs) >= 900000 // 15 minutos
         );
 
         if (podeDispararHora) {
